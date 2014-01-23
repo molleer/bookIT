@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @whitelist_item.title %>
+</p>
+
+<p>
+  <strong>Rule duration:</strong>
+  <%= @whitelist_item.rule_start %> - <%= @whitelist_item.rule_end %>
+</p>
+
+<p>
+  <strong>Time duration:</strong>
+  <%= @whitelist_item.begin_time.strftime '%R' %> - <%= @whitelist_item.end_time.strftime '%R' %>
+</p>
+
+<p>
+  <strong>BlacklistItem:</strong>
+  <%= @whitelist_item.blacklist %>
+</p>
+
+<p>
+  <strong>Active on:</strong>
+  <% days = active_weekdays(@whitelist_item) %>
+  <%= days.empty? ? "" : days.map(&:capitalize).join(", ") %>
+</p>
+
+<%= link_to 'Edit', edit_whitelist_item_path(@whitelist_item) %> |
+<%= link_to 'Back', whitelist_items_path %>

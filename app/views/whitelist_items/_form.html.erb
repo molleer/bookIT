@@ -1,0 +1,50 @@
+<%= form_for(@whitelist_item) do |f| %>
+  <% if @whitelist_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@whitelist_item.errors.count, "error") %> prohibited this whitelist_item from being saved:</h2>
+
+      <ul>
+      <% @whitelist_item.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :rule_start %><br>
+    <%= f.date_field :rule_start %>
+  </div>
+  <div class="field">
+    <%= f.label :rule_end %><br>
+    <%= f.date_field :rule_end %>
+  </div>
+  <div class="field">
+    <%= f.label :begin_time %>
+    <%= f.time_field :begin_time %>
+  </div>
+  <div class="field">
+    <%= f.label :end_time %>
+    <%= f.time_field :end_time %>
+  </div>
+  <div class="field">
+    <%= f.label :blacklist %>
+    <%= f.check_box :blacklist %>
+  </div>
+  <div class="field">
+    <% swedish_day_names.each_with_index do |day, i| %>
+      <%= f.check_box :day_array, 
+            name: "whitelist_item[day_array][#{i}]", 
+            id: "whitelist_item_day_array_#{i}", 
+            checked: (i < 5 ? true : false) %> 
+      <%= f.label "day_array_#{i}", day.capitalize %>
+    <% end %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

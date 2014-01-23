@@ -1,0 +1,35 @@
+<h1>Listing whitelist_items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Rule duration</th>
+      <th>Time</th>
+      <th>Days in week</th>
+      <th>Blacklist</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @whitelist_items.each do |whitelist_item| %>
+      <tr>
+        <td><%= whitelist_item.title %></td>
+        <td><%= whitelist_item.rule_start %> - <br> <%= whitelist_item.rule_end %></td>
+        <td><%= whitelist_item.begin_time.strftime '%R' %> - <br> <%= whitelist_item.end_time.strftime '%R' %></td>
+        <td><%= whitelist_item.days_in_week.to_s(2) %></td>
+        <td><%= whitelist_item.blacklist %></td>
+        <td><%= link_to 'Show', whitelist_item %></td>
+        <td><%= link_to 'Edit', edit_whitelist_item_path(whitelist_item) %></td>
+        <td><%= link_to 'Destroy', whitelist_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Whitelist item', new_whitelist_item_path %>

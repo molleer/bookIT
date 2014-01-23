@@ -1,0 +1,59 @@
+<%= form_for(@booking) do |f| %>
+  <% if @booking.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@booking.errors.count, "error") %> prohibited this booking from being saved:</h2>
+
+      <ul>
+      <% @booking.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :cid %><br>
+    <%= f.text_field :cid %>
+  </div>
+  <div class="field">
+    <%= f.label :room_id %><br>
+    <%= f.collection_radio_buttons :room_id, Room.order(:id), :id, :name, checked: Room.first.id %>
+  </div>
+  <div class="field">
+    <%= f.label :begin_date %>
+    <%= datetime_local_helper f, :begin_date %>
+    <%= f.label :end_date %>
+    <%= datetime_local_helper(f, :end_date, DateTime.now + 2.hours) %>
+  </div>
+  <div class="field">
+    <%= f.label :group %><br>
+    <%= f.text_field :group %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+    <%= f.label :festansvarig %><br>
+    <%= f.text_field :festansvarig %>
+  </div>
+  <div class="field">
+    <%= f.label :festnumber %><br>
+    <%= f.text_field :festnumber %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+  <div>
+    <h3>Bokning endast möjligt inom följade perioder</h3>
+    <ul>
+    <% WhitelistItem.find_each do |w| %>
+      <li><%= w %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>

@@ -1,0 +1,2 @@
+module WhitelistItemsHelper
+end
