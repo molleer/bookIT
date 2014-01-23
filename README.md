@@ -14,9 +14,9 @@ match regexp, times_array [, options]
 ```
 
 ##### Times array:
-Array of strings in this format: `XX:XX-XX:XX`
+Array of strings in this format: `HH:MM-HH:MM`
 
-##### Options hash:
+##### Options:
 Possible keys:
 
 * `:blacklist`
@@ -38,5 +38,5 @@ match /Läsperiod \d/, ['15:00-24:00', '11:00-12:00'], days: :weekends, blacklis
 match /Tentamensperiod \d/, ['08:00-24:00'], days: [:mon, :tue, :wed]
 
 # Mellan 11-12 på alla dagar får man boka. Whitelistningen har en custom titel
-match /Tentamensperiod \d/, ['11:00-12:00'], days: :all, title: 'Ej luncher under tentaperioder'
+match /Tentamensperiod \d/, ['11:00-12:00'], days: :all, title: 'Luncher under tentaperioder'
 ```
