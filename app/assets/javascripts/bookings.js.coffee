@@ -19,3 +19,5 @@ $ ->
 					minDate: '-1970/01/01'
 				$('#booking_begin_date').datetimepicker defaults
 				$('#booking_end_date').datetimepicker defaults
+	$('#fest').on 'change', (e) ->
+		$('.party-info-container').toggle this.checked

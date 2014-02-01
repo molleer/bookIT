@@ -45,14 +45,21 @@
       <%= f.collection_select :group, [:Privatperson, :digIT], :to_s, :to_s %>
     </li>
   </ul>
-  <p class="field">
-    <%= f.label :festansvarig %>
-    <%= f.text_field :festansvarig %>
+  <p class="party-container">
+    <label for="fest"><input type="checkbox" id="fest" name="fest"> Jag vill även festanmäla</label>
   </p>
-  <p class="field">
-    <%= f.label :festnumber %>
-    <%= f.text_field :festnumber %>
-  </p>
+  <div class="party-info-container" style="display:none">
+    <ul>
+      <li>
+        <%= f.label :festansvarig %>
+        <%= f.text_field :festansvarig %>
+      </li>
+      <li>
+        <%= f.label :festnumber %>
+        <%= f.text_field :festnumber %>
+      </li>
+    </ul>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

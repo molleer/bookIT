@@ -1,13 +1,23 @@
 class Booking < ActiveRecord::Base
   belongs_to :room
 
-  validates :title, :cid, :group, :description, :festansvarig, :festnumber, :room, :begin_date, :end_date, presence: true
+  validates :title, :cid, :group, :description, :room, :begin_date, :end_date, presence: true
   validate :time_whitelisted
   validate :time_not_too_long
+
+  before_validation :check_fest
 
   
 
 private
+
+  def check_fest
+    unless self.fest
+      self.festnumber = nil
+      self.festansvarig = nil
+    end
+  end
+
   def time_whitelisted
   	WhitelistItem.all.each do |item|
   		range = item.rule_range
