@@ -14,6 +14,7 @@ class WhitelistItem < ActiveRecord::Base
 	end
 
 	def days=(*array)
+		array = array[0] if array.length == 1 && array[0].is_a?(Array)
 		wkdays = [:mon, :tue, :wed, :thu, :fri, :sun, :sat]
 		if array.include? :all
 			result = [1, 1, 1, 1, 1, 1, 1]
