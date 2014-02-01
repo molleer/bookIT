@@ -10,7 +10,7 @@ class WhitelistItem < ActiveRecord::Base
 	end
 
 	def to_s
-		"\"#{title.gsub('[AUTO]', '')}\" (#{rule_start.strftime(NAT_DATE)} - #{rule_end.strftime(NAT_DATE)}, on: #{days_in_week.to_s(2)}): #{begin_time.strftime(NAT_TIME)}-#{end_time.strftime(NAT_TIME)}"
+		"\"#{title}\" (#{rule_start.strftime(NAT_DATE)} - #{rule_end.strftime(NAT_DATE)}, on: #{days_in_week.to_s(2)}): #{begin_time.strftime(NAT_TIME)}-#{end_time.strftime(NAT_TIME)}"
 	end
 
 	def days=(*array)
@@ -40,6 +40,8 @@ class WhitelistItem < ActiveRecord::Base
 		array = array.values if array.is_a? Hash
 		self.days_in_week = array.join.to_i(2) if array.present?
 	end
+
+private
 
 	NAT_DATE = '%-d/%-m'
 	NAT_TIME = '%R'
