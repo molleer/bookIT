@@ -5,18 +5,20 @@ class Booking < ActiveRecord::Base
   validate :time_whitelisted
   validate :time_not_too_long
 
-  before_validation :check_fest
 
+  def fest
+    !(self.festansvarig.nil? && self.festnumber.nil?)
+  end
+
+  def fest=(fest)
+    unless fest
+      self.festansvarig = nil
+      self.festnumber = nil
+    end
+  end
   
 
 private
-
-  def check_fest
-    unless self.fest
-      self.festnumber = nil
-      self.festansvarig = nil
-    end
-  end
 
   def time_whitelisted
   	WhitelistItem.all.each do |item|

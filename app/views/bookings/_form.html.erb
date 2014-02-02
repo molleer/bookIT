@@ -46,7 +46,9 @@
     </li>
   </ul>
   <p class="party-container">
-    <label for="fest"><input type="checkbox" id="fest" name="fest"> Jag vill även festanmäla</label>
+    <%= f.label :fest do %>
+      <%= f.check_box :fest %> Jag vill även festanmäla
+    <% end %>
   </p>
   <div class="party-info-container" style="display:none">
     <ul>
