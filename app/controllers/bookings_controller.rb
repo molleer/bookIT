@@ -14,6 +14,10 @@ class BookingsController < ApplicationController
 
   # GET /bookings/new
   def new
+    @user = set_user
+    if @user.nil?
+      render :file => "public/401", :status => :unauthorized
+    end
     @booking = Booking.new
   end
 
@@ -70,5 +74,12 @@ class BookingsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def booking_params
       params.require(:booking).permit(:title, :cid, :group, :begin_date, :end_date, :description, :fest, :festansvarig, :festnumber, :room_id, :title)
+    end
+
+    def set_user
+      unless cookies[:chalmersItAuth]
+        return nil
+      end
+      @user ||= ItAuth.new cookies[:chalmersItAuth]
     end
 end

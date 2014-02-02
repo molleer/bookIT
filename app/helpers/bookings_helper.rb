@@ -1,3 +1,5 @@
+require 'it_auth'
+
 module BookingsHelper
 	def datetime_local_helper(f, name, date = DateTime.now)
 		date = date.change min: 0

@@ -5,7 +5,7 @@ class ItAuth
 	@@base_url = "https://chalmers.it/auth/userInfo.php"
 
 	%w[cid dn firstname lastname mail nick uidnumber groups].each do |name|
-		define_method name do 
+		define_method name do
 			@data[name]
 		end
 	end
@@ -14,6 +14,6 @@ class ItAuth
 		uri = URI.parse(@@base_url)
 		uri.query = "token=#{token}"
 		json = Net::HTTP.get(uri)
-		@data = JSON.parse(json)
+		@data = (json[0] == "{" && JSON.parse(json)) || nil
 	end
 end

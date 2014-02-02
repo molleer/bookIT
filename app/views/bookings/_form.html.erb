@@ -16,8 +16,9 @@
     <%= f.text_field :title, placeholder: "Ex. spelkväll med drawIT" %>
   </p>
   <p class="field">
-    <%= f.label :cid %>
-    <%= f.text_field :cid %>
+    <%= f.label :cid do %>
+      cid: <%= @user.cid %>
+    <% end %>
   </p>
   <%= f.label :room_id %>
   <ul class="location-container horizontal-list">
@@ -42,7 +43,7 @@
   <ul class="phone-and-groups-container">
     <li>
       <%= f.label :group, "Boka som" %>
-      <%= f.collection_select :group, [:Privatperson, :digIT], :to_s, :to_s %>
+      <%= f.collection_select :group, ["#{@user.firstname} #{@user.lastname} (Privatperson)"] + @user.groups, :parameterize, :to_s %>
     </li>
   </ul>
   <p class="party-container">
