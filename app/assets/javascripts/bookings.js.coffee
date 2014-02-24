@@ -19,5 +19,14 @@ $ ->
 					minDate: '-1970/01/01'
 				$('#booking_begin_date').datetimepicker defaults
 				$('#booking_end_date').datetimepicker defaults
+	$('.location-container').on 'change', 'input[type="radio"]', ->
+		fest = $(@).data 'fest'
+		$('.party-container').toggle fest
+
+		# Disable booking_fest if not festrum
+		$('#booking_fest').attr('checked', false) unless fest
+
+		$('#booking_fest').trigger('change')
+		# $('.party-info-container').toggle fest
 	$('#booking_fest').on 'change', (e) ->
-		$('.party-info-container').toggle this.checked
+		$('.party-info-container').toggle @checked
