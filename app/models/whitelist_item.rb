@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: whitelist_items
+#
+#  id           :integer          not null, primary key
+#  title        :string(255)
+#  begin_time   :time
+#  end_time     :time
+#  created_at   :datetime
+#  updated_at   :datetime
+#  days_in_week :integer
+#  rule_start   :date
+#  rule_end     :date
+#  blacklist    :boolean
+#
+
 class WhitelistItem < ActiveRecord::Base
 
 	validates :title, :begin_time, :end_time, :rule_start, :rule_end, :days_in_week, presence: true

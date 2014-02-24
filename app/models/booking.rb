@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: bookings
+#
+#  id           :integer          not null, primary key
+#  cid          :string(255)
+#  begin_date   :datetime
+#  end_date     :datetime
+#  group        :string(255)
+#  description  :text
+#  festansvarig :string(255)
+#  festnumber   :string(255)
+#  room_id      :integer
+#  created_at   :datetime
+#  updated_at   :datetime
+#  title        :string(255)
+#
+
 class Booking < ActiveRecord::Base
   belongs_to :room
 

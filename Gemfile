@@ -36,6 +36,7 @@ group :development, :test do
 	gem "rspec-rails"
 	# gem "rack-mini-profiler"
 	gem "better_errors"
+	gem "annotate"
 	gem "binding_of_caller"
 end
 
