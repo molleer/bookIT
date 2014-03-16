@@ -1,10 +1,11 @@
 class BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :edit, :update, :destroy]
+  before_action :set_user
 
   # GET /bookings
   # GET /bookings.json
   def index
-    @bookings = Booking.all
+    @bookings = Booking.future
   end
 
   # GET /bookings/1
@@ -14,11 +15,10 @@ class BookingsController < ApplicationController
 
   # GET /bookings/new
   def new
-    @user = set_user
-    if @user.nil?
+    if @user.nil? && Rails.env == :production
       render :file => "public/401", :status => :unauthorized
     end
-    @booking = Booking.new
+    @booking = Booking.new({ cid: @user.cid })
   end
 
   # GET /bookings/1/edit
@@ -77,9 +77,10 @@ class BookingsController < ApplicationController
     end
 
     def set_user
-      unless cookies[:chalmersItAuth]
-        return nil
+      if cookies[:chalmersItAuth]
+        @user = ItAuth.new cookies[:chalmersItAuth]
+      else
+        @user = ItAuth.new(nil)
       end
-      @user ||= ItAuth.new cookies[:chalmersItAuth]
     end
 end

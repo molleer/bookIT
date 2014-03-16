@@ -4,7 +4,7 @@ class WhitelistItemsController < ApplicationController
   # GET /whitelist_items
   # GET /whitelist_items.json
   def index
-    @whitelist_items = WhitelistItem.all
+    @whitelist_items = WhitelistItem.active
   end
 
   # GET /whitelist_items/1
