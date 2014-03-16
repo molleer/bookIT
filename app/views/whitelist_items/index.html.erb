@@ -20,7 +20,7 @@
         <td><%= whitelist_item.title %></td>
         <td><%= whitelist_item.rule_start %> - <br> <%= whitelist_item.rule_end %></td>
         <td><%= whitelist_item.begin_time.strftime '%R' %> - <br> <%= whitelist_item.end_time.strftime '%R' %></td>
-        <td><%= whitelist_item.days_in_week.to_s(2) %></td>
+        <td><%= whitelist_item.days_human_format %></td>
         <td><%= whitelist_item.blacklist %></td>
         <td><%= link_to 'Show', whitelist_item %></td>
         <td><%= link_to 'Edit', edit_whitelist_item_path(whitelist_item) %></td>

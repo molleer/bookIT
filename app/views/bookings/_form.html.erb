@@ -16,9 +16,8 @@
     <%= f.text_field :title, placeholder: "Ex. spelkväll med drawIT" %>
   </p>
   <p class="field">
-    <%= f.label :cid do %>
-      cid: <%= @user.cid %>
-    <% end %>
+    <%= f.label :cid %>
+    <%= @booking.cid %>
   </p>
   <%= f.label :room_id %>
   <ul class="location-container horizontal-list">
@@ -74,7 +73,7 @@
   <div>
     <h3>Bokning endast möjligt inom följade perioder</h3>
     <ul>
-    <% WhitelistItem.find_each do |w| %>
+    <% WhitelistItem.active.find_each do |w| %>
       <li><%= w %></li>
     <% end %>
     </ul>

@@ -2,8 +2,8 @@
 <html>
 <head>
   <title>BookIT</title>
-  <%= stylesheet_link_tag "https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,400italic" %>
-  <%= stylesheet_link_tag "https://chalmers.it/core/wp-content/themes/chalmersit/assets/css/style.css" %>
+  <%= stylesheet_link_tag "//fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,400italic" %>
+  <%= stylesheet_link_tag "//chalmers.it/core/wp-content/themes/chalmersit/assets/css/style.css" %>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
@@ -15,6 +15,6 @@
  	</div>
  </article>
 
-<%= debug params if Rails.env != 'production' %>
+<%= debug params if Rails.env != :production %>
 </body>
 </html>
