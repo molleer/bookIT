@@ -15,12 +15,13 @@
 #
 
 class WhitelistItem < ActiveRecord::Base
+	scope :active, -> { where('rule_end >= ?', Date.today) }
 
 	validates :title, :begin_time, :end_time, :rule_start, :rule_end, :days_in_week, presence: true
 
 	# declares a method for each day like 'saturday?', returns true if item is defined on this weekday
 	%w(mon tues wednes thurs fri satur sun).each_with_index do |day, i|
-		define_method "#{day}day?" do 
+		define_method "#{day}day?" do
 			! self.days_in_week.nil? && self.days_in_week & (1 << 6 - i) > 0
 		end
 	end
@@ -48,6 +49,10 @@ class WhitelistItem < ActiveRecord::Base
 		self.day_array = result
 	end
 
+	def range
+		begin_time..end_time
+	end
+
 	def day_array
 		(self.days_in_week || 0).to_s(2).rjust(7, '0').split("").map(&:to_i)
 	end
@@ -55,6 +60,15 @@ class WhitelistItem < ActiveRecord::Base
 	def day_array=(array)
 		array = array.values if array.is_a? Hash
 		self.days_in_week = array.join.to_i(2) if array.present?
+	end
+
+	def days_human_format
+		res = ''
+		days = day_array
+		%w(M T W T F S S).each_with_index do |s, i|
+			res += day_array[i] == 1 && s || '-'
+		end
+		res
 	end
 
 private

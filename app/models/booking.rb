@@ -17,15 +17,20 @@
 #
 
 class Booking < ActiveRecord::Base
+  scope :future, -> { where('end_date >= ?', DateTime.now) }
   belongs_to :room
 
   validates :title, :cid, :group, :description, :room, :begin_date, :end_date, presence: true
-  validate :time_whitelisted
-  validate :time_not_too_long
+  validate :must_be_whitelisted
+  validate :must_not_exceed_max_duration
+  validate :must_not_collide
+
+  validates_datetime :begin_date, after: -> { Time.zone.now }, before: :end_date
+  validates_datetime :end_date, after: -> { Time.zone.now }
 
 
   def fest
-    !(self.festansvarig.nil? && self.festnumber.nil?)
+    !(festansvarig.nil? && festnumber.nil?)
   end
 
   def fest=(fest)
@@ -34,31 +39,42 @@ class Booking < ActiveRecord::Base
       self.festnumber = nil
     end
   end
-  
+
 
 private
 
-  def time_whitelisted
-  	WhitelistItem.all.each do |item|
-  		range = item.rule_range
-
-  		# if range in whitelist
-      unless range.cover?(self.begin_date)
-	     errors.add :begin_date, "ligger inte inom whitelistad period"
+  def must_not_collide
+    Booking.future.each do |b|
+      unless b == self
+        # Algorithm source: http://makandracards.com/makandra/984-test-if-two-date-ranges-overlap-in-ruby-or-rails
+        if (begin_date - b.end_date) * (b.begin_date - end_date) >= 0
+          errors.add(:begin_date, 'Din bokning kolliderar med annan bokning.')
+          return
+        end
       end
-
-      unless range.cover?(self.end_date)
-	     errors.add :end_date, "ligger inte inom whitelistad period"
-      end
-
-      puts range
     end
   end
 
-  def time_not_too_long
-    unless self.begin_date.nil? || self.end_date.nil?
-      days = (self.end_date - self.begin_date).to_i / 1.day
-      errors[:base] << "Bokningen får ej vara längre än en vecka, (är #{days} dagar)" if days > 7
+  def must_be_whitelisted
+    whitelisted = false
+  	WhitelistItem.active.each do |item|
+  		range = item.range
+
+      if range.cover?(begin_date) and range.cover?(end_date)
+        whitelisted = true
+        break
+      end
+    end
+    unless whitelisted
+     errors.add :begin_date, "ligger inte inom whitelistad period"
+     errors.add :end_date, "ligger inte inom whitelistad period"
+    end
+  end
+
+  def must_not_exceed_max_duration
+    unless begin_date.nil? || end_date.nil?
+      days = (end_date - begin_date).to_i / 1.day
+      errors.add(:end_date, "Bokningen får ej vara längre än en vecka, (är #{days} dagar)") if days > 7
     end
   end
 end
