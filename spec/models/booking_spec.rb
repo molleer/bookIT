@@ -1,36 +1,45 @@
-# == Schema Information
-#
-# Table name: bookings
-#
-#  id           :integer          not null, primary key
-#  cid          :string(255)
-#  begin_date   :datetime
-#  end_date     :datetime
-#  group        :string(255)
-#  description  :text
-#  festansvarig :string(255)
-#  festnumber   :string(255)
-#  room_id      :integer
-#  created_at   :datetime
-#  updated_at   :datetime
-#  title        :string(255)
-#
-
 require 'spec_helper'
 
 describe Booking do
-	it "should not verify" do
-		WhitelistItem.create(title: "November 2013", 
-							begin_date: DateTime.new(2013,11,1), 
-							end_date: DateTime.new(2013, 12,1))
-		build(:booking, begin_date: DateTime.new(2013, 10, 10), 
-						end_date: DateTime.new(2013, 10, 13)).should_not be_valid
+	it "should have valid factories" do
+		build(:booking).should be_valid
+		build(:party_booking).should be_valid
 	end
-	it "should verify" do
-		WhitelistItem.create(title: "November 2013", 
-							begin_date: DateTime.new(2013,11,1), 
-							end_date: DateTime.new(2013, 12,1))
-		build(:booking, begin_date: DateTime.new(2013, 11, 2), 
-						end_date: DateTime.new(2013, 11, 3)).should be_valid
+
+	it "should only validate bookings in the future" do
+		build(:booking, 
+			begin_date: DateTime.new(2014,1,1,17,0), 
+			end_date: DateTime.new(2014,1,1,21,0)).should_not be_valid
+		build(:booking, 
+			begin_date: DateTime.now.tomorrow.change(hour: 17, minute: 0), 
+			end_date: DateTime.now.tomorrow.change(hour: 21, minute: 0)).should be_valid
+	end
+
+	it "should have end date after begin date" do
+		build(:booking, 
+			begin_date: DateTime.now.tomorrow.change(hour: 21, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 17, minute: 0)).should_not be_valid
+	end
+
+	it "should not exceed one week" do
+		build(:booking, 
+			begin_date: DateTime.now.tomorrow.change(hour: 17, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 21, minute: 0) + 6.days).should be_valid
+		build(:booking, 
+			begin_date: DateTime.now.tomorrow.change(hour: 17, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 21, minute: 0) + 8.days).should_not be_valid
+	end
+
+	it "should not collide with another booking" do
+		create(:booking).should be_valid
+		build(:booking).should_not be_valid
+	end
+
+	it "should not allow booking as not group" do
+		build(:booking, room: create(:hubben)).should_not be_valid
+	end
+
+	it "should now allow party in non-party room" do
+		build(:party_booking, room: create(:grupprummet)).should_not be_valid
 	end
 end

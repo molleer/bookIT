@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140121212325) do
+ActiveRecord::Schema.define(version: 20140415020341) do
 
   create_table "bookings", force: true do |t|
     t.string   "cid"
@@ -19,21 +19,24 @@ ActiveRecord::Schema.define(version: 20140121212325) do
     t.datetime "end_date"
     t.string   "group"
     t.text     "description"
-    t.string   "festansvarig"
-    t.string   "festnumber"
+    t.string   "party_responsible"
+    t.string   "party_responsible_phone"
     t.integer  "room_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "title"
+    t.boolean  "party"
+    t.string   "phone"
   end
 
   add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
 
   create_table "rooms", force: true do |t|
     t.string   "name"
-    t.boolean  "festrum"
+    t.boolean  "allow_party"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "only_group"
   end
 
   create_table "whitelist_items", force: true do |t|

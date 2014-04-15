@@ -2,10 +2,10 @@ require 'it_auth'
 
 module BookingsHelper
 	def datetime_local_helper(f, name, date = DateTime.now)
-		date = date.change min: 0
-    	f.datetime_local_field name, 
-    		value: datetime_local_dateformat(date), 
-    		step: 60*60,
-    		class: 'booking-dates'
+		date = f.object[name] || date.change(min: 0)
+  	f.datetime_local_field name,
+  		value: datetime_local_dateformat(date),
+  		step: 1.hour,
+  		class: 'booking-dates'
 	end
 end

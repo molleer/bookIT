@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.1'
+gem 'rails', '4.0.4'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -25,6 +25,7 @@ gem 'jbuilder', '~> 1.2'
 # Dependencies for bookIT
 gem 'nokogiri'
 gem 'validates_timeliness', '~> 3.0'
+gem 'ri_cal', '~> 0.8.5'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -41,7 +42,8 @@ end
 
 group :test do
 	gem "factory_girl_rails"
-	gem "guard-rspec"
+	gem "capybara"
+	gem 'guard-rspec', require: false
 	gem 'rb-fsevent'
 end
 

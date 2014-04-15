@@ -142,7 +142,7 @@ sv:
         strip_insignificant_zeros: false
         unit: kr
     format:
-      delimiter:  
+      delimiter:
       precision: 2
       separator: ! ','
       significant: false
@@ -209,4 +209,9 @@ sv:
         festnumber: Telefonnummer till festansvarig
         room_id: Lokal
     errors:
+      models:
+        booking:
+          attributes:
+            begin_date:
+              before: 'är efter slutdatum'
       <<: *errors

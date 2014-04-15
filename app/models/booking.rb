@@ -2,46 +2,61 @@
 #
 # Table name: bookings
 #
-#  id           :integer          not null, primary key
-#  cid          :string(255)
-#  begin_date   :datetime
-#  end_date     :datetime
-#  group        :string(255)
-#  description  :text
-#  festansvarig :string(255)
-#  festnumber   :string(255)
-#  room_id      :integer
-#  created_at   :datetime
-#  updated_at   :datetime
-#  title        :string(255)
+#  id                      :integer          not null, primary key
+#  cid                     :string(255)
+#  begin_date              :datetime
+#  end_date                :datetime
+#  group                   :string(255)
+#  description             :text
+#  party_responsible       :string(255)
+#  party_responsible_phone :string(255)
+#  room_id                 :integer
+#  created_at              :datetime
+#  updated_at              :datetime
+#  title                   :string(255)
+#  party                   :boolean
+#  phone                   :string(255)
 #
 
 class Booking < ActiveRecord::Base
   scope :future, -> { where('end_date >= ?', DateTime.now) }
+  scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
+  
   belongs_to :room
 
-  validates :title, :cid, :group, :description, :room, :begin_date, :end_date, presence: true
+  validates :title, :cid, :description, :room, :begin_date, :end_date, :phone, presence: true
+  validates_inclusion_of :party, :in => [true, false]
   validate :must_be_whitelisted
   validate :must_not_exceed_max_duration
   validate :must_not_collide
+  validate :must_have_responsible_if_party
+  validate :must_be_party_room_if_party
+  validate :must_be_group_in_room
 
-  validates_datetime :begin_date, after: -> { Time.zone.now }, before: :end_date
-  validates_datetime :end_date, after: -> { Time.zone.now }
-
-
-  def fest
-    !(festansvarig.nil? && festnumber.nil?)
-  end
-
-  def fest=(fest)
-    unless fest
-      self.festansvarig = nil
-      self.festnumber = nil
-    end
-  end
+  validates_datetime :begin_date, after: -> { DateTime.now.beginning_of_day }
+  validates_datetime :end_date, after: :begin_date
 
 
 private
+
+  def must_have_responsible_if_party
+    if party
+      errors.add(:party_responsible, 'Bokning måste ha festansvarig') if party_responsible.empty?
+      errors.add(:party_responsible_phone, 'Festansvarigs telefonnummer måste anges') if party_responsible_phone.empty?
+    end
+  end
+
+  def must_be_party_room_if_party
+    if party
+      errors.add(:room, 'Festbokning ej tillåten i detta rum') unless room.allow_party
+    end
+  end
+
+  def must_be_group_in_room
+    if group.nil? || group.empty?
+      errors.add(:room, 'Du kan ej boka detta rum som privatperson') if room.only_group
+    end
+  end
 
   def must_not_collide
     Booking.future.each do |b|
@@ -66,8 +81,7 @@ private
       end
     end
     unless whitelisted
-     errors.add :begin_date, "ligger inte inom whitelistad period"
-     errors.add :end_date, "ligger inte inom whitelistad period"
+     #errors.add :begin_date, "ligger inte inom whitelistad period"
     end
   end
 
