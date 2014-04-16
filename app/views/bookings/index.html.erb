@@ -1,33 +1,13 @@
 <h1>Listar bokningar</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Cid</th>
-      <th>Start</th>
-      <th>End</th>
-      <th>Group</th>
-      <th>Room</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @bookings.each do |booking| %>
-      <tr>
-        <td><%= booking.cid %></td>
-        <td><%= booking.start %></td>
-        <td><%= booking.end %></td>
-        <td><%= booking.group %></td>
-        <td><%= booking.room %></td>
-        <td><%= link_to 'Visa', booking %></td>
-        <td><%= link_to 'Redigera', edit_booking_path(booking) %></td>
-        <td><%= link_to 'Radera', booking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<ul>
+  <% @bookings.each do |booking| %>
+    <li>
+      <strong><%= link_to booking.title, booking %></strong> by <%= booked_by(booking) %> (<%= booking.room %>) <br>
+      <%= booking.begin_date.to_s(:short) %> - <%= booking.end_date.to_s(:short) %> <br>
+      <%= link_to 'Redigera', edit_booking_path(booking) %> <%= link_to 'Radera', booking, method: :delete, data: { confirm: 'Are you sure?' } %>
+    </li>
+  <% end %>
+</ul>
 
 <br>
 

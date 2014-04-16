@@ -18,13 +18,15 @@
   <p class="field">
     <%= f.label :cid %>
     <%= @booking.cid %>
+    <%= f.label :phone %>
+    <%= f.text_field :phone %>
   </p>
   <%= f.label :room_id %>
   <ul class="location-container horizontal-list">
     <% Room.find_each do |room| %>
       <li>
         <label for="booking_room_id_<%= room.id %>">
-          <input <%= 'checked=checked' if room.id == 1 %> id="booking_room_id_<%= room.id %>" data-fest="<%= room.festrum %>" name="booking[room_id]" type="radio" value="<%= room.id %>">
+          <input <%= 'checked=checked' if room.id == 1 %> id="booking_room_id_<%= room.id %>" data-fest="<%= room.allow_party %>" name="booking[room_id]" type="radio" value="<%= room.id %>">
           <%= room.name %>
         </label>
       </li>
@@ -47,23 +49,23 @@
   <ul class="phone-and-groups-container">
     <li>
       <%= f.label :group, "Boka som" %>
-      <%= f.collection_select :group, ["#{@user.firstname} #{@user.lastname} (Privatperson)"] + @user.groups, :parameterize, :to_s %>
+      <%= f.select :group, options_from_collection_for_select(@user.groups, :to_s, :to_s), prompt: "Privatperson" %>
     </li>
   </ul>
   <p class="party-container">
-    <%= f.label :fest do %>
-      <%= f.check_box :fest %> Jag vill även festanmäla
+    <%= f.label :party do %>
+      <%= f.check_box :party %> Jag vill även festanmäla
     <% end %>
   </p>
   <div class="party-info-container" style="display:none">
     <ul>
       <li>
-        <%= f.label :festansvarig %>
-        <%= f.text_field :festansvarig %>
+        <%= f.label :party_responsible %>
+        <%= f.text_field :party_responsible %>
       </li>
       <li>
-        <%= f.label :festnumber %>
-        <%= f.text_field :festnumber %>
+        <%= f.label :party_responsible_phone %>
+        <%= f.text_field :party_responsible_phone %>
       </li>
     </ul>
   </div>

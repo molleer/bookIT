@@ -1,6 +1,6 @@
 class BookingsController < ApplicationController
-  before_action :set_booking, only: [:show, :edit, :update, :destroy]
-  before_action :set_user, only: [:edit, :update, :destroy]
+  # before_action :set_booking, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /bookings
   # GET /bookings.json
@@ -15,10 +15,7 @@ class BookingsController < ApplicationController
 
   # GET /bookings/new
   def new
-    if @user.nil? && Rails.env == :production
-      render :file => "public/401", :status => :unauthorized
-    end
-    @booking = Booking.new({ cid: @user.cid })
+    @booking = Booking.new(cid: @user.cid)
   end
 
   # GET /bookings/1/edit
@@ -28,7 +25,7 @@ class BookingsController < ApplicationController
   # POST /bookings
   # POST /bookings.json
   def create
-    @booking = Booking.new(booking_params)
+    @booking = Booking.new(booking_params.merge(cid: @user.cid))
 
     respond_to do |format|
       if @booking.save
@@ -45,7 +42,7 @@ class BookingsController < ApplicationController
   # PATCH/PUT /bookings/1.json
   def update
     respond_to do |format|
-      if @booking.update(booking_params)
+      if @booking.update(booking_params.merge(cid: @user.cid))
         format.html { redirect_to @booking, notice: 'Booking was successfully updated.' }
         format.json { head :no_content }
       else
@@ -73,14 +70,11 @@ class BookingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def booking_params
-      params.require(:booking).permit(:title, :cid, :group, :begin_date, :end_date, :description, :party, :party_responsible, :party_responsible_phone, :phone, :room_id, :title)
+      params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :party, :party_responsible, :party_responsible_phone, :phone, :room_id, :title)
     end
 
-    def set_user
-      if cookies[:chalmersItAuth]
-        @user = ItAuth.new cookies[:chalmersItAuth]
-      else
-        @user = ItAuth.new(nil)
-      end
+    def authorize_user
+      @user ||= ItAuth.new cookies[:chalmersItAuth]
+      render file: "public/401", status: :unauthorized if @user.nil? && Rails.env == :production
     end
 end

@@ -24,9 +24,9 @@ $ ->
 		$('.party-container').toggle fest
 
 		# Disable booking_fest if not festrum
-		$('#booking_fest').attr('checked', false) unless fest
+		$('#booking_party').attr('checked', false) unless fest
 
-		$('#booking_fest').trigger('change')
+		$('#booking_party').trigger('change')
 		# $('.party-info-container').toggle fest
-	$('#booking_fest').on 'change', (e) ->
+	$('#booking_party').on 'change', (e) ->
 		$('.party-info-container').toggle @checked

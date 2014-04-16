@@ -33,4 +33,13 @@ FactoryGirl.define do
 			only_group false
 		end
 	end
+
+	factory :whitelist_item do
+		title 'Lov'
+		begin_time '8:00'
+		end_time '23:59'
+		days_in_week 0b1111111
+		rule_start DateTime.now.beginning_of_year
+		rule_end DateTime.now.end_of_year
+	end
 end

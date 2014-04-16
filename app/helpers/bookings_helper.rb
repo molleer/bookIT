@@ -8,4 +8,8 @@ module BookingsHelper
   		step: 1.hour,
   		class: 'booking-dates'
 	end
+
+	def booked_by(booking)
+		(booking.group.empty? && booking.cid) || booking.group
+	end
 end

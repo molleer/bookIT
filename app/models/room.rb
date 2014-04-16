@@ -16,4 +16,8 @@ class Room < ActiveRecord::Base
 	validates :name, presence: true
 	validates_inclusion_of :allow_party, :in => [true, false]
 	validates_inclusion_of :only_group, :in => [true, false]
+
+	def to_s
+		name
+	end
 end

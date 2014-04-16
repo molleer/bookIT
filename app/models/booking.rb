@@ -21,12 +21,12 @@
 class Booking < ActiveRecord::Base
   scope :future, -> { where('end_date >= ?', DateTime.now) }
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
-  
+
   belongs_to :room
 
   validates :title, :cid, :description, :room, :begin_date, :end_date, :phone, presence: true
   validates_inclusion_of :party, :in => [true, false]
-  validate :must_be_whitelisted
+  # validate :must_be_whitelisted
   validate :must_not_exceed_max_duration
   validate :must_not_collide
   validate :must_have_responsible_if_party
@@ -72,16 +72,16 @@ private
 
   def must_be_whitelisted
     whitelisted = false
+    puts 'range:', begin_date..end_date
   	WhitelistItem.active.each do |item|
-  		range = item.range
-
-      if range.cover?(begin_date) and range.cover?(end_date)
+  		range = item.range(begin_date)
+      if range.cover?(begin_date) && range.cover?(end_date)
         whitelisted = true
         break
       end
     end
     unless whitelisted
-     #errors.add :begin_date, "ligger inte inom whitelistad period"
+     errors.add :begin_date, "ligger inte inom whitelistad period"
     end
   end
 
