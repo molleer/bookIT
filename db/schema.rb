@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20140415020341) do
     t.string   "phone"
   end
 
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "rooms", force: true do |t|
     t.string   "name"

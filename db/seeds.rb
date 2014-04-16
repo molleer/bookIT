@@ -7,4 +7,4 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 
-Room.create([ { name: "Hubben", festrum: true }, { name: "Grupprummet", festrum: false }])
+Room.create([ { name: "Hubben", allow_party: true, only_group: true }, { name: "Grupprummet", allow_party: false, only_group: false }])
