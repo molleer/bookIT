@@ -8,6 +8,6 @@ module BookingsHelper
 	end
 
 	def booked_by(booking)
-		(booking.group.empty? && booking.cid) || booking.group
+		(booking.group.empty? && booking.user) || booking.group_sym.itize
 	end
 end

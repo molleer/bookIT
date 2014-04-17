@@ -203,11 +203,14 @@ sv:
         title: Titel
         begin_date: Startdatum
         end_date: Slutdatum
-        group: Kommitté/förening
+        group: Bokad av
+        phone: Telefonnummer
         description: Beskrivning
-        festansvarig: Festansvarig
-        festnumber: Telefonnummer till festansvarig
+        party_responsible: Festansvarig
+        party_responsible_phone: Telefonnummer till festansvarig
+        liquor_license: Serveringstillstånd
         room_id: Lokal
+        room: Lokal
     errors:
       models:
         booking:

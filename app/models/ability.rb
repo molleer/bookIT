@@ -7,7 +7,7 @@ class Ability
     if user.admin?
       can :manage, :all
     else user.present? # not nil
-      can :manage, Booking, cid: user.cid # a user can manage bookings he/she created
+      can :manage, Booking, user_id: user.id # a user can manage bookings he/she created
       can :read, :all
     end
     # Define abilities for the passed in user here. For example:

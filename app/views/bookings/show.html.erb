@@ -1,44 +1,25 @@
-<p id="notice"><%= notice %></p>
+<h1><%= @booking.title %></h1>
+<h2><%= @booking.room %></h2>
+<strong>Bokad av:</strong> <%= link_to @booking.user, @booking.user.user_profile_path %>
+<% if @booking.group.present? %>
+<br><strong>Förening:</strong> <%= @booking.group_sym.itize if @booking.group.present? %>
+<% end %>
 
 <p>
-  <strong>Cid:</strong>
-  <%= @booking.cid %>
+  <%= @booking.booking_range %>
 </p>
 
 <p>
-  <strong>Start:</strong>
-  <%= @booking.begin_date %>
-</p>
-
-<p>
-  <strong>End:</strong>
-  <%= @booking.end_date %>
-</p>
-
-<p>
-  <strong>Group:</strong>
-  <%= @booking.group %>
-</p>
-
-<p>
-  <strong>Description:</strong>
   <%= @booking.description %>
 </p>
 
-<p>
-  <strong>Festansvarig:</strong>
-  <%= @booking.party_responsible %>
-</p>
-
-<p>
-  <strong>Festnumber:</strong>
+<% if @booking.party && current_user.admin? %>
+  <strong><%= Booking.human_attribute_name(:party_responsible) %>:</strong>
+  <%= @booking.party_responsible %><br>
+  <strong><%= Booking.human_attribute_name(:party_responsible_phone) %>:</strong>
   <%= @booking.party_responsible_phone %>
 </p>
+<% end %>
 
-<p>
-  <strong>Room:</strong>
-  <%= @booking.room %>
-</p>
-
-<%= link_to 'Edit', edit_booking_path(@booking) %> |
-<%= link_to 'Back', bookings_path %>
+<%= link_to 'Redigera', edit_booking_path(@booking), class: 'btn btn-boring' %>
+<%= link_to 'Tillbaka', bookings_path, class: 'btn btn-boring' %>

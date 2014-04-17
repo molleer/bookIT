@@ -9,10 +9,11 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
- <article role="article">
- 	<div class="article-content">
-		<%= yield %>
- 	</div>
- </article>
+  <%= render 'layouts/messages' %>
+  <article role="article">
+  	<div class="article-content">
+  	<%= yield %>
+  	</div>
+  </article>
 </body>
 </html>

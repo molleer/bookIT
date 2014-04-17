@@ -5,6 +5,15 @@ class ApplicationController < ActionController::Base
 
 
   def current_user
-    @user ||= User.find cookies[:chalmersItAuth]
+    if session[:cookie] == cookies[:chalmersItAuth] && session[:user].present?
+      @user ||= User.find(session[:user])
+    else
+      reset_session
+      @user = User.find_by_token cookies[:chalmersItAuth]
+      session[:cookie] = cookies[:chalmersItAuth]
+      session[:user] = @user.cid
+    end
+    @user
   end
+  helper_method :current_user
 end

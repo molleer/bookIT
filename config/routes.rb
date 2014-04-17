@@ -1,7 +1,7 @@
 BookIT::Application.routes.draw do
   resources :whitelist_items, :bookings, :rooms
 
-  get 'export/:room_id.ics' => 'export#show'
+  get '/export/:room_id.ics' => 'export#show'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

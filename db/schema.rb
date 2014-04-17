@@ -11,10 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140415020341) do
+ActiveRecord::Schema.define(version: 20140416160642) do
 
   create_table "bookings", force: true do |t|
-    t.string   "cid"
+    t.string   "user_id"
     t.datetime "begin_date"
     t.datetime "end_date"
     t.string   "group"
@@ -27,9 +27,10 @@ ActiveRecord::Schema.define(version: 20140415020341) do
     t.string   "title"
     t.boolean  "party"
     t.string   "phone"
+    t.boolean  "liquor_license"
   end
 
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
 
   create_table "rooms", force: true do |t|
     t.string   "name"
@@ -37,6 +38,17 @@ ActiveRecord::Schema.define(version: 20140415020341) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "only_group"
+  end
+
+  create_table "users", id: false, force: true do |t|
+    t.string   "cid"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "nick"
+    t.string   "mail"
+    t.string   "groups"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "whitelist_items", force: true do |t|

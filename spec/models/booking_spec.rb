@@ -1,9 +1,27 @@
+# == Schema Information
+#
+# Table name: bookings
+#
+#  id                      :integer          not null, primary key
+#  user_id                 :string(255)
+#  begin_date              :datetime
+#  end_date                :datetime
+#  group                   :string(255)
+#  description             :text
+#  party_responsible       :string(255)
+#  party_responsible_phone :string(255)
+#  room_id                 :integer
+#  created_at              :datetime
+#  updated_at              :datetime
+#  title                   :string(255)
+#  party                   :boolean
+#  phone                   :string(255)
+#  liquor_license          :boolean
+#
+
 require 'spec_helper'
 
 describe Booking do
-	before(:each) do
-		create(:whitelist_item)
-	end
 
 	it "should have valid factories" do
 		build(:booking).should be_valid
@@ -43,7 +61,17 @@ describe Booking do
 		build(:booking, room: create(:hubben)).should_not be_valid
 	end
 
-	it "should now allow party in non-party room" do
+	it "should only allow groups which user belong to" do
+		build(:booking, group: :nollkit).should_not be_valid
+		build(:booking, user: create(:nollkit_user), group: :nollkit).should be_valid
+	end
+
+	it "should have a valid phone number" do
+		build(:booking, phone: '636').should_not be_valid
+		build(:party_booking, party_responsible_phone: '636').should_not be_valid
+	end
+
+	it "should not allow party in non-party room" do
 		build(:party_booking, room: create(:grupprummet)).should_not be_valid
 	end
 end

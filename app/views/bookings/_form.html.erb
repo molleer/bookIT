@@ -1,7 +1,7 @@
 <%= form_for(@booking, html: {class: 'page-bokning'}) do |f| %>
   <% if @booking.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@booking.errors.count, "error") %> prohibited this booking from being saved:</h2>
+    <div id="error_explanation" class="message-warning">
+      <h3><%= @booking.errors.count %> fel hindrade denna bokning från att sparas:</h3>
 
       <ul>
       <% @booking.errors.full_messages.each do |msg| %>
@@ -16,17 +16,15 @@
     <%= f.text_field :title, placeholder: "Ex. spelkväll med drawIT" %>
   </p>
   <p class="field">
-    <%= f.label :cid %>
-    <%= @booking.cid %>
     <%= f.label :phone %>
-    <%= f.text_field :phone %>
+    <%= f.text_field :phone, data: { persist: true } %>
   </p>
   <%= f.label :room_id %>
   <ul class="location-container horizontal-list">
     <% Room.find_each do |room| %>
       <li>
         <label for="booking_room_id_<%= room.id %>">
-          <input <%= 'checked=checked' if room.id == 1 %> id="booking_room_id_<%= room.id %>" data-fest="<%= room.allow_party %>" name="booking[room_id]" type="radio" value="<%= room.id %>">
+          <%= f.radio_button :room_id, room.id, data: { fest: room.allow_party} %>
           <%= room.name %>
         </label>
       </li>
@@ -49,7 +47,7 @@
   <ul class="phone-and-groups-container">
     <li>
       <%= f.label :group, "Boka som" %>
-      <%= f.select :group, options_from_collection_for_select(@user.groups, :to_s, :to_s), prompt: "Privatperson" %>
+      <%= f.collection_select :group, @user.groups, :to_s, :itize, include_blank: @user.full_name %>
     </li>
   </ul>
   <p class="party-container">
@@ -61,23 +59,19 @@
     <ul>
       <li>
         <%= f.label :party_responsible %>
-        <%= f.text_field :party_responsible %>
+        <%= f.text_field :party_responsible, data: { persist: true } %>
       </li>
       <li>
         <%= f.label :party_responsible_phone %>
-        <%= f.text_field :party_responsible_phone %>
+        <%= f.text_field :party_responsible_phone, data: { persist: true } %>
       </li>
     </ul>
+    <%= f.label :liquor_license do %>
+      <%= f.check_box :liquor_license %> <%= Booking.human_attribute_name(:liquor_license) %>
+    <% end %>
   </div>
   <div class="actions">
     <%= f.submit %>
-  </div>
-  <div>
-    <h3>Bokning endast möjligt inom följade perioder</h3>
-    <ul>
-    <% WhitelistItem.active.find_each do |w| %>
-      <li><%= w %></li>
-    <% end %>
-    </ul>
+    <%= link_to "Tillbaka", bookings_path, class: 'btn btn-boring'%>
   </div>
 <% end %>

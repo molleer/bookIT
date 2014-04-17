@@ -1,11 +1,16 @@
 class BookingsController < ApplicationController
-  # before_action :set_booking, only: [:show, :edit, :update, :destroy]
-  load_and_authorize_resource
+  before_action :set_booking, only: [:show, :edit, :update, :destroy]
+  authorize_resource
 
   # GET /bookings
   # GET /bookings.json
   def index
-    @bookings = Booking.future
+    if params[:filter]
+      @bookings = Booking.future.by_group_or_user(params[:filter])
+    else
+      @bookings = Booking.future
+    end
+    @bookings = @bookings.order(:begin_date)
   end
 
   # GET /bookings/1
@@ -15,7 +20,7 @@ class BookingsController < ApplicationController
 
   # GET /bookings/new
   def new
-    @booking = Booking.new(cid: @user.cid)
+    @booking = current_user.bookings.build(room: Room.find_by(name: 'Hubben'))
   end
 
   # GET /bookings/1/edit
@@ -25,7 +30,7 @@ class BookingsController < ApplicationController
   # POST /bookings
   # POST /bookings.json
   def create
-    @booking = Booking.new(booking_params.merge(cid: @user.cid))
+    @booking = current_user.bookings.build(booking_params)
 
     respond_to do |format|
       if @booking.save
@@ -42,7 +47,7 @@ class BookingsController < ApplicationController
   # PATCH/PUT /bookings/1.json
   def update
     respond_to do |format|
-      if @booking.update(booking_params.merge(cid: @user.cid))
+      if @booking.update(booking_params)
         format.html { redirect_to @booking, notice: 'Booking was successfully updated.' }
         format.json { head :no_content }
       else
@@ -70,11 +75,6 @@ class BookingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def booking_params
-      params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :party, :party_responsible, :party_responsible_phone, :phone, :room_id, :title)
-    end
-
-    def authorize_user
-      @user ||= ItAuth.new cookies[:chalmersItAuth]
-      render file: "public/401", status: :unauthorized if @user.nil? && Rails.env == :production
+      params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :party, :party_responsible, :liquor_license, :party_responsible_phone, :phone, :room_id, :title)
     end
 end

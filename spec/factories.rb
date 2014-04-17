@@ -1,8 +1,19 @@
 FactoryGirl.define do
+	factory :user do
+		sequence(:cid) {|n| "smurf#{n}"}
+		nick 'Smurf'
+		first_name 'Test'
+		last_name 'Testsson'
+		sequence(:mail) { |n| "smurf#{n}@example.com" }
+
+		factory :nollkit_user do
+			groups [:nollkit]
+		end
+	end
 	factory :booking do
 		title 'kod&vin'
 		description 'digIT kodar hubbIT'
-		cid 'jolinds'
+		user
 		phone '0303030303'
 		room { create(:grupprummet) }
 		party false
@@ -13,11 +24,13 @@ FactoryGirl.define do
 			title 'party'
 			description 'digIT har fest!'
 			room { create(:hubben) }
-			group 'digIT'
+			group :nollkit
 			party true
+			user { create(:nollkit_user) }
 			phone '0020202020'
 			party_responsible 'Johan Lindskogen'
 			party_responsible_phone '0020202020'
+			liquor_license true
 		end
 	end
 
