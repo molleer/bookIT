@@ -16,10 +16,11 @@ $ ->
 		# $('.party-info-container').toggle fest
 	$('#booking_party').on 'change', (e) ->
 		$('.party-info-container').toggle @checked
-	for name, value of JSON.parse(localStorage.getItem 'bookITStorage')
-		$elem = $("\##{name}")
-		if $elem.val().length == 0
-			$elem.val(value)
+	if window.location.href.match /new/
+		for name, value of JSON.parse(localStorage.getItem 'bookITStorage')
+			$elem = $("\##{name}")
+			if $elem.val().length == 0
+				$elem.val(value)
 	$('form').on 'submit', (e) ->
 		return unless window.localStorage
 		store = {}

@@ -4,13 +4,15 @@ class AdminMailer < ActionMailer::Base
   VO_MAIL = 'vo@chalmers.it'
   PRIT_MAIL = 'prit@chalmers.it'
 
-  def party_report(booking)
-    @booking = booking
-    # mail to: VO_MAIL, subject: "Festanmälan #{@booking.booking_range}"
-  end
-
   def booking_report(booking)
     @booking = booking
-    # mail to: PRIT_MAIL, subject: "Bokning av #{@booking.room} #{@booking.booking_range}"
+    @url = booking_url(@booking, host: 'localhost:3000') # TODO: move to production.rb
+
+    recipients = [PRIT_MAIL, @booking.user.mail]
+
+    recipients << VO_MAIL if @booking.party
+    subject = "#{@booking.party ? 'Festanmälan' : 'Bokning'} av #{@booking.room}, #{@booking.booking_range}"
+
+    mail to: recipients, subject: subject, reply_to: @booking.user.mail
   end
 end

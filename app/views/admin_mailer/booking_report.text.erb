@@ -1,0 +1,16 @@
+<%= @booking.user.full_name %> har bokat <%= @booking.room %>.
+
+<%= @booking.title %>
+<%= @booking.description %>
+
+Mellan följande tider:
+<%= @booking.booking_range %>
+
+<% if @booking.party -%>
+Bokningen har festanmälts.
+<%- end -%>
+<%- if @booking.liquor_license -%>
+Serveringstillstånd har begärts.
+<% end %>
+
+Länk till bokningen: <%= @url %>

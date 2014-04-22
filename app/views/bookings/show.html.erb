@@ -20,6 +20,8 @@
   <%= @booking.party_responsible_phone %>
 </p>
 <% end %>
+Bokningen är <%= @booking.status_text %>.
+<br><br>
 
 <%= link_to 'Redigera', edit_booking_path(@booking), class: 'btn btn-boring' %>
 <%= link_to 'Tillbaka', bookings_path, class: 'btn btn-boring' %>

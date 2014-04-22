@@ -34,6 +34,9 @@ class BookingsController < ApplicationController
 
     respond_to do |format|
       if @booking.save
+
+        email_update # tell about the new booking
+
         format.html { redirect_to @booking, notice: 'Booking was successfully created.' }
         format.json { render action: 'show', status: :created, location: @booking }
       else
@@ -48,6 +51,9 @@ class BookingsController < ApplicationController
   def update
     respond_to do |format|
       if @booking.update(booking_params)
+
+        email_update # tell about the updated booking
+
         format.html { redirect_to @booking, notice: 'Booking was successfully updated.' }
         format.json { head :no_content }
       else
@@ -76,5 +82,10 @@ class BookingsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def booking_params
       params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :party, :party_responsible, :liquor_license, :party_responsible_phone, :phone, :room_id, :title)
+    end
+
+    def email_update
+      # Send mail to P.R.I.T. (and maybe vo)
+      AdminMailer.booking_report(@booking).deliver
     end
 end
