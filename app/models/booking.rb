@@ -17,6 +17,7 @@
 #  party                   :boolean
 #  phone                   :string(255)
 #  liquor_license          :boolean
+#  accepted                :boolean
 #
 
 class Booking < ActiveRecord::Base
