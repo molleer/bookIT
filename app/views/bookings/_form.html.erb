@@ -1,3 +1,6 @@
+<% Term.active.each_with_index do |term, i| %>
+  <%= render 'term', term: term, i: i %>
+<% end %>
 <%= form_for(@booking, html: {class: 'page-bokning'}) do |f| %>
   <% if @booking.errors.any? %>
     <div id="error_explanation" class="message-warning">
@@ -70,6 +73,14 @@
       <%= f.check_box :liquor_license %> <%= Booking.human_attribute_name(:liquor_license) %>
     <% end %>
   </div>
+  <div>
+    <% Term.active.each_with_index do |term, i| %>
+      <%= label 'term', 'accepted' do %>
+        <%= check_box 'term', 'accepted', required: true %> Jag har läst igenom och accepterar <%= link_to 'bokningsvillkoren', '#', data: { 'reveal-id' => "terms_#{i}"}%>
+      <% end %>
+    <% end %>
+  </div>
+  <br>
   <div class="actions">
     <%= f.submit %>
     <%= link_to "Tillbaka", bookings_path, class: 'btn btn-boring'%>

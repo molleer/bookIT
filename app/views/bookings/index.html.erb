@@ -24,3 +24,7 @@
     <%= link_to 'Dina bokningar', bookings_path(filter: current_user.cid), class: 'btn btn-boring' %>
   <% end %>
 <% end %>
+<br><br>
+<% if can? :manage, Term %>
+  <%= link_to 'Villkor', terms_path %>
+<% end %>

@@ -4,21 +4,6 @@
 
 
 $ ->
-	loaded = false
-	Modernizr.load
-		test: Modernizr.inputtypes["datetime-local"]
-		nope: ['/assets/jquery.datetimepicker.js', '/assets/jquery.datetimepicker.css']
-		callback: ->
-			if !loaded
-				loaded = true
-				defaults =
-					format: 'Y-m-d\\TH:i'
-					step: 30
-					dayOfWeekStart: 1
-					todayButton: true
-					minDate: '-1970/01/01'
-				$('#booking_begin_date').datetimepicker defaults
-				$('#booking_end_date').datetimepicker defaults
 	$('.party-info-container').show() if $('#booking_party').prop('checked')
 	$('.location-container').on 'change', 'input[type="radio"]', ->
 		fest = $(@).data 'fest'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140416160642) do
+ActiveRecord::Schema.define(version: 20140422193709) do
 
   create_table "bookings", force: true do |t|
     t.string   "user_id"
@@ -38,6 +38,14 @@ ActiveRecord::Schema.define(version: 20140416160642) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "only_group"
+  end
+
+  create_table "terms", force: true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.boolean  "active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", id: false, force: true do |t|

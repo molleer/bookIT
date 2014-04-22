@@ -1,5 +1,7 @@
 BookIT::Application.routes.draw do
+
   resources :whitelist_items, :bookings, :rooms
+  resources :terms, only: [:index, :edit, :update]
 
   get '/export/:room_id.ics' => 'export#show'
 

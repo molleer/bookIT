@@ -19,6 +19,11 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
 
+gem 'compass-rails'
+gem 'zurb-foundation', '~> 3.0'
+
+gem 'redcarpet'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
