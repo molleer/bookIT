@@ -64,10 +64,40 @@ describe Booking do
 		build(:party_booking).should be_valid
 	end
 
+	it "should allow two bookings to end and begin at the same time" do
+	  room = create(:grupprummet)
+		create(:booking,
+			room: room,
+			begin_date: DateTime.now.tomorrow.change(hour: 17, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 21, minute: 0))
+		build(:booking,
+			room: room,
+			begin_date: DateTime.now.tomorrow.change(hour: 21, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 22, minute: 0)).should be_valid
+	end
+
 	it "should not collide with another booking" do
 		room = create(:grupprummet)
-		create(:booking, room: room).should be_valid
-		build(:booking, room: room).should_not be_valid
+		create(:booking,
+			room: room,
+			begin_date: DateTime.now.tomorrow.change(hour: 17, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 21, minute: 0)).should be_valid
+		build(:booking,
+			room: room,
+			begin_date: DateTime.now.tomorrow.change(hour: 20, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 22, minute: 0)).should_not be_valid
+		build(:booking,
+			room: room,
+			begin_date: DateTime.now.tomorrow.change(hour: 16, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 22, minute: 0)).should_not be_valid
+		build(:booking,
+			room: room,
+			begin_date: DateTime.now.tomorrow.change(hour: 16, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 20, minute: 0)).should_not be_valid
+		build(:booking,
+			room: room,
+			begin_date: DateTime.now.tomorrow.change(hour: 18, minute: 0),
+			end_date: DateTime.now.tomorrow.change(hour: 20, minute: 0)).should_not be_valid
 	end
 
 	it "should not allow booking as not group" do

@@ -118,7 +118,7 @@ private
     Booking.in_room(self.room).in_future.each do |b|
       unless b == self
         # Algorithm source: http://makandracards.com/makandra/984-test-if-two-date-ranges-overlap-in-ruby-or-rails
-        if (begin_date - b.end_date) * (b.begin_date - end_date) >= 0
+        if (begin_date - b.end_date) * (b.begin_date - end_date) > 0
           errors[:base] << 'Lokalen är redan bokad under denna perioden'
           return
         end
