@@ -216,5 +216,7 @@ sv:
         booking:
           attributes:
             begin_date:
-              before: 'är efter slutdatum'
+              after: 'är innan idag'
+            end_date:
+              after: 'är innan startdatum'
       <<: *errors

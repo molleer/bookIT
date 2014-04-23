@@ -5,12 +5,10 @@ class BookingsController < ApplicationController
   # GET /bookings
   # GET /bookings.json
   def index
+    @bookings = Booking.in_future.order(:begin_date)
     if params[:filter]
-      @bookings = Booking.future.by_group_or_user(params[:filter])
-    else
-      @bookings = Booking.future
+      @bookings = @bookings.by_group_or_user(params[:filter])
     end
-    @bookings = @bookings.order(:begin_date)
   end
 
   # GET /bookings/1

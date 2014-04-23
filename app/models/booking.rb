@@ -22,8 +22,11 @@
 
 class Booking < ActiveRecord::Base
   scope :by_group_or_user, -> (name) { where('user_id = ? OR `group` = ?', name, name) }
-  scope :future, -> { where('end_date >= ?', DateTime.now) }
+  scope :in_future, -> { where('end_date >= ?', DateTime.now) }
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
+  scope :unaccepted, -> { where('accepted IS NULL') }
+  scope :party_reported, -> { where(party: true) }
+  scope :in_room, -> (room) { where(room: room) }
 
   belongs_to :room
   belongs_to :user
@@ -33,7 +36,7 @@ class Booking < ActiveRecord::Base
 
   # essential validations
   validates :title, :description, :user, :room, :begin_date, :end_date, presence: true
-  validates :phone, presence: true ,length: { minimum: 6 }
+  validates :phone, presence: true,length: { minimum: 6 }
   validates_inclusion_of :party, :in => [true, false]
 
   # validations if party is selected:
@@ -65,14 +68,26 @@ class Booking < ActiveRecord::Base
     end
   end
 
+  DATE_AND_TIME = '%-d %b %R' # example: 4 apr 12:00
+
   def booking_range
-    ary = [begin_date.strftime('%d %b %R')]
+    ary = [I18n.localize(begin_date, format: DATE_AND_TIME)]
     if same_day?(begin_date, end_date)
-      ary << end_date.strftime('%R')
+      ary << I18n.localize(end_date, format: '%R') # example: 09:00
     else
-      ary << end_date.strftime('%d %b %R')
+      ary << I18n.localize(end_date, format: DATE_AND_TIME)
     end
     ary.join ' - '
+  end
+
+  def accept
+    self.accepted = true
+    save
+  end
+
+  def reject
+    self.accepted = false
+    save
   end
 
 private
@@ -88,7 +103,7 @@ private
   end
 
   def must_be_party_room # called if party
-    errors.add(:room, 'Festbokning ej tillåten i detta rum') unless room.allow_party
+    errors.add(:room, 'tillåter ej festbokningar') unless room.allow_party
   end
 
   def must_be_group_in_room
@@ -100,7 +115,7 @@ private
   end
 
   def must_not_collide
-    Booking.future.each do |b|
+    Booking.in_room(self.room).in_future.each do |b|
       unless b == self
         # Algorithm source: http://makandracards.com/makandra/984-test-if-two-date-ranges-overlap-in-ruby-or-rails
         if (begin_date - b.end_date) * (b.begin_date - end_date) >= 0

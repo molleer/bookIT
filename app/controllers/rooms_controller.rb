@@ -10,6 +10,15 @@ class RoomsController < ApplicationController
   # GET /rooms/1
   # GET /rooms/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.json
+      format.ics do
+        send_data(RoomCalendar.new(@room),
+                    filename: "#{@room.name}.txt",
+                    disposition: :inline)
+      end
+    end
   end
 
   # GET /rooms/new
