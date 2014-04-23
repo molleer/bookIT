@@ -203,7 +203,7 @@ sv:
         title: Titel
         begin_date: Startdatum
         end_date: Slutdatum
-        group: Bokad av
+        group: Grupp
         phone: Telefonnummer
         description: Beskrivning
         party_responsible: Festansvarig
