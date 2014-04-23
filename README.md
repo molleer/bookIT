@@ -1,5 +1,12 @@
 # bookIT
 
+
+Skapa 'Hubben' och 'Grupprummet':
+
+```
+rake db:seed
+```
+
 ## rake tasks
 
 * `rake bookit:parse`, `rake bookit:clean`, `rake bookit:reparse`
