@@ -13,7 +13,7 @@
 class Room < ActiveRecord::Base
 	has_many :bookings
 
-	validates :name, presence: true
+	validates :name, presence: true, uniqueness: true
 	validates_inclusion_of :allow_party, :in => [true, false]
 	validates_inclusion_of :only_group, :in => [true, false]
 
