@@ -15,7 +15,7 @@ FactoryGirl.define do
 		description 'digIT kodar hubbIT'
 		user
 		phone '0303030303'
-		room { create(:grupprummet) }
+		association :room, factory: :grupprummet
 		party false
 		begin_date { DateTime.now.tomorrow.change(hour: 17) }
 		end_date { DateTime.now.tomorrow.change(hour: 21) }
@@ -23,10 +23,10 @@ FactoryGirl.define do
 		factory :party_booking do
 			title 'party'
 			description 'digIT har fest!'
-			room { create(:hubben) }
+			association :room, factory: :hubben
 			group :nollkit
 			party true
-			user { create(:nollkit_user) }
+			association :user, factory: :nollkit_user
 			phone '0020202020'
 			party_responsible 'Johan Lindskogen'
 			party_responsible_phone '0020202020'

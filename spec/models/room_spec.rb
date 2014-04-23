@@ -17,4 +17,9 @@ describe Room do
   	build(:hubben).should be_valid
   	build(:grupprummet).should be_valid
   end
+
+  it "should have unique names" do
+    create(:hubben).should be_valid
+    build(:hubben).should_not be_valid
+  end
 end

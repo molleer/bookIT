@@ -30,10 +30,13 @@ describe Booking do
 	end
 
 	it "should only validate bookings in the future" do
+		room = create(:grupprummet)
 		build(:booking,
+			room: room,
 			begin_date: DateTime.new(2014,1,1,17,0),
 			end_date: DateTime.new(2014,1,1,21,0)).should_not be_valid
 		build(:booking,
+			room: room,
 			begin_date: DateTime.now.tomorrow.change(hour: 17, minute: 0),
 			end_date: DateTime.now.tomorrow.change(hour: 21, minute: 0)).should be_valid
 	end
@@ -45,17 +48,26 @@ describe Booking do
 	end
 
 	it "should not exceed one week" do
+		room = create(:grupprummet)
 		build(:booking,
+			room: room,
 			begin_date: DateTime.now.tomorrow.change(hour: 17, minute: 0),
 			end_date: DateTime.now.tomorrow.change(hour: 21, minute: 0) + 6.days).should be_valid
 		build(:booking,
+			room: room,
 			begin_date: DateTime.now.tomorrow.change(hour: 17, minute: 0),
 			end_date: DateTime.now.tomorrow.change(hour: 21, minute: 0) + 8.days).should_not be_valid
 	end
 
+	it "should allow bookings at same time in different rooms" do
+	  create(:booking)
+		build(:party_booking).should be_valid
+	end
+
 	it "should not collide with another booking" do
-		create(:booking).should be_valid
-		build(:booking).should_not be_valid
+		room = create(:grupprummet)
+		create(:booking, room: room).should be_valid
+		build(:booking, room: room).should_not be_valid
 	end
 
 	it "should not allow booking as not group" do
@@ -63,8 +75,9 @@ describe Booking do
 	end
 
 	it "should only allow groups which user belong to" do
-		build(:booking, group: :nollkit).should_not be_valid
-		build(:booking, user: create(:nollkit_user), group: :nollkit).should be_valid
+		room = create(:grupprummet)
+		build(:booking, room: room, group: :nollkit).should_not be_valid
+		build(:booking, room: room, user: create(:nollkit_user), group: :nollkit).should be_valid
 	end
 
 	it "should have a valid phone number" do
