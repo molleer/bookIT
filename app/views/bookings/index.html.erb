@@ -1,16 +1,4 @@
 <h1>Listar bokningar</h1>
-<% @bookings.each do |booking| %>
-  <p>
-    <strong><%= link_to booking.title, booking %></strong><br>
-    <%= booking.booking_range %> | <%= booking.room %><br>
-    <% if can? :manage, booking %>
-      <%= link_to 'Redigera', edit_booking_path(booking) %> <%= link_to 'Radera', booking, method: :delete, data: { confirm: 'Are you sure?' } %>
-    <% end %>
-  </p>
-<% end %>
-
-<br>
-
 <% if can? :create, Booking %>
   <%= link_to 'Ny Bokning', new_booking_path, class: 'btn btn-primary' %>
 <% end %>
@@ -25,6 +13,16 @@
   <% end %>
 <% end %>
 <br><br>
+<% @bookings.each do |booking| %>
+  <p>
+    <strong><%= link_to booking.title, booking %></strong><br>
+    <%= booking.booking_range %> | <%= booking.room %><br>
+    <% if can? :manage, booking %>
+      <%= link_to 'Redigera', edit_booking_path(booking) %> <%= link_to 'Radera', booking, method: :delete, data: { confirm: 'Are you sure?' } %>
+    <% end %>
+  </p>
+<% end %>
+
 <% if can? :manage, Term %>
   <%= link_to 'Villkor', terms_path %>
 <% end %>

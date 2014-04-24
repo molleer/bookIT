@@ -24,7 +24,7 @@ class Booking < ActiveRecord::Base
   scope :by_group_or_user, -> (name) { where('user_id = ? OR `group` = ?', name, name) }
   scope :in_future, -> { where('end_date >= ?', DateTime.now) }
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
-  scope :unaccepted, -> { where('accepted IS NULL') }
+  scope :accepted_or_waiting, -> { where('accepted != ?', false) }
   scope :party_reported, -> { where(party: true) }
   scope :in_room, -> (room) { where(room: room) }
 
@@ -90,6 +90,14 @@ class Booking < ActiveRecord::Base
     save
   end
 
+  def accepted?
+    self.accepted == true
+  end
+
+  def rejected?
+    self.accepted == false
+  end
+
 private
 
   def same_day?(d1, d2)
@@ -115,7 +123,7 @@ private
   end
 
   def must_not_collide
-    Booking.in_room(self.room).in_future.each do |b|
+    Booking.accepted_or_waiting.in_room(self.room).in_future.each do |b|
       unless b == self
         # Algorithm source: http://makandracards.com/makandra/984-test-if-two-date-ranges-overlap-in-ruby-or-rails
         if (begin_date - b.end_date) * (b.begin_date - end_date) > 0

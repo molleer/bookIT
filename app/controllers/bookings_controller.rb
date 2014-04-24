@@ -1,5 +1,5 @@
 class BookingsController < ApplicationController
-  before_action :set_booking, only: [:show, :edit, :update, :destroy]
+  before_action :set_booking, only: [:show, :edit, :update, :destroy, :accept, :reject]
   authorize_resource
 
   # GET /bookings
@@ -70,6 +70,28 @@ class BookingsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  # GET /bookings/1/accept
+  def accept
+    if can? :accept, @booking
+      @booking.accept
+      redirect_to party_reports_path, notice: 'Festanmälan accepterad'
+    else
+      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
+    end
+  end
+
+  # GET /bookings/1/reject
+  def reject
+    if can? :accept, @booking
+      @booking.reject
+      # TODO: javascript prompt form -> send_reply
+      redirect_to party_reports_path, notice: 'Festanmälan avslagen'
+    else
+      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -1,15 +1,21 @@
 BookIT::Application.routes.draw do
 
+
   resources :party_reports, only: :index do
     member do
-      get :accept
-      get :reject
       get :reply
       post :send_reply
     end
   end
 
-  resources :whitelist_items, :bookings, :rooms
+  resources :bookings do
+    member do
+      get :accept
+      get :reject
+    end
+  end
+
+  resources :whitelist_items, :rooms
   resources :terms, only: [:index, :edit, :update]
 
   # The priority is based upon order of creation: first created -> highest priority.
