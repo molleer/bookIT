@@ -8,3 +8,5 @@
 
 
 Room.create([ { name: "Hubben", allow_party: true, only_group: true }, { name: "Grupprummet", allow_party: false, only_group: false }])
+
+Term.create(title: 'Checklista', content: File.read('checklista.md'))
