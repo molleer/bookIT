@@ -19,7 +19,8 @@
 			<td><%= booking.booking_range %></td>
 			<td><%= booking.liquor_license ? 'Ja' : '-' %></td>
 			<td><%= link_to '✔', accept_booking_path(booking), class: 'btn', disabled: booking.accepted? %></td>
-			<td><%= link_to '✘', reject_booking_path(booking), class: 'btn btn-dangerous', data: { mail: booking.user.mail }, disabled: booking.rejected? %></td>
+			<td><%= link_to '✘', reject_booking_path(booking), class: 'btn btn-dangerous reject', data: { mail: booking.user.mail, url: booking_url(booking), id: booking.id }, disabled: booking.rejected? %></td>
 		</tr>
 	<% end %>
 </table>
+<%= render 'mail' %>

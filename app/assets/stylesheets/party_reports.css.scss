@@ -1,0 +1,13 @@
+// Place all the styles related to the PartyReports controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#mail_form {
+	input[type=text] {
+		width: 300px
+	}
+	a.close-reveal-modal:hover {
+		text-decoration: none;
+		color: darken(#aaa, 20);
+	}
+}
