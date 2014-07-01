@@ -47,7 +47,7 @@ class Booking < ActiveRecord::Base
     f.validate :must_be_party_room
   end
 
-  # validate :must_be_whitelisted
+  validate :must_be_allowed
   validate :must_not_exceed_max_duration, :must_not_collide, :must_be_group_in_room
   # validate :disallow_liquor_license_unless_party
 
@@ -98,7 +98,7 @@ class Booking < ActiveRecord::Base
     self.accepted == false
   end
 
-private
+  private
 
   def same_day?(d1, d2)
     d1.year == d2.year && d1.month == d2.month && d1.day == d2.day
@@ -151,20 +151,17 @@ private
     end
   end
 
-  # def must_be_whitelisted
-  #   whitelisted = false
-  #   puts 'range:', begin_date..end_date
-  # 	WhitelistItem.active.each do |item|
-  # 		range = item.range(begin_date)
-  #     if range.cover?(begin_date) && range.cover?(end_date)
-  #       whitelisted = true
-  #       break
-  #     end
-  #   end
-  #   unless whitelisted
-  #    errors.add :begin_date, "ligger inte inom whitelistad period"
-  #   end
-  # end
+  def must_be_allowed
+    rules = Rule.in_range(self.start_date, self.stop_date).order(:prio)
+    rules.each do |rule|
+      (success, reason) = check_rule(rule)
+      if success == false
+        errors.add(:rule " bryter mot regeln")
+      elsif success
+        break
+      end
+    end
+  end
 
   def must_not_exceed_max_duration
     unless begin_date.nil? || end_date.nil?
@@ -172,4 +169,53 @@ private
       errors.add(:end_date, "Bokningen får ej vara längre än en vecka, (är #{days} dagar)") if days > 7
     end
   end
+
+  def check_booking_against_rule(rule)
+
+    if rule.start_time.nil?
+      return rule.allow, rule.reason
+    end
+
+    #
+    # Vi måste veta om bokningen täcker flera dagar för att kolla
+    # tiden för regler. Säg bokning fre lör sön, så täcker ju bokninge all tid
+    # på lördag, men ska ta hänsyn till boknignstiden olika för fre och sön
+    # därav måste första och sista dagen hanteras annorlunda vid flerdagsbokningar
+    # då det i första dagen gäller från bokningstart - 24:00
+    # och sista dagen gäller från 00:00 - bokningsslut, kom på det
+    multi_day_booking = ((stop_date.to_date - start_date.to_date).to_i) > 0
+
+    unless multi_day_booking
+     if(rule.start_time - start_time) * (rule.stop_time - stop_time) > 0
+      return rule.allow, rule.reason
+    else
+      return nil
+    end
+
+
+    ((start_date.to_date)..(stop_date.to_date)).each do |day| 
+      if rule.applies? day.wday
+        if day == start_date.to_date # First day of booking start_time - 23:59:59
+         if(rule.start_time - start_time) * (rule.stop_time - last_second(day)) > 0 
+          return rule.allow, rule.reason
+        elsif day == stop_date.to_date # Last day of booking 00:00 - stop_time
+          if(rule.start_time - day.midnight) * (rule.stop_time - stop_time) > 0 
+            return rule.allow, rule.reason
+          end
+        else # Day in the middle of booking, 00:00 - 23:59:59
+         if(rule.start_time - day.midnight) * (rule.stop_time - last_second(day)) > 0 
+          return rule.allow, rule.reason
+        end
+      end
+    end
+    return nil
+  end
+
+
+end
+
+def last_second(day)
+  return day.midnight+1.day-1.second
+end
+
 end

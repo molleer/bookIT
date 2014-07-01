@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140422213225) do
+ActiveRecord::Schema.define(version: 20140701210313) do
 
   create_table "bookings", force: true do |t|
     t.string   "user_id"
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20140422213225) do
     t.boolean  "accepted"
   end
 
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "rooms", force: true do |t|
     t.string   "name"
@@ -39,6 +39,20 @@ ActiveRecord::Schema.define(version: 20140422213225) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "only_group"
+  end
+
+  create_table "rules", force: true do |t|
+    t.integer  "day_mask"
+    t.datetime "start_date"
+    t.datetime "stop_date"
+    t.time     "start_time"
+    t.time     "stop_time"
+    t.boolean  "allow"
+    t.integer  "prio"
+    t.text     "reason"
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "terms", force: true do |t|

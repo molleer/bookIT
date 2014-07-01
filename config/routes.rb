@@ -15,7 +15,7 @@ BookIT::Application.routes.draw do
     end
   end
 
-  resources :whitelist_items, :rooms
+  resources :rules, :rooms
   resources :terms, only: [:index, :edit, :update]
 
   # The priority is based upon order of creation: first created -> highest priority.

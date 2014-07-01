@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
 				self.new(cid: resp['cid'], first_name: resp['firstname'], last_name: resp['lastname'],
 					nick: resp['nick'], mail: resp['mail'], groups: groups & @@FILTER)
 			else
-				raise resp.response.inspect
+				raise resp.parsed_response
 			end
 		end
 end
