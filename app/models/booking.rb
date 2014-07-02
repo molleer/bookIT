@@ -160,16 +160,17 @@ class Booking < ActiveRecord::Base
   end
 
   def must_be_allowed
-    rules = Rule.in_range(begin_date, end_date).order(prio: :desc)
+    rules = Rule.in_room(room).in_range(begin_date, end_date).order(:prio)
     rules.each do |rule|
-      (allow, reason) = check_rule(rule)
-     
+      (allow, reason) = check_booking_against_rule(rule)
+
       next if allow.nil? # Rule did not apply for given time span
 
       if allow # Booking is allowed
-        return 
+        return
       else
         errors.add(:rule, reason)
+        return
       end
     end
   end
@@ -180,55 +181,62 @@ class Booking < ActiveRecord::Base
       return rule.allow, rule.reason
     end
 
-   
+
     # Vi måste veta om bokningen täcker flera dagar för att kolla
     # tiden för regler. Säg bokning fre lör sön, så täcker ju bokninge all tid
     # på lördag, men ska ta hänsyn till boknignstiden olika för fre och sön
     # därav måste första och sista dagen hanteras annorlunda vid flerdagsbokningar
     # då det i första dagen gäller från bokningstart - 24:00
     # och sista dagen gäller från 00:00 - bokningsslut
-    multi_day_booking = ((stop_date.to_date - start_date.to_date).to_i) > 0
+    multi_day_booking = ((end_date.to_date - begin_date.to_date).to_i) > 0
 
     unless multi_day_booking
-     if(rule.start_time - start_time) * (rule.stop_time - stop_time) > 0
-      return rule.allow, rule.reason
-    else
-      return nil
+      rule.start_time = rule.start_time.change(day: begin_date.day,
+        month: begin_date.month,
+        year: begin_date.year)
+      rule.stop_time = rule.stop_time.change(day: end_date.day,
+        month: end_date.month,
+        year: end_date.year)
+      if (rule.start_time - end_date) * (begin_date - rule.stop_time) > 0
+        return rule.allow, rule.reason
+      else
+        return nil
+      end
     end
 
-
-    ((start_date.to_date)..(stop_date.to_date)).each do |day| 
+    ((begin_date.to_date)..(end_date.to_date)).each do |day|
+      rule.start_time = rule.start_time.change(day: day.day,
+        month: day.month,
+        year: day.year)
+      rule.stop_time = rule.stop_time.change(day: day.day,
+        month: day.month,
+        year: day.year)
       if rule.applies? day.wday
-        if collides(day, rule) 
+        if collides?(day, rule)
           return rule.allow, rule.reason
-        end 
+        end
       end
     end
     return nil
   end
 
+  def collides?(day, rule)
+    return first_day_collision?(day, rule) if day == begin_date.to_date
+    return last_day_collision?(day, rule) if day == end_date.to_date
+    return middle_day_collision?(day, rule)
 
-end
+  end
+# (begin_date - b.end_date) * (b.begin_date - end_date) > 0
+  def first_day_collision?(day, rule)
+    return (rule.start_time - day.end_of_day) * (begin_date - rule.stop_time) > 0
+  end
 
-def collides?(day, rule)
-  return ((day == start_date.to_date) && first_day_collision(day, rule)) || 
-          ((day == stop_date.to_date) && last_day_collision(day, rule)) ||
-          middle_day_collision(day, rule)
-     
-end
+  def middle_day_collision?(day, rule)
+    return (rule.start_time - day.end_of_day) * (day.midnight - rule.stop_time) > 0
+  end
 
-def first_day_collision?(day, rule)
-  return (rule.start_time - start_time) * (rule.stop_time - day.end_of_day) > 0
-end
-
-def last_day_collision?(day, rule)
-   return (rule.start_time - day.midnight) * (rule.stop_time - stop_time) > 0
-end
-
-def middle_day_collision?(day, rule)
-  return (rule.start_time - day.midnight) * (rule.stop_time - day.end_of_day) > 0
-end
-
-
+  def last_day_collision?(day, rule)
+    return (rule.start_time - end_date) * (day.midnight - rule.stop_time) > 0
+  end
 
 end

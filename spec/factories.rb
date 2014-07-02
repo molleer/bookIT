@@ -55,4 +55,45 @@ FactoryGirl.define do
 		rule_start DateTime.now.beginning_of_year
 		rule_end DateTime.now.end_of_year
 	end
+
+	factory	:rule do
+		title 'Läsveckor'
+		day_mask 0b1111100
+		start_date DateTime.new(1970, 1, 1)
+		stop_date DateTime.new(3000, 1, 1)
+		start_time Time.utc(1990, 1, 1, 8, 0, 0)
+		stop_time Time.utc(1990, 1, 1, 17, 0, 0)
+		allow false
+		association :room, factory: :hubben
+		prio 20
+		reason 'Du bör vara på din lektion under denna tiden (läsveckor)'
+
+		factory :rule_deny_group_room do
+			title 'Boka ej grupprum på vardagar'
+			day_mask 0b1111100
+			association :room, factory: :grupprummet
+			prio 20
+			reason 'Du bör vara på din lektion under denna tiden (grupp vardagar)'
+
+			factory :rule_allow_lunch_group_room do
+				title 'Tillåt lunchmöten i grupprum'
+				prio 19
+				start_time Time.utc(1990, 1, 1, 12, 0, 0)
+				stop_time Time.utc(1990, 1, 1, 13, 0, 0)
+				allow true
+				reason 'Lunchmöte är ok!'
+			end
+		end
+
+		factory :rule_deny_tentavecka do
+			title 'Tentavecka'
+			prio 2
+			start_date DateTime.new(2014, 10, 25)
+			stop_date DateTime.new(2014, 11, 1)
+			start_time nil
+			stop_time nil
+			allow false
+			reason 'Du skall plugga, inte prokrastinera!'
+		end
+	end
 end

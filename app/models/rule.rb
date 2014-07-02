@@ -14,12 +14,18 @@
 #  title      :string(255)
 #  created_at :datetime
 #  updated_at :datetime
+#  room_id    :integer
 #
 
 class Rule < ActiveRecord::Base
-  scope :in_range, -> (start, stop) { 
-  	where('start_date <= ? AND stop_date >= ?', start, stop ) 
+  scope :in_room, -> (room) { where(room: room) }
+  scope :in_range, -> (start, stop) {
+  	where('start_date <= ? AND stop_date >= ?', start, stop )
   }
+
+  belongs_to :room
+
+  # Validate non-negative priority
 
 
   def applies?(day)
@@ -29,7 +35,7 @@ class Rule < ActiveRecord::Base
   	day = 2**(6-day) #Converting day to bitmask form 64 -> monday, 1 -> sunday
 
   	return (day_mask & day) > 0
-  	
+
   end
 
 end
