@@ -197,6 +197,22 @@ class Booking < ActiveRecord::Base
       rule.stop_time = rule.stop_time.change(day: end_date.day,
         month: end_date.month,
         year: end_date.year)
+
+      puts rule.inspect
+      puts rule.allow
+
+      if rule.allow
+        if rule.start_time <= begin_date && rule.stop_time >= end_date
+          return rule.allow, rule.reason
+        else
+          return nil
+        end
+      end
+
+      puts begin_date
+      puts end_date
+      
+      puts (rule.start_time - end_date) * (begin_date - rule.stop_time) > 0
       if (rule.start_time - end_date) * (begin_date - rule.stop_time) > 0
         return rule.allow, rule.reason
       else

@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20140702193440) do
     t.boolean  "accepted"
   end
 
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "rooms", force: true do |t|
     t.string   "name"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20140702193440) do
     t.integer  "room_id"
   end
 
-  add_index "rules", ["room_id"], name: "index_rules_on_room_id"
+  add_index "rules", ["room_id"], name: "index_rules_on_room_id", using: :btree
 
   create_table "terms", force: true do |t|
     t.string   "title"

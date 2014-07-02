@@ -143,6 +143,10 @@ describe Booking do
 			room: gruppr,
 			begin_date: Time.now.utc.tomorrow.change(hour: 14, min: 0),
 			end_date: Time.now.utc.tomorrow.change(hour: 17, min: 0)).should_not be_valid
+		build(:booking,
+			room: gruppr,
+			begin_date: Time.utc(2014, 7, 4, 12, 0),
+			end_date: Time.utc(2014, 7, 4, 19, 0)).should_not be_valid
 
 		# Multi-day bookings
 
