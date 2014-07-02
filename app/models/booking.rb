@@ -151,38 +151,42 @@ class Booking < ActiveRecord::Base
     end
   end
 
-  def must_be_allowed
-    rules = Rule.in_range(self.start_date, self.stop_date).order(:prio)
-    rules.each do |rule|
-      (success, reason) = check_rule(rule)
-      if success == false
-        errors.add(:rule " bryter mot regeln")
-      elsif success
-        break
-      end
-    end
-  end
-
   def must_not_exceed_max_duration
     unless begin_date.nil? || end_date.nil?
       days = (end_date - begin_date).to_i / 1.day
-      errors.add(:end_date, "Bokningen får ej vara längre än en vecka, (är #{days} dagar)") if days > 7
+      msg = "Bokningen får ej vara längre än en vecka, (är #{days} dagar)"
+      errors.add(:end_date, msg) if days > 7
+    end
+  end
+
+  def must_be_allowed
+    rules = Rule.in_range(begin_date, end_date).order(prio: :desc)
+    rules.each do |rule|
+      (allow, reason) = check_rule(rule)
+     
+      next if allow.nil? # Rule did not apply for given time span
+
+      if allow # Booking is allowed
+        return 
+      else
+        errors.add(:rule, reason)
+      end
     end
   end
 
   def check_booking_against_rule(rule)
 
-    if rule.start_time.nil?
+    if rule.start_time.nil? # Rule is always in effect if time = nil
       return rule.allow, rule.reason
     end
 
-    #
+   
     # Vi måste veta om bokningen täcker flera dagar för att kolla
     # tiden för regler. Säg bokning fre lör sön, så täcker ju bokninge all tid
     # på lördag, men ska ta hänsyn till boknignstiden olika för fre och sön
     # därav måste första och sista dagen hanteras annorlunda vid flerdagsbokningar
     # då det i första dagen gäller från bokningstart - 24:00
-    # och sista dagen gäller från 00:00 - bokningsslut, kom på det
+    # och sista dagen gäller från 00:00 - bokningsslut
     multi_day_booking = ((stop_date.to_date - start_date.to_date).to_i) > 0
 
     unless multi_day_booking
@@ -195,17 +199,9 @@ class Booking < ActiveRecord::Base
 
     ((start_date.to_date)..(stop_date.to_date)).each do |day| 
       if rule.applies? day.wday
-        if day == start_date.to_date # First day of booking start_time - 23:59:59
-         if(rule.start_time - start_time) * (rule.stop_time - last_second(day)) > 0 
+        if collides(day, rule) 
           return rule.allow, rule.reason
-        elsif day == stop_date.to_date # Last day of booking 00:00 - stop_time
-          if(rule.start_time - day.midnight) * (rule.stop_time - stop_time) > 0 
-            return rule.allow, rule.reason
-          end
-        else # Day in the middle of booking, 00:00 - 23:59:59
-         if(rule.start_time - day.midnight) * (rule.stop_time - last_second(day)) > 0 
-          return rule.allow, rule.reason
-        end
+        end 
       end
     end
     return nil
@@ -214,8 +210,25 @@ class Booking < ActiveRecord::Base
 
 end
 
-def last_second(day)
-  return day.midnight+1.day-1.second
+def collides?(day, rule)
+  return ((day == start_date.to_date) && first_day_collision(day, rule)) || 
+          ((day == stop_date.to_date) && last_day_collision(day, rule)) ||
+          middle_day_collision(day, rule)
+     
 end
+
+def first_day_collision?(day, rule)
+  return (rule.start_time - start_time) * (rule.stop_time - day.end_of_day) > 0
+end
+
+def last_day_collision?(day, rule)
+   return (rule.start_time - day.midnight) * (rule.stop_time - stop_time) > 0
+end
+
+def middle_day_collision?(day, rule)
+  return (rule.start_time - day.midnight) * (rule.stop_time - day.end_of_day) > 0
+end
+
+
 
 end
