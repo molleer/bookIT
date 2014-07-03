@@ -25,7 +25,12 @@ class Rule < ActiveRecord::Base
 
   belongs_to :room
 
-  # Validate non-negative priority
+  validates :day_mask, :start_date, :stop_date, :prio, :reason, :title, :room, presence: true
+  validates_inclusion_of :allow, :in => [true, false]
+
+  # Validates non-negative priority
+  validates :prio, :numericality => { :greater_than_or_equal_to => 0 }
+
 
 
   def applies?(day)
