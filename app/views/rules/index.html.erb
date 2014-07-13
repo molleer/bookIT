@@ -1,0 +1,47 @@
+<h1>Listing Rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Rule duration</th>
+      <th>Time</th>
+      <th>Rooms</th>
+      <th>M T O T F L S</th>
+      <th>Allow</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @rules.each do |rule| %>
+      <tr>
+        <td><%= rule.title %></td>
+        <td><%= rule.start_date.strftime '%F' %> - <br> <%= rule.stop_date.strftime '%F' %></td>
+        <td><%= rule.start_time.strftime '%R' unless rule.start_time.nil? %> - <br> <%= rule.stop_time.strftime '%R' unless rule.stop_time.nil? %></td>
+        <td>
+          <% rule.rooms.each do |r| %>
+            <%= r.name %><br>
+          <% end %>
+        </td>
+        <td><% rule.days_array.each do |k, d| %>
+          <% if d == '1' %>
+            <div class="day green"></div>
+          <% else %>
+            <div class="day red"></div>
+          <% end %>
+        <% end %></td>
+        <td><%= rule.allow %></td>
+        <td><%= link_to 'Show', rule %></td>
+        <td><%= link_to 'Edit', edit_rule_path(rule) %></td>
+        <td><%= link_to 'Destroy', rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Rule', new_rule_path %>

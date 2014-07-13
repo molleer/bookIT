@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @rule.title %>
+</p>
+
+<p>
+  <strong>Rule duration:</strong>
+  <%= @rule.start_date.strftime '%F' %> - <%= @rule.stop_date.strftime '%F' %>
+</p>
+
+<p>
+  <strong>Rooms:</strong>
+  <%= @rule.rooms.join ', ' %>
+</p>
+
+<p>
+  <strong>Time duration:</strong>
+  <%= @rule.start_time.strftime '%R' unless @rule.start_time.nil? %> - <%= @rule.stop_time.strftime '%R' unless @rule.stop_time.nil? %>
+</p>
+
+<p>
+  <strong>Allow:</strong>
+  <%= @rule.allow %>
+</p>
+
+<p>
+  <strong>Active on:</strong>
+  <% @rule.days_array.each do |k, d| %>
+    <% if d == '1' %>
+      <div class="day green"></div>
+    <% else %>
+      <div class="day red"></div>
+    <% end %>
+  <% end %>
+</p>
+
+<%= link_to 'Edit', edit_rule_path(@rule) %> |
+<%= link_to 'Back', rules_path %>

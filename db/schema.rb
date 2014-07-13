@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140702193440) do
+ActiveRecord::Schema.define(version: 20140713200333) do
 
   create_table "bookings", force: true do |t|
     t.string   "user_id"
@@ -33,6 +33,18 @@ ActiveRecord::Schema.define(version: 20140702193440) do
 
   add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
+  create_table "it_room_bookings", force: true do |t|
+    t.timestamp "created_at",              null: false
+    t.string    "title",                   null: false
+    t.text      "description"
+    t.string    "phone",                   null: false
+    t.string    "location",                null: false
+    t.string    "booking_group"
+    t.datetime  "start_time",              null: false
+    t.datetime  "end_time",                null: false
+    t.integer   "user_id",       limit: 8, null: false
+  end
+
   create_table "rooms", force: true do |t|
     t.string   "name"
     t.boolean  "allow_party"
@@ -40,6 +52,14 @@ ActiveRecord::Schema.define(version: 20140702193440) do
     t.datetime "updated_at"
     t.boolean  "only_group"
   end
+
+  create_table "rooms_rules", id: false, force: true do |t|
+    t.integer "room_id"
+    t.integer "rule_id"
+  end
+
+  add_index "rooms_rules", ["room_id"], name: "index_rooms_rules_on_room_id", using: :btree
+  add_index "rooms_rules", ["rule_id"], name: "index_rooms_rules_on_rule_id", using: :btree
 
   create_table "rules", force: true do |t|
     t.integer  "day_mask"

@@ -1,0 +1,64 @@
+<%= form_for(@rule) do |f| %>
+  <% if @rule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@rule.errors.count, "error") %> prohibited this rule from being saved:</h2>
+
+      <ul>
+      <% @rule.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :reason %>
+    <%= f.text_area :reason %>
+  </div>
+  <div class="field">
+    <%= f.label :prio %>
+    <%= f.number_field :prio, min: 0, max: 20 %>
+  </div>
+  <div class="field">
+    <%= f.label :room_ids, 'Rum' %>
+    <%= f.collection_check_boxes :room_ids, Room.all, :id, :name do |r| %>
+      <%= r.label { r.check_box + r.text } %>
+    <% end %>
+  </div>
+  <div class="field">
+    <%= f.label :start_date %>
+    <%= f.date_field :start_date %>
+  </div>
+  <div class="field">
+    <%= f.label :stop_date %>
+    <%= f.date_field :stop_date %>
+  </div>
+  <div class="field">
+    <%= f.label :start_time %>
+    <%= f.time_field :start_time %>
+  </div>
+  <div class="field">
+    <%= f.label :stop_time %>
+    <%= f.time_field :stop_time %>
+  </div>
+  <div class="field">
+    <%= f.label :allow %>
+    <%= f.check_box :allow %>
+  </div>
+  <div class="field days">
+    <% swedish_day_names.each_with_index do |day, i| %>
+      <%= f.check_box :days_array,
+            name: "rule[days_array][#{i}]",
+            id: "days_array#{i}",
+            checked: @rule.days_array[i] == '1' %>
+      <%= f.label "days_array_#{i}", day.capitalize %>
+    <% end %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

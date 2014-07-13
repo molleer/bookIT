@@ -18,20 +18,30 @@
 #
 
 class Rule < ActiveRecord::Base
-  scope :in_room, -> (room) { where(room: room) }
+  scope :in_room, -> (room) { where(rooms: room) }
   scope :in_range, -> (start, stop) {
   	where('start_date <= ? AND stop_date >= ?', start, stop )
   }
 
-  belongs_to :room
+  has_and_belongs_to_many :rooms
 
-  validates :day_mask, :start_date, :stop_date, :prio, :reason, :title, :room, presence: true
+  validates :day_mask, :start_date, :stop_date, :prio, :reason, :title, presence: true
   validates_inclusion_of :allow, :in => [true, false]
 
   # Validates non-negative priority
-  validates :prio, :numericality => { :greater_than_or_equal_to => 0 }
+  validates :prio, :numericality => { greater_than_or_equal_to: 0,
+                                      less_than_or_equal_to: 20 }
 
 
+  def days_array=(hash)
+    string = hash.values.join
+    self.day_mask = string.to_i 2
+  end
+
+  def days_array
+    day_mask_array = day_mask.to_s(2).rjust(7, '0').split('')
+    (0..6).zip(day_mask_array).to_h
+  end
 
   def applies?(day)
   	day -= 1

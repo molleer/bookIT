@@ -2,8 +2,7 @@ class RulesController < ApplicationController
   before_action :set_rule, only: [:show, :edit, :update, :destroy]
 
   def index
-    #@rules = Rule.active
-    raise "derp"
+    @rules = Rule.all
   end
 
   # GET /rules/1
@@ -13,7 +12,10 @@ class RulesController < ApplicationController
 
   # GET /rules/new
   def new
-    @rule = Rule.new
+    @rule = Rule.new(
+      start_date: DateTime.new(2001,1,1),
+      stop_date: DateTime.new(2030,1,1),
+      prio: 10)
   end
 
   # GET /rules/1/edit
@@ -77,7 +79,9 @@ class RulesController < ApplicationController
         :start_time,
         :stop_time,
         :day_mask,
-        :prio 
+        :prio,
+        :room_ids => [],
+        :days_array => ['0', '1', '2', '3', '4', '5', '6']
       )
     end
 end
