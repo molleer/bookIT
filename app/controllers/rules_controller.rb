@@ -2,7 +2,7 @@ class RulesController < ApplicationController
   before_action :set_rule, only: [:show, :edit, :update, :destroy]
 
   def index
-    @rules = Rule.all
+    @rules = Rule.all.order :prio
   end
 
   # GET /rules/1

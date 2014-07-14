@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>Title</th>
+      <th>Prio</th>
       <th>Rule duration</th>
       <th>Time</th>
       <th>Rooms</th>
@@ -19,8 +20,13 @@
     <% @rules.each do |rule| %>
       <tr>
         <td><%= rule.title %></td>
+        <td><%= rule.prio %></td>
         <td><%= rule.start_date.strftime '%F' %> - <br> <%= rule.stop_date.strftime '%F' %></td>
-        <td><%= rule.start_time.strftime '%R' unless rule.start_time.nil? %> - <br> <%= rule.stop_time.strftime '%R' unless rule.stop_time.nil? %></td>
+        <% if rule.start_time.nil? %>
+          <td>All</td>
+        <% else %>
+          <td><%= rule.start_time.strftime '%R' %> - <br> <%= rule.stop_time.strftime '%R' %></td>
+        <% end %>
         <td>
           <% rule.rooms.each do |r| %>
             <%= r.name %><br>

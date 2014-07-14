@@ -6,6 +6,16 @@
 </p>
 
 <p>
+  <strong>Reason:</strong>
+  <%= @rule.reason %>
+</p>
+
+<p>
+  <strong>Prio:</strong>
+  <%= @rule.prio %>
+</p>
+
+<p>
   <strong>Rule duration:</strong>
   <%= @rule.start_date.strftime '%F' %> - <%= @rule.stop_date.strftime '%F' %>
 </p>
@@ -17,7 +27,11 @@
 
 <p>
   <strong>Time duration:</strong>
-  <%= @rule.start_time.strftime '%R' unless @rule.start_time.nil? %> - <%= @rule.stop_time.strftime '%R' unless @rule.stop_time.nil? %>
+  <% if @rule.start_time.nil? %>
+    All
+  <% else %>
+    <%= @rule.start_time.strftime '%R' %> - <%= @rule.stop_time.strftime '%R' %>
+  <% end %>
 </p>
 
 <p>
@@ -26,7 +40,8 @@
 </p>
 
 <p>
-  <strong>Active on:</strong>
+  <strong>Active on:</strong><br>
+  <strong>M T O T F L S</strong>
   <% @rule.days_array.each do |k, d| %>
     <% if d == '1' %>
       <div class="day green"></div>

@@ -1,0 +1,13 @@
+Hej!
+
+Festanmälan av Hubben:
+
+<% @bookings.each do |b| %>
+<%= b.booking_range %>
+<%= b.title %>
+<%= b.user.full_name %>
+	<% if b.liquor_license %>
+Serveringstillstånd har begärts.
+	<% end %>
+---------
+<% end %>

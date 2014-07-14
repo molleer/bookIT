@@ -1,5 +1,9 @@
 module ApplicationHelper
 
+	def datetime_local_dateformat(date)
+		date.strftime "%Y-%m-%dT%H:%M"
+	end
+
 	def swedish_day_names
 		I18n.t(:'date.day_names').rotate
 	end
