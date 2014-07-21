@@ -18,7 +18,12 @@
 #
 
 class Rule < ActiveRecord::Base
-  scope :in_room, -> (room) { joins(:rooms).where(rooms: room) }
+  scope :in_room, -> (room) {
+    joins("join rooms_rules, rooms").
+     where('rooms.id = rooms_rules.room_id
+            AND rooms_rules.rule_id = rules.id
+            AND rooms.id = ?', room.id)
+  }
   scope :in_range, -> (start, stop) {
   	where('start_date <= ? AND stop_date >= ?', start, stop )
   }

@@ -160,7 +160,6 @@ class Booking < ActiveRecord::Base
   end
 
   def must_be_allowed
-    raise Rule.in_room(room).to_sql
     rules = Rule.in_room(room).in_range(begin_date, end_date).order(:prio)
     rules.each do |rule|
       (allow, reason) = check_booking_against_rule(rule)
