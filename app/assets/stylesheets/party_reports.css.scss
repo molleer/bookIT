@@ -10,4 +10,13 @@
 		text-decoration: none;
 		color: darken(#aaa, 20);
 	}
+	input.close-reveal-modal {
+		font-size: 14px;
+		line-height: 14px;
+		position: relative;
+		top: auto;
+		right: auto;
+		color: #fff;
+		text-shadow: rgba(0, 0, 0, 0.298039) 0px -1px 1px;
+	}
 }
