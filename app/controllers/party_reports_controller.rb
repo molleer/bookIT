@@ -22,12 +22,16 @@ class PartyReportsController < ApplicationController
   def preview_bookings
     bookings = Booking.find(params[:booking_ids])
     mail = AdminMailer.chalmers_report(bookings)
-    render text: mail.body.raw_source
+    render json: {
+      source: mail.body.raw_source,
+      booking_ids: params[:booking_ids]
+    }
   end
 
   def send_bookings
     AdminMailer.chalmers_message(params[:message]).deliver
-    
+
+    Booking.where(id: params[:booking_ids]).update_all(sent: true)
     redirect_to party_reports_path, notice: 'Festanmälan har skickats till Chalmers!'
   end
 

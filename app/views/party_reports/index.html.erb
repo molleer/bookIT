@@ -1,8 +1,12 @@
 <h1>Festanmälningar</h1>
-<h2>Att acceptera:</h2>
-<%= render 'bookinglist', bookings: @not_accepted_bookings %>
-<h2>Skickade:</h2>
-<%= render 'bookinglist', bookings: @sent_bookings %>
+<% if @not_accepted_bookings.any? %>
+	<h2>Att acceptera:</h2>
+	<%= render 'bookinglist', bookings: @not_accepted_bookings, active: true %>
+<% end %>
+<% if @sent_bookings.any? %>
+	<h2>Skickade:</h2>
+	<%= render 'bookinglist', bookings: @sent_bookings, active: false %>
+<% end %>
 
 <% if @unsent_bookings.any? %>
 <button class="send_bookings">Skicka festanmälningar</button>

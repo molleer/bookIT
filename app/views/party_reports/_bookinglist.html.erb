@@ -1,26 +1,28 @@
 <table>
 	<thead>
 		<tr>
-			<th>Skicka</th>
 			<th>Titel</th>
 			<th>Lokal</th>
 			<th>Bokad av</th>
 			<th>Period</th>
 			<th>Serveringstillstånd</th>
-			<th>Godkänn</th>
-			<th>Avslå</th>
+			<% if active %>
+				<th>Godkänn</th>
+				<th>Avslå</th>
+			<% end %>
 		</tr>
 	</thead>
 	<% bookings.each do |booking| %>
 		<tr>
-			<td><%= check_box_tag :send, booking.id, false, disabled: booking.sent %></td>
 			<td><%= link_to booking.title, booking %></td>
 			<td><%= booking.room %></td>
 			<td><%= booking.group_sym.itize || booking.user %></td>
 			<td><%= booking.booking_range %></td>
 			<td><%= booking.liquor_license ? 'Ja' : 'Nej' %></td>
-			<td><%= link_to '✔', accept_booking_path(booking), class: 'btn', disabled: booking.accepted? %></td>
-			<td><%= link_to '✘', reject_booking_path(booking), class: 'btn btn-dangerous reject', data: { mail: booking.user.mail, url: booking_url(booking), id: booking.id }, disabled: booking.rejected? %></td>
+			<% if active %>
+				<td><%= link_to '✔', accept_booking_path(booking), class: 'btn', disabled: booking.accepted? %></td>
+				<td><%= link_to '✘', reject_booking_path(booking), class: 'btn btn-dangerous reject', data: { mail: booking.user.mail, url: booking_url(booking), id: booking.id }, disabled: booking.rejected? %></td>
+			<% end %>
 		</tr>
 	<% end %>
 </table>

@@ -8,7 +8,8 @@
 		<% end %>
 		<%= submit_tag 'Förhandsgranska mail', class: 'button preview_mail' %>
 	<% end %>
-	<%= form_tag send_bookings_party_reports_url, class: 'hidden' do %>
+	<%= form_tag send_bookings_party_reports_url,
+				id: 'send_msg_form', class: 'hidden' do %>
 		<textarea class="message-preview" name="message"></textarea>
 		<%= submit_tag 'Skicka mail', class: 'close-reveal-modal button' %>
 	<% end %>
