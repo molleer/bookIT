@@ -1,0 +1,16 @@
+<div id="send_form" class="reveal-modal medium">
+	<h2>Masskicka festanmälan</h2>
+	<%= form_tag preview_bookings_party_reports_url, method: :get do %>
+		<% bookings.each do |b| %>
+			<%= label_tag do %>
+				<%= check_box_tag 'booking_ids[]', b.id, true %><%= b.title %>
+			<% end %><br>
+		<% end %>
+		<%= submit_tag 'Förhandsgranska mail', class: 'button preview_mail' %>
+	<% end %>
+	<%= form_tag send_bookings_party_reports_url, class: 'hidden' do %>
+		<textarea class="message-preview" name="message"></textarea>
+		<%= submit_tag 'Skicka mail', class: 'close-reveal-modal button' %>
+	<% end %>
+	<a href="#" class="close-reveal-modal">&times;</a>
+</div>

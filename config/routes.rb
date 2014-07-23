@@ -8,6 +8,13 @@ BookIT::Application.routes.draw do
     end
   end
 
+  resource :party_reports, only: [] do
+    member do
+      get :preview_bookings
+      post :send_bookings
+    end
+  end
+
   resources :bookings do
     member do
       get :accept

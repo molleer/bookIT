@@ -18,6 +18,7 @@
 #  phone                   :string(255)
 #  liquor_license          :boolean
 #  accepted                :boolean
+#  sent                    :boolean
 #
 
 require 'spec_helper'

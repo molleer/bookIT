@@ -14,7 +14,6 @@
 #  title      :string(255)
 #  created_at :datetime
 #  updated_at :datetime
-#  room_id    :integer
 #
 
 class Rule < ActiveRecord::Base

@@ -19,10 +19,18 @@ class AdminMailer < ActionMailer::Base
 
   def chalmers_report(bookings)
     @bookings = bookings
-    recipients = CHALMERS_MAIL + VO_MAIL
+    recipients = CHALMERS_MAIL << VO_MAIL
 
     subject = "Festanmälan Hubben"
 
     mail to: recipients, subject: subject, from: VO_MAIL
+  end
+
+  def chalmers_message(msg)
+    recipients = CHALMERS_MAIL << VO_MAIL
+    subject = "Festanmälan Hubben"
+    mail to: recipients, subject: subject, from: VO_MAIL do |format|
+      format.text { render text: msg }
+    end
   end
 end
