@@ -66,6 +66,7 @@ class User < ActiveRecord::Base
 				self.new(cid: resp['cid'], first_name: resp['firstname'], last_name: resp['lastname'],
 					nick: resp['nick'], mail: resp['mail'], groups: groups & @@FILTER)
 			else
+				abort 'Please sign in!'
 				raise resp.parsed_response
 			end
 		end
