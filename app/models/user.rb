@@ -7,7 +7,6 @@
 #  last_name  :string(255)
 #  nick       :string(255)
 #  mail       :string(255)
-#  groups     :string(255)
 #  created_at :datetime
 #  updated_at :datetime
 #
@@ -20,13 +19,17 @@ class User < ActiveRecord::Base
 
 	validates :cid, :nick, :mail, :first_name, :last_name, presence: true
 	validates :cid, :mail, uniqueness: true
-	serialize :groups, Array
 
 
 	base_uri "https://chalmers.it/auth/userInfo.php"
 
 	@@ADMIN_GROUPS = [:digit, :styrit, :prit]
 	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit]
+
+
+	def groups
+		@groups ||= refresh_groups
+	end
 
 	def admin?
 		(groups & @@ADMIN_GROUPS).present?
@@ -59,12 +62,19 @@ class User < ActiveRecord::Base
 	alias_method :full_name, :to_s
 
 	private
+		def refresh_groups
+			user = HTTParty.get('https://chalmers.it/auth/userInfo.php', query: { cid: cid })
+			groups = user['groups'].uniq.map { |g| g.downcase.to_sym }
+			@groups = groups & @@FILTER
+		end
+
 		def self.send_request(options)
 			resp = get("", options)
 			if resp.success? && resp['cid'].present?
 				groups = resp['groups'].uniq.map { |g| g.downcase.to_sym }
+				@groups = groups & @@FILTER
 				self.new(cid: resp['cid'], first_name: resp['firstname'], last_name: resp['lastname'],
-					nick: resp['nick'], mail: resp['mail'], groups: groups & @@FILTER)
+					nick: resp['nick'], mail: resp['mail'])
 			else
 				abort 'Please sign in!'
 				raise resp.parsed_response
