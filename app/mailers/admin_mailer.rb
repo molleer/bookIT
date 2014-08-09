@@ -7,7 +7,7 @@ class AdminMailer < ActionMailer::Base
 
   def booking_report(booking)
     @booking = booking
-    @url = booking_url(@booking, host: 'localhost:3000') # TODO: move to production.rb
+    @url = booking_url(@booking)
 
     recipients = [PRIT_MAIL, @booking.user.mail]
 
