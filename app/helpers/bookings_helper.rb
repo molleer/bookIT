@@ -4,7 +4,8 @@ module BookingsHelper
   	f.datetime_local_field name,
   		value: datetime_local_dateformat(date),
   		step: 1.hour,
-  		class: 'booking-dates'
+  		class: 'booking-dates',
+			required: true
 	end
 
 	def booked_by(booking)
