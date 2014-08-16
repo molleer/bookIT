@@ -29,7 +29,8 @@ class Booking < ActiveRecord::Base
   scope :accepted, -> { where('accepted = ?', true) }
   scope :party_reported, -> { where(party: true) }
   scope :in_room, -> (room) { where(room: room) }
-  scope :sent, -> (s) { where(sent: s) }
+  scope :unsent, -> { where('sent IS NULL OR ?', false) }
+  scope :sent, -> { where('sent = ?', true) }
 
   belongs_to :room
   belongs_to :user
@@ -121,7 +122,7 @@ class Booking < ActiveRecord::Base
     unless group.present?
       errors.add(:room, 'kan ej bokas som privatperson') if room.only_group
     else
-      errors.add(:group, 'är du ej medlem i') unless user.in? group.to_sym
+      errors.add(:group, 'är du ej medlem i') unless user.in_group? group.to_sym
     end
   end
 

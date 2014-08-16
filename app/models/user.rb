@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
 		(groups & @@ADMIN_GROUPS).present?
 	end
 
-	def in?(group)
+	def in_group?(group)
 		groups.include? group
 	end
 
@@ -76,8 +76,9 @@ class User < ActiveRecord::Base
 				self.new(cid: resp['cid'], first_name: resp['firstname'], last_name: resp['lastname'],
 					nick: resp['nick'], mail: resp['mail'])
 			else
-				abort 'Please sign in!'
+				puts options.inspect
 				raise resp.parsed_response
+				abort 'Please sign in!'
 			end
 		end
 end

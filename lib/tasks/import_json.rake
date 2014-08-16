@@ -3,8 +3,9 @@ namespace :bookit do
 	task import: :environment do
 		json = JSON.parse File.read ARGV[1]
 		json.each do |b|
-			location = b['location']
+			location = b['room']
 			b['room_id'] = Room.find_by(name: location).id
+			b['user_id'] = b['cid']
 
 
 			if b['group'].present?
@@ -22,8 +23,9 @@ namespace :bookit do
 
 			b['description'] = b['title'] if b['description'].empty?
 
-			b.delete 'location'
+			b.delete 'cid'
 			b.delete 'id'
+			b.delete 'room'
 
 			begin
 				Booking.create!(b)

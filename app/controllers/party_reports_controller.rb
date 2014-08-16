@@ -4,8 +4,8 @@ class PartyReportsController < ApplicationController
   def index
     bookings = Booking.party_reported
     @not_accepted_bookings = bookings.waiting
-    @unsent_bookings = bookings.accepted.sent(false)
-    @sent_bookings = bookings.accepted.sent(true)
+    @unsent_bookings = bookings.accepted.unsent
+    @sent_bookings = bookings.accepted.sent
   end
 
   def reply

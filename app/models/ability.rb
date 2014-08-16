@@ -6,7 +6,7 @@ class Ability
 
     if user.admin?
       can :manage, :all
-    elsif user.in? :styrit
+    elsif user.in_group? :styrit
       can :accept, Booking
     else user.present? # not nil
       can :manage, Booking, user_id: user.id # a user can manage bookings he/she created
