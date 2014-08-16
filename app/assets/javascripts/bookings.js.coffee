@@ -4,6 +4,39 @@
 
 
 $ ->
+	if $('.page-bokning')[0]
+		formScripts()
+
+	$('.bookings-index').on 'click', 'a.others', (e) ->
+		$this = $(@)
+		id = $this.data('id')
+		$form = $('#mail_form form')
+		$form.attr('action', $form.data('url').replace('$$', id))
+		$('#booking_title').text($this.parent().find('strong a').text())
+		$('#mail_form').reveal()
+		return false
+
+setFormValues = (activeRadio) ->
+	fest = $(activeRadio).data 'fest'
+	$('.party-container').toggle fest
+	options = $('option', '#booking_group')
+	options.first().attr('disabled', fest)
+
+	# prevents a person to book rooms only to be booked by groups
+	if options.length > 1
+		$('#booking_group').val(options[1].value)
+	else
+		$('#booking_group')[0].setCustomValidity('Lokalen kan ej bokas som privatperson')
+
+
+	# Disable booking_fest if not festrum
+	$('#booking_party').attr('checked', false) unless fest
+
+
+	$('#booking_party').trigger('change')
+	# $('.party-info-container').toggle fest
+
+formScripts = ->
 	$('.party-info-container').show() if $('#booking_party').prop('checked')
 	setFormValues($('.location-container input[type="radio"]:checked').first())
 
@@ -43,23 +76,3 @@ $ ->
 				end_date.val(begin_date.val())
 			else
 				begin_date.val(end_date.val())
-
-setFormValues = (activeRadio) ->
-	fest = $(activeRadio).data 'fest'
-	$('.party-container').toggle fest
-	options = $('option', '#booking_group')
-	options.first().attr('disabled', fest)
-
-	# prevents a person to book rooms only to be booked by groups
-	if options.length > 1
-		$('#booking_group').val(options[1].value)
-	else
-	$('#booking_group')[0].setCustomValidity('Lokalen kan ej bokas som privatperson')
-
-
-	# Disable booking_fest if not festrum
-	$('#booking_party').attr('checked', false) unless fest
-
-
-	$('#booking_party').trigger('change')
-	# $('.party-info-container').toggle fest

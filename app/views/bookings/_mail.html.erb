@@ -1,0 +1,11 @@
+<div id="mail_form" class="reveal-modal medium">
+	<h2>Radera bokning "<output id="booking_title"></output>"</h2>
+	<%= form_tag(booking_path('$$'),
+			method: :delete, data: { url: booking_path('$$') }) do %>
+		<%= label_tag :reason, 'Anledning:' %>
+		<%= text_area_tag :reason %>
+		<p></p>
+		<%= submit_tag 'Skicka', class: 'close-reveal-modal button' %>
+	<% end %>
+	<a href="#" class="close-reveal-modal">&times;</a>
+</div>

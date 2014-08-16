@@ -65,6 +65,7 @@ class BookingsController < ApplicationController
   # DELETE /bookings/1
   # DELETE /bookings/1.json
   def destroy
+    UserMailer.reject_booking(@booking, params[:reason]).deliver unless current_user == @booking.user
     @booking.destroy
     respond_to do |format|
       format.html { redirect_to bookings_url }
@@ -86,7 +87,6 @@ class BookingsController < ApplicationController
   def reject
     if can? :accept, @booking
       @booking.reject
-      # TODO: javascript prompt form -> send_reply
       redirect_to party_reports_path, notice: 'Festanmälan avslagen'
     else
       redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
