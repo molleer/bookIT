@@ -1,1 +1,3 @@
-json.extract! @booking, :id, :cid, :start, :end, :group, :description, :festansvarig, :festnumber, :room_id, :created_at, :updated_at
+json.extract! @booking, :id, :title, :user_id, :begin_date, :end_date, :group,
+												:description, :party_responsible, :room, :phone,
+												:party_responsible_phone, :created_at, :updated_at
