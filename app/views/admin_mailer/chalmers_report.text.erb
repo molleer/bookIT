@@ -5,9 +5,9 @@ Festanmälan av Hubben:
 <% @bookings.each do |b| %>
 <%= b.booking_range %>
 <%= b.title %>
-<%= b.user.full_name %>
+Festansvarig: <%= b.party_responsible %>, kontaktas på <%= b.party_responsible_phone %>
 	<% if b.liquor_license %>
 Serveringstillstånd har begärts.
 	<% end %>
----------
+<% unless b == @bookings.last %>---------<% end %>
 <% end %>

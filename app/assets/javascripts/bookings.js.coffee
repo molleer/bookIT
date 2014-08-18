@@ -4,6 +4,8 @@
 
 
 $ ->
+	unless window.top == window
+		$('h1').first().hide()
 	if $('.page-bokning')[0]
 		formScripts()
 

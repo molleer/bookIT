@@ -5,7 +5,7 @@ class PartyReportsController < ApplicationController
     bookings = Booking.party_reported
     @not_accepted_bookings = bookings.waiting
     @unsent_bookings = bookings.accepted.unsent
-    @sent_bookings = bookings.accepted.sent
+    @sent_bookings = bookings.accepted.sent.limit(10)
   end
 
   def reply

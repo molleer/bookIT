@@ -17,8 +17,8 @@
 </p>
 
 <% if @booking.party %>
-Bokningen är <%= @booking.status_text %>.
+Bokningen status: <%= @booking.status_text %>.
 <br><br>
 <% end %>
 <%= link_to 'Redigera', edit_booking_path(@booking), class: 'btn btn-boring' %>
-<%= link_to 'Tillbaka', bookings_path, class: 'btn btn-boring' %>
+<%= link_to 'Alla bokningar', bookings_path, class: 'btn btn-boring' %>

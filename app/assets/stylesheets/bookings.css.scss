@@ -3,5 +3,16 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 body {
-	padding: 50px;
+	padding: 10px;
+}
+
+table {
+	tbody tr:hover {
+			background-color: #f1f1f1;
+	}
+	td {
+		padding: 3px 15px;
+		border-top: 1px solid #e2e2e2;
+		border-bottom: 1px solid #e2e2e2;
+	}
 }

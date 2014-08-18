@@ -6,12 +6,24 @@
 				<%= check_box_tag 'booking_ids[]', b.id, true %><%= b.title %>
 			<% end %><br>
 		<% end %>
+		<br>
 		<%= submit_tag 'Förhandsgranska mail', class: 'button preview_mail' %>
 	<% end %>
 	<%= form_tag send_bookings_party_reports_url,
 				id: 'send_msg_form', class: 'hidden' do %>
 		<textarea class="message-preview" name="message"></textarea>
+		<br>
+		<br>
 		<%= submit_tag 'Skicka mail', class: 'close-reveal-modal button' %>
+		<br>
+		<small>
+			Mail kommer skickas från vo@chalmers.it till:
+			<ul>
+				<li>vso@chalmers.se</li>
+				<li>chalmersvakten.aos@chalmers.se</li>
+				<li>kent.wikersten@chalmers.se</li>
+			</ul>
+		</small>
 	<% end %>
 	<a href="#" class="close-reveal-modal">&times;</a>
 </div>

@@ -29,7 +29,7 @@ class Booking < ActiveRecord::Base
   scope :accepted, -> { where('accepted = ?', true) }
   scope :party_reported, -> { where(party: true) }
   scope :in_room, -> (room) { where(room: room) }
-  scope :unsent, -> { where('sent IS NULL OR ?', false) }
+  scope :unsent, -> { where('sent IS NULL OR sent = ?', false) }
   scope :sent, -> { where('sent = ?', true) }
 
   belongs_to :room
@@ -64,11 +64,11 @@ class Booking < ActiveRecord::Base
 
   def status_text
     if accepted
-      return 'godkänd'
+      return 'Godkänd'
     elsif accepted.nil?
-      return 'ej godkänd ännu'
+      return 'Väntar på godkänande av VO'
     else
-      return 'avslagen'
+      return 'Avslagen'
     end
   end
 

@@ -1,4 +1,17 @@
 <h1>Listar bokningar</h1>
+
+<% if can? :manage, Term %>
+  <%= link_to 'Villkor', terms_path %>
+<% end %>
+<% if can? :manage, Rule %>
+  | <%= link_to 'Regler', rules_path %>
+<% end %>
+<% if can? :accept, Booking %>
+  | <%= link_to 'Party Reports', party_reports_path %>
+<% end %>
+<br>
+<br>
+
 <% if can? :create, Booking %>
   <%= link_to 'Ny Bokning', new_booking_path, class: 'btn btn-primary' %>
 <% end %>
@@ -10,26 +23,20 @@
   <% end %>
 <% end %>
 <br><br>
-<ul class="bookings-index">
+<table class="bookings-index">
 <% @bookings.each do |booking| %>
-  <li>
-    <strong><%= link_to booking.title, booking %></strong><br>
-    <%= booking.booking_range %> | <%= booking.room %><br>
-    <% if can? :manage, booking %>
-      <%= link_to 'Ändra', edit_booking_path(booking) %> <%= link_to 'Radera', booking, method: :delete, class: ('others' unless booking.user == current_user), data: { id: booking.id } %>
-    <% end %>
-  </li>
+  <tr>
+    <td><%= link_to booking.title, booking %></td>
+    <td><%= booking.booking_range %></td>
+    <td><%= booking.room %></td>
+    <td>
+      <% if can? :manage, booking %>
+        <%= link_to 'Ändra', edit_booking_path(booking) %> <%= link_to 'Radera', booking, method: :delete, class: ('others' unless booking.user == current_user), data: { id: booking.id } %>
+      <% end %>
+    </td>
+  </tr>
 <% end %>
-</ul>
+</table>
 
-<% if can? :manage, Term %>
-  <%= link_to 'Villkor', terms_path %>
-<% end %>
-<% if can? :manage, Rule %>
-  | <%= link_to 'Regler', rules_path %>
-<% end %>
-<% if can? :accept, Booking %>
-  | <%= link_to 'Party Reports', party_reports_path %>
-<% end %>
 
 <%= render 'mail' %>
