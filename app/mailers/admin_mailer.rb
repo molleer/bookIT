@@ -19,7 +19,9 @@ class AdminMailer < ActionMailer::Base
 
   def chalmers_report(bookings)
     @bookings = bookings
-    recipients = CHALMERS_MAIL << VO_MAIL
+    # If you change this, make sure to edit app/views/party_reports/_send_bookings.html.erb
+    # recipients = CHALMERS_MAIL << VO_MAIL
+    recipients = VO_MAIL
 
     subject = "Festanmälan Hubben"
 
@@ -27,7 +29,8 @@ class AdminMailer < ActionMailer::Base
   end
 
   def chalmers_message(msg)
-    recipients = CHALMERS_MAIL << VO_MAIL
+    # recipients = CHALMERS_MAIL << VO_MAIL
+    recipients = VO_MAIL
     subject = "Festanmälan Hubben"
     mail to: recipients, subject: subject, from: VO_MAIL do |format|
       format.text { render text: msg }
