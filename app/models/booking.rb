@@ -66,7 +66,7 @@ class Booking < ActiveRecord::Base
     if accepted
       return 'Godkänd'
     elsif accepted.nil?
-      return 'Väntar på godkänande av VO'
+      return 'Väntar på godkännande av VO'
     else
       return 'Avslagen'
     end
