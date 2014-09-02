@@ -7,7 +7,6 @@ FactoryGirl.define do
 		sequence(:mail) { |n| "smurf#{n}@example.com" }
 
 		factory :nollkit_user do
-			groups [:nollkit]
 		end
 	end
 	factory :booking do
@@ -24,7 +23,6 @@ FactoryGirl.define do
 			title 'party'
 			description 'digIT har fest!'
 			association :room, factory: :hubben
-			group :nollkit
 			party true
 			association :user, factory: :nollkit_user
 			phone '0020202020'
@@ -64,14 +62,12 @@ FactoryGirl.define do
 		start_time Time.utc(1990, 1, 1, 8, 0, 0)
 		stop_time Time.utc(1990, 1, 1, 17, 0, 0)
 		allow false
-		association :room, factory: :hubben
 		prio 20
 		reason 'Du bör vara på din lektion under denna tiden (läsveckor)'
 
 		factory :rule_deny_group_room do
 			title 'Boka ej grupprum på vardagar'
 			day_mask 0b1111100
-			association :room, factory: :grupprummet
 			prio 20
 			reason 'Du bör vara på din lektion under denna tiden (grupp vardagar)'
 

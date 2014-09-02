@@ -32,19 +32,7 @@ ActiveRecord::Schema.define(version: 20140809160008) do
     t.boolean  "sent"
   end
 
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
-
-  create_table "it_room_bookings", force: true do |t|
-    t.timestamp "created_at",              null: false
-    t.string    "title",                   null: false
-    t.text      "description"
-    t.string    "phone",                   null: false
-    t.string    "location",                null: false
-    t.string    "booking_group"
-    t.datetime  "start_time",              null: false
-    t.datetime  "end_time",                null: false
-    t.integer   "user_id",       limit: 8, null: false
-  end
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
 
   create_table "rooms", force: true do |t|
     t.string   "name"
@@ -59,8 +47,8 @@ ActiveRecord::Schema.define(version: 20140809160008) do
     t.integer "rule_id"
   end
 
-  add_index "rooms_rules", ["room_id"], name: "index_rooms_rules_on_room_id", using: :btree
-  add_index "rooms_rules", ["rule_id"], name: "index_rooms_rules_on_rule_id", using: :btree
+  add_index "rooms_rules", ["room_id"], name: "index_rooms_rules_on_room_id"
+  add_index "rooms_rules", ["rule_id"], name: "index_rooms_rules_on_rule_id"
 
   create_table "rules", force: true do |t|
     t.integer  "day_mask"

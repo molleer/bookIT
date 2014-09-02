@@ -104,97 +104,106 @@ class Booking < ActiveRecord::Base
 
   private
 
-  def same_day?(d1, d2)
-    d1.year == d2.year && d1.month == d2.month && d1.day == d2.day
-  end
-
-  def format_phone
-    [:phone, :party_responsible_phone].each do |s|
-      self[s].gsub!(/[^0-9]/, '') if self[s].present?
+    def same_day?(d1, d2)
+      d1.year == d2.year && d1.month == d2.month && d1.day == d2.day
     end
-  end
 
-  def must_be_party_room # called if party
-    errors.add(:room, 'tillåter ej festbokningar') unless room.allow_party
-  end
-
-  def must_be_group_in_room
-    unless group.present?
-      errors.add(:room, 'kan ej bokas som privatperson') if room.only_group
-    else
-      errors.add(:group, 'är du ej medlem i') unless user.in_group? group.to_sym
+    def format_phone
+      [:phone, :party_responsible_phone].each do |s|
+	self[s].gsub!(/[^0-9]/, '') if self[s].present?
+      end
     end
-  end
 
-  def must_not_collide
-    Booking.in_room(self.room).in_future.each do |b|
-      unless b == self
-        # Algorithm source: http://makandracards.com/makandra/984-test-if-two-date-ranges-overlap-in-ruby-or-rails
-        if (begin_date - b.end_date) * (b.begin_date - end_date) > 0
-          errors[:base] << 'Lokalen är redan bokad under denna perioden'
-          return
+    def must_be_party_room # called if party
+      errors.add(:room, 'tillåter ej festbokningar') unless room.allow_party
+    end
+
+    def must_be_group_in_room
+      unless group.present?
+	errors.add(:room, 'kan ej bokas som privatperson') if room.only_group
+      else
+	errors.add(:group, 'är du ej medlem i') unless user.in_group? group.to_sym
+      end
+    end
+
+    def must_not_collide
+      Booking.in_room(self.room).in_future.each do |b|
+	unless b == self
+	  # Algorithm source: http://makandracards.com/makandra/984-test-if-two-date-ranges-overlap-in-ruby-or-rails
+	  if (begin_date - b.end_date) * (b.begin_date - end_date) > 0
+	    errors[:base] << 'Lokalen är redan bokad under denna perioden'
+	    return
+	  end
         end
       end
     end
-  end
 
-  def disallow_liquor_license_unless_party
-    unless self.party
+    def disallow_liquor_license_unless_party
+      unless self.party
 
-      # errors.add(:liquor_license, 'kan ej begäras om inte festanmält') if self.liquor_license
-      # errors.add(:party_responsible_phone, 'får ej anges om inte festanmält') if self.party_responsible_phone.present?
-      # errors.add(:party_responsible, 'får ej anges om inte festanmält') if self.party_responsible.present?
-    end
-  end
-
-  def clear_party_options_unless_party
-    unless self.party
-      self.liquor_license = false
-      self.party_responsible = ""
-      self.party_responsible_phone = ""
-    end
-  end
-
-  def must_not_exceed_max_duration
-    unless begin_date.nil? || end_date.nil?
-      days = (end_date - begin_date).to_i / 1.day
-      msg = "Bokningen får ej vara längre än en vecka, (är #{days} dagar)"
-      errors.add(:end_date, msg) if days > 7
-    end
-  end
-
-  def must_be_allowed
-    rules = Rule.in_room(room).in_range(begin_date, end_date).order(:prio)
-    rules.each do |rule|
-      (allow, reason) = check_booking_against_rule(rule)
-
-      next if allow.nil? # Rule did not apply for given time span
-
-      if allow # Booking is allowed
-        return
-      else
-        errors.add(:rule, reason)
-        return
+	# errors.add(:liquor_license, 'kan ej begäras om inte festanmält') if self.liquor_license
+	# errors.add(:party_responsible_phone, 'får ej anges om inte festanmält') if self.party_responsible_phone.present?
+	# errors.add(:party_responsible, 'får ej anges om inte festanmält') if self.party_responsible.present?
       end
     end
-  end
 
-  def check_booking_against_rule(rule)
-
-    if rule.start_time.nil? # Rule is always in effect if time = nil
-      return rule.allow, rule.reason
+    def clear_party_options_unless_party
+      unless self.party
+	self.liquor_license = false
+	self.party_responsible = ""
+	self.party_responsible_phone = ""
+      end
     end
 
+    def must_not_exceed_max_duration
+      unless begin_date.nil? || end_date.nil?
+	days = (end_date - begin_date).to_i / 1.day
+	msg = "Bokningen får ej vara längre än en vecka, (är #{days} dagar)"
+	errors.add(:end_date, msg) if days > 7
+      end
+    end
 
-    # Vi måste veta om bokningen täcker flera dagar för att kolla
-    # tiden för regler. Säg bokning fre lör sön, så täcker ju bokninge all tid
-    # på lördag, men ska ta hänsyn till boknignstiden olika för fre och sön
-    # därav måste första och sista dagen hanteras annorlunda vid flerdagsbokningar
-    # då det i första dagen gäller från bokningstart - 24:00
-    # och sista dagen gäller från 00:00 - bokningsslut
-    multi_day_booking = ((end_date.to_date - begin_date.to_date).to_i) > 0
+    def must_be_allowed
+      rules = Rule.in_room(room).in_range(begin_date, end_date).order(:prio)
+      rules.each do |rule|
+	(allow, reason) = check_booking_against_rule(rule)
 
-    unless multi_day_booking
+	next if allow.nil? # Rule did not apply for given time span
+
+	if allow # Booking is allowed
+	  return
+	else
+	  errors.add(:rule, reason)
+	  return
+	end
+      end
+    end
+
+    def check_booking_against_rule(rule)
+
+      if rule.start_time.nil? # Rule is always in effect if time = nil
+	return rule.allow, rule.reason
+      end
+
+      # Vi måste veta om bokningen täcker flera dagar för att kolla
+      # tiden för regler. Säg bokning fre lör sön, så täcker ju bokninge all tid
+      # på lördag, men ska ta hänsyn till bokningstiden olika för fre och sön
+      # därav måste första och sista dagen hanteras annorlunda vid flerdagsbokningar
+      # då det i första dagen gäller från bokningstart - 24:00
+      # och sista dagen gäller från 00:00 - bokningsslut
+      multi_day_booking = ((end_date.to_date - begin_date.to_date).to_i) > 0
+
+      res = nil
+
+      if multi_day_booking
+	res = check_multi_day_booking(rule)
+      else
+	res = check_single_day_booking(rule)
+      end
+      return res
+    end
+
+    def check_single_day_booking(rule)
       rule.start_time = rule.start_time.change(day: begin_date.day,
         month: begin_date.month,
         year: begin_date.year)
@@ -202,54 +211,55 @@ class Booking < ActiveRecord::Base
         month: end_date.month,
         year: end_date.year)
 
-      if rule.allow
-        if rule.start_time <= begin_date && rule.stop_time >= end_date
-          return rule.allow, rule.reason
-        else
-          return nil
+      if rule.applies? begin_date.wday
+	if rule.allow
+	  if rule.start_time <= begin_date && rule.stop_time >= end_date
+	    return rule.allow, rule.reason
+	  else
+	    return nil
+	  end
         end
-      end
 
-      if (rule.start_time - end_date) * (begin_date - rule.stop_time) > 0
-        return rule.allow, rule.reason
-      else
-        return nil
+	if (rule.start_time - end_date) * (begin_date - rule.stop_time) > 0
+	  return rule.allow, rule.reason
+	end
       end
+      return nil
     end
 
-    ((begin_date.to_date)..(end_date.to_date)).each do |day|
-      rule.start_time = rule.start_time.change(day: day.day,
-        month: day.month,
-        year: day.year)
-      rule.stop_time = rule.stop_time.change(day: day.day,
-        month: day.month,
-        year: day.year)
-      if rule.applies? day.wday
-        if collides?(day, rule)
+    def check_multi_day_booking(rule)
+      ((begin_date.to_date)..(end_date.to_date)).each do |day|
+
+	# rule just contains times, we must translate its date to the booking day
+	rule.start_time = rule.start_time.change(day: day.day,
+	  month: day.month,
+	  year: day.year)
+	rule.stop_time = rule.stop_time.change(day: day.day,
+	  month: day.month,
+	  year: day.year)
+	if rule.applies?(day.wday) && collides?(day, rule)
           return rule.allow, rule.reason
         end
       end
+      return nil
     end
-    return nil
-  end
 
-  def collides?(day, rule)
-    return first_day_collision?(day, rule) if day == begin_date.to_date
-    return last_day_collision?(day, rule) if day == end_date.to_date
-    return middle_day_collision?(day, rule)
+    def collides?(day, rule)
+      return first_day_collision?(day, rule) if day == begin_date.to_date
+      return last_day_collision?(day, rule) if day == end_date.to_date
+      return middle_day_collision?(day, rule)
+    end
+    # (begin_date - b.end_date) * (b.begin_date - end_date) > 0
+    def first_day_collision?(day, rule)
+      return (rule.start_time - day.end_of_day) * (begin_date - rule.stop_time) > 0
+    end
 
-  end
-# (begin_date - b.end_date) * (b.begin_date - end_date) > 0
-  def first_day_collision?(day, rule)
-    return (rule.start_time - day.end_of_day) * (begin_date - rule.stop_time) > 0
-  end
+    def middle_day_collision?(day, rule)
+      return (rule.start_time - day.end_of_day) * (day.midnight - rule.stop_time) > 0
+    end
 
-  def middle_day_collision?(day, rule)
-    return (rule.start_time - day.end_of_day) * (day.midnight - rule.stop_time) > 0
-  end
-
-  def last_day_collision?(day, rule)
-    return (rule.start_time - end_date) * (day.midnight - rule.stop_time) > 0
-  end
+    def last_day_collision?(day, rule)
+      return (rule.start_time - end_date) * (day.midnight - rule.stop_time) > 0
+    end
 
 end

@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
 	private
 		def refresh_groups
 			user = HTTParty.get('https://chalmers.it/auth/userInfo.php', query: { cid: cid })
-			groups = user['groups'].uniq.map { |g| g.downcase.to_sym }
+			groups = (user['groups']  || []).uniq.map { |g| g.downcase.to_sym }
 			@groups = groups & @@FILTER
 		end
 

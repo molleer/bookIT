@@ -53,6 +53,7 @@ group :test do
 	gem "capybara"
 	gem 'guard-rspec', require: false
 	gem 'rb-fsevent'
+	gem 'timecop', '~> 0.7.1'
 end
 
 

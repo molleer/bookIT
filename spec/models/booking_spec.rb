@@ -25,6 +25,11 @@ require 'spec_helper'
 
 describe Booking do
 
+	before :all do
+		t = Time.local(2014, 7, 1, 10, 0)
+		Timecop.freeze(t)
+	end
+
 	it "should have valid factories" do
 		build(:booking).should be_valid
 		build(:party_booking).should be_valid
@@ -108,7 +113,7 @@ describe Booking do
 	it "should only allow groups which user belong to" do
 		room = create(:grupprummet)
 		build(:booking, room: room, group: :nollkit).should_not be_valid
-		build(:booking, room: room, user: create(:nollkit_user), group: :nollkit).should be_valid
+		build(:booking, room: room, user: create(:nollkit_user)).should be_valid
 	end
 
 	it "should have a valid phone number" do
@@ -123,10 +128,10 @@ describe Booking do
 	it "should check against rules" do
 		hubben = create(:hubben)
 		gruppr = create(:grupprummet)
-		create(:rule, room: hubben)
-		create(:rule_deny_group_room, room: gruppr)
-		create(:rule_allow_lunch_group_room, room: gruppr)
-		create(:rule_deny_tentavecka, room: hubben)
+		create(:rule, rooms: [hubben])
+		create(:rule_deny_group_room, rooms: [gruppr])
+		create(:rule_allow_lunch_group_room, rooms: [gruppr])
+		create(:rule_deny_tentavecka, rooms: [hubben])
 
 		build(:booking,
 			room: hubben,
@@ -186,5 +191,42 @@ describe Booking do
 			room: hubben,
 			begin_date: Time.utc(2014, 7, 7, 17, 0),
 			end_date: Time.utc(2014, 7, 8, 2, 0)).should be_valid
+	end
+
+
+	it "should allow single day fest" do
+		hubben = create(:hubben)
+		gruppr = create(:grupprummet)
+		create(:rule,
+			title: 'Lunchmöte',
+			prio: 9,
+			start_date: Time.utc(2001, 1, 1),
+			stop_date: Time.utc(2030, 1, 1),
+			start_time: "12:00",
+			stop_time: "13:00",
+			rooms: [gruppr],
+			day_mask: 0b1111100,
+			allow: true
+		)
+		create(:rule,
+			title: 'Läsdag',
+			prio: 10,
+			start_date: Time.utc(2001, 1, 1),
+			stop_date: Time.utc(2030, 1, 1),
+			start_time: "08:00",
+			stop_time: "17:00",
+			rooms: [gruppr, hubben],
+			day_mask: 0b1111100,
+			allow: false
+		)
+		puts Rule.all.inspect
+		create(:booking,
+			title: 'fest en hel helg',
+			description: 'festar hela helgeeeen!',
+			room: gruppr,
+			party: false,
+			begin_date: Time.utc(2014, 9, 6, 12, 0),
+			end_date: Time.utc(2014, 9, 6, 23, 0)
+		).should be_valid
 	end
 end
