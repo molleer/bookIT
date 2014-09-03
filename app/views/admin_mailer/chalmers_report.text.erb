@@ -1,13 +1,11 @@
-Hej!
-
-Festanmälan av Hubben:
+Arrangemangsanmälan av Hubben:
 
 <% @bookings.each do |b| %>
 <%= b.booking_range %>
-<%= b.title %>
-Festansvarig: <%= b.party_responsible %>, kontaktas på <%= b.party_responsible_phone %>
+Ansvarig: <%= b.party_responsible %>
+Tel: <%= b.party_responsible_phone %>
 	<% if b.liquor_license %>
-Serveringstillstånd har begärts.
+Serveringstillstånd gäller.
 	<% end %>
 <% unless b == @bookings.last %>---------<% end %>
 <% end %>
