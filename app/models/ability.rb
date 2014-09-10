@@ -6,11 +6,16 @@ class Ability
 
     if user.admin?
       can :manage, :all
+
     elsif user.in_group? :styrit
+      can :manage, Booking, user_id: user.id
       can :accept, Booking
+
     else user.present? # not nil
-      can :manage, Booking, user_id: user.id # a user can manage bookings he/she created
+      can :manage, Booking, user_id: user.id    # a user can manage bookings he/she created
+      cannot :accept, Booking
       can :read, :all
+
     end
     # Define abilities for the passed in user here. For example:
     #

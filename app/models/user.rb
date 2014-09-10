@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
 
 	base_uri "https://chalmers.it/auth/userInfo.php"
 
-	@@ADMIN_GROUPS = [:digit, :styrit, :prit]
+	@@ADMIN_GROUPS = [:digit, :prit]
 	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit]
 
 

@@ -2,6 +2,10 @@ class PartyReportsController < ApplicationController
   before_action :set_booking, except: [:index, :send_bookings, :preview_bookings]
 
   def index
+    if cannot? :accept, Booking
+      redirect_to bookings_path, notice: 'Du har inte tillåtelse att visa denna sidan!'
+    end
+
     bookings = Booking.party_reported
     @not_accepted_bookings = bookings.waiting
     @unsent_bookings = bookings.accepted.unsent
