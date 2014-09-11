@@ -7,7 +7,7 @@ class PartyReportsController < ApplicationController
     end
 
     bookings = Booking.party_reported
-    @not_accepted_bookings = bookings.waiting
+    @not_accepted_bookings = bookings.waiting.order(:begin_date)
     @unsent_bookings = bookings.accepted.unsent
     @sent_bookings = bookings.accepted.sent.limit(10)
   end
@@ -24,7 +24,7 @@ class PartyReportsController < ApplicationController
   end
 
   def preview_bookings
-    bookings = Booking.find(params[:booking_ids])
+    bookings = Booking.find(params[:booking_ids]).order(:begin_date)
     mail = AdminMailer.chalmers_report(bookings)
     render json: {
       source: mail.body.raw_source,

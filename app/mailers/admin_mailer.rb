@@ -23,7 +23,7 @@ class AdminMailer < ActionMailer::Base
     # recipients = CHALMERS_MAIL << VO_MAIL
     recipients = VO_MAIL
 
-    subject = "Festanmälan Hubben"
+    subject = "Arrangemangsanmälan Hubben"
 
     mail to: recipients, subject: subject, from: VO_MAIL
   end
@@ -31,7 +31,7 @@ class AdminMailer < ActionMailer::Base
   def chalmers_message(msg)
     # recipients = CHALMERS_MAIL << VO_MAIL
     recipients = VO_MAIL
-    subject = "Festanmälan Hubben"
+    subject = "Arrangemangsanmälan Hubben"
     mail to: recipients, subject: subject, from: VO_MAIL do |format|
       format.text { render text: msg }
     end
