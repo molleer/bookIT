@@ -24,7 +24,7 @@ class PartyReportsController < ApplicationController
   end
 
   def preview_bookings
-    bookings = Booking.find(params[:booking_ids]).order(:begin_date)
+    bookings = Booking.where(id: params[:booking_ids]).order(:begin_date)
     mail = AdminMailer.chalmers_report(bookings)
     render json: {
       source: mail.body.raw_source,
