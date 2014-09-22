@@ -6,8 +6,8 @@ class PartyReportsController < ApplicationController
       redirect_to bookings_path, notice: 'Du har inte tillåtelse att visa denna sidan!'
     end
 
-    bookings = Booking.party_reported
-    @not_accepted_bookings = bookings.waiting.order(:begin_date)
+    bookings = Booking.party_reported.order(:begin_date)
+    @not_accepted_bookings = bookings.waiting
     @unsent_bookings = bookings.accepted.unsent
     @sent_bookings = bookings.accepted.sent.limit(10)
   end
