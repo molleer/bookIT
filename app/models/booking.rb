@@ -22,7 +22,7 @@
 #
 
 class Booking < ActiveRecord::Base
-  scope :by_group_or_user, -> (name) { where('user_id = ? OR "group" = ?', name, name) }
+  scope :by_group_or_user, -> (name) { where('user_id = ? OR `group` = ?', name, name) }
   scope :in_future, -> { where('end_date >= ?', DateTime.now) }
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
   scope :waiting, -> { where('accepted IS NULL') }
