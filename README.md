@@ -1,5 +1,15 @@
 # bookIT
+ * language javascript ruby
+A Webbased booking system.
+Fetures: 
+ * Admin system
+ * ldap intergation
+ * Special rules on set timeslots.
+ * Repeat bookings
 
+Install instructions:
+
+ 
 
 Skapa 'Hubben' och 'Grupprummet':
 
