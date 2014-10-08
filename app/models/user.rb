@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
 	validates :cid, :mail, uniqueness: true
 
 
-	base_uri "https://chalmers.it/auth/userInfo.php"
+	base_uri "https://account.chalmers.it/userInfo.php"
 
 	@@ADMIN_GROUPS = [:digit, :prit]
 	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit]
@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
 
 	private
 		def refresh_groups
-			user = HTTParty.get('https://chalmers.it/auth/userInfo.php', query: { cid: cid })
+			user = HTTParty.get('https://account.chalmers.it/userInfo.php', query: { cid: cid })
 			groups = (user['groups']  || []).uniq.map { |g| g.downcase.to_sym }
 			@groups = groups & @@FILTER
 		end
