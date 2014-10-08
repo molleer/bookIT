@@ -1,23 +1,24 @@
 # bookIT
- * language javascript ruby
-A Webbased booking system.
-Fetures: 
- * Admin system
- * ldap intergation
- * Special rules on set timeslots.
- * Repeat bookings
 
-Install instructions:
+Bokningssystem för Chalmers IT  
+*Byggt i Ruby on Rails av Ndushi*
 
- 
+Features:
 
-Skapa 'Hubben' och 'Grupprummet':
+ * Administration av bokningar + arrangemangsanmälningar (endast VO)
+ * Regelsystem med matchningar mot dynamiskt definerade regler
+
+
+Kör följande kommando för att skapa 'Hubben' och 'Grupprummet':
 
 ```
 rake db:seed
 ```
 
-## rake tasks
+
+
+
+### rake tasks
 
 * `rake bookit:parse`, `rake bookit:clean`, `rake bookit:reparse`
 	* Parsear [Chalmers Läsårstider](https://www.student.chalmers.se/sp/academic_year_list) efter läsperiodstider
