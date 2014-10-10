@@ -1,0 +1,7 @@
+<% @bookings.each do |booking| %>
+<%= booking.title %>
+<%= booking.group %>
+<%= booking.party_responsible %>
+<%= booking.booking_range %>
+<% unless booking == @bookings.last %>---------<% end %>
+<% end %>

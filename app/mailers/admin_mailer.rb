@@ -36,4 +36,11 @@ class AdminMailer < ActionMailer::Base
       format.text { render text: msg }
     end
   end
+
+  def remind_vo(bookings)
+    @bookings = bookings
+    recipients = VO_MAIL
+    subject = "Oskickad festanmälan inom 48h"
+    mail to: recipients, subject: subject
+  end
 end
