@@ -11,4 +11,8 @@ module BookingsHelper
 	def booked_by(booking)
 		(booking.group.empty? && booking.user) || booking.group_sym.itize
 	end
+
+	def user_bookings_path(user)
+		bookings_path(filter: ([user.cid] + user.groups).join(' '))
+	end
 end

@@ -19,7 +19,7 @@
   <% if params[:filter].present? %>
     <%= link_to 'Alla bokningar', bookings_path, class: 'btn btn-boring' %>
   <% else %>
-    <%= link_to 'Dina bokningar', bookings_path(filter: current_user.cid), class: 'btn btn-boring' %>
+    <%= link_to 'Dina bokningar', user_bookings_path(current_user), class: 'btn btn-boring' %>
   <% end %>
 <% end %>
 <br><br>
