@@ -19,6 +19,7 @@
 #  liquor_license          :boolean
 #  accepted                :boolean
 #  sent                    :boolean
+#  deleted_at              :datetime
 #
 
 class Booking < ActiveRecord::Base
@@ -30,10 +31,12 @@ class Booking < ActiveRecord::Base
   scope :party_reported, -> { where(party: true) }
   scope :in_room, -> (room) { where(room: room) }
   scope :unsent, -> { where('sent IS NULL OR sent = ?', false) }
-  scope :sent, -> { where('sent = ?', true) }
+  scope :sent, -> { with_deleted.where('sent = ?', true) }
 
   belongs_to :room
   belongs_to :user
+
+  acts_as_paranoid # make destroy -> logical delete
 
   before_validation :format_phone # remove any non-numeric characters
   before_validation :clear_party_options_unless_party
