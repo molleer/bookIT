@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140809160008) do
+ActiveRecord::Schema.define(version: 20141010211604) do
 
   create_table "bookings", force: true do |t|
     t.string   "user_id"
@@ -30,9 +30,11 @@ ActiveRecord::Schema.define(version: 20140809160008) do
     t.boolean  "liquor_license"
     t.boolean  "accepted"
     t.boolean  "sent"
+    t.datetime "deleted_at"
   end
 
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["deleted_at"], name: "index_bookings_on_deleted_at", using: :btree
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
 
   create_table "rooms", force: true do |t|
     t.string   "name"
@@ -47,8 +49,8 @@ ActiveRecord::Schema.define(version: 20140809160008) do
     t.integer "rule_id"
   end
 
-  add_index "rooms_rules", ["room_id"], name: "index_rooms_rules_on_room_id"
-  add_index "rooms_rules", ["rule_id"], name: "index_rooms_rules_on_rule_id"
+  add_index "rooms_rules", ["room_id"], name: "index_rooms_rules_on_room_id", using: :btree
+  add_index "rooms_rules", ["rule_id"], name: "index_rooms_rules_on_rule_id", using: :btree
 
   create_table "rules", force: true do |t|
     t.integer  "day_mask"

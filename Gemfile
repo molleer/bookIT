@@ -35,6 +35,9 @@ gem 'ri_cal', '~> 0.8.5'
 gem 'cancan' # user authorization
 gem 'httparty'
 
+# logical deletes
+gem 'paranoia'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false

@@ -19,6 +19,7 @@
 #  liquor_license          :boolean
 #  accepted                :boolean
 #  sent                    :boolean
+#  deleted_at              :datetime
 #
 
 require 'spec_helper'
