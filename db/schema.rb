@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20140809160008) do
     t.datetime "begin_date"
     t.datetime "end_date"
     t.string   "group"
-    t.text     "description"
+    t.text     "description",             limit: 16777215
     t.string   "party_responsible"
     t.string   "party_responsible_phone"
     t.integer  "room_id"
@@ -32,7 +32,19 @@ ActiveRecord::Schema.define(version: 20140809160008) do
     t.boolean  "sent"
   end
 
-  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id"
+  add_index "bookings", ["room_id"], name: "index_bookings_on_room_id", using: :btree
+
+  create_table "it_room_bookings", force: true do |t|
+    t.datetime "created_at",                     null: false
+    t.string   "title",                          null: false
+    t.text     "description",   limit: 16777215
+    t.string   "phone",                          null: false
+    t.string   "location",                       null: false
+    t.string   "booking_group"
+    t.datetime "start_time",                     null: false
+    t.datetime "end_time",                       null: false
+    t.integer  "user_id",       limit: 8,        null: false
+  end
 
   create_table "rooms", force: true do |t|
     t.string   "name"
@@ -47,8 +59,8 @@ ActiveRecord::Schema.define(version: 20140809160008) do
     t.integer "rule_id"
   end
 
-  add_index "rooms_rules", ["room_id"], name: "index_rooms_rules_on_room_id"
-  add_index "rooms_rules", ["rule_id"], name: "index_rooms_rules_on_rule_id"
+  add_index "rooms_rules", ["room_id"], name: "index_rooms_rules_on_room_id", using: :btree
+  add_index "rooms_rules", ["rule_id"], name: "index_rooms_rules_on_rule_id", using: :btree
 
   create_table "rules", force: true do |t|
     t.integer  "day_mask"
@@ -58,7 +70,7 @@ ActiveRecord::Schema.define(version: 20140809160008) do
     t.time     "stop_time"
     t.boolean  "allow"
     t.integer  "prio"
-    t.text     "reason"
+    t.text     "reason",     limit: 16777215
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -66,7 +78,7 @@ ActiveRecord::Schema.define(version: 20140809160008) do
 
   create_table "terms", force: true do |t|
     t.string   "title"
-    t.text     "content"
+    t.text     "content",    limit: 16777215
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
