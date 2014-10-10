@@ -7,7 +7,8 @@ class BookingsController < ApplicationController
   def index
     @bookings = Booking.in_future.order(:begin_date)
     if params[:filter]
-      @bookings = @bookings.by_group_or_user(params[:filter])
+      filter = params[:filter].split ' '
+      @bookings = @bookings.by_group_or_user(filter)
     end
   end
 
