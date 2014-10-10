@@ -19,6 +19,9 @@ rake db:seed
 
 
 ### rake tasks
+Lägg till följande till cron: `cd path_to_bookit && path_to_rake RAILS_ENV=production bookit:remind`
+Bör köras varje timme
+
 
 * `rake bookit:parse`, `rake bookit:clean`, `rake bookit:reparse`
 	* Parsear [Chalmers Läsårstider](https://www.student.chalmers.se/sp/academic_year_list) efter läsperiodstider
