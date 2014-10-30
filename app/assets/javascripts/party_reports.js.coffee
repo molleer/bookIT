@@ -26,6 +26,10 @@ $ ->
 					.val el
 					.appendTo form
 			$('.message-preview').text data.source
+			$.each data.to, (i, el) ->
+				$('.message-recipients').append($('<li/>').text(el))
+			$.each data.bcc, (i, el) ->
+				$('.message-recipients').append($('<li/>').addClass('bcc').text(el))
 
 showEmail = (mail, url, id) ->
 	$('#email').val(mail)
