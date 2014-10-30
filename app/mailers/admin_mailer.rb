@@ -1,9 +1,7 @@
 class AdminMailer < ActionMailer::Base
-  default from: "bookit@chalmers.it"
+  include EmailRecipients
 
-  VO_MAIL = 'vo@chalmers.it'
-  PRIT_MAIL = 'prit@chalmers.it'
-  CHALMERS_MAIL = ['vso@chalmers.se', 'chalmersvakten.aos@chalmers.se', 'kent.wikersten@chalmers.se']
+  default from: "bookit@chalmers.it"
 
   def booking_report(booking)
     @booking = booking
@@ -20,27 +18,22 @@ class AdminMailer < ActionMailer::Base
   def chalmers_report(bookings)
     @bookings = bookings
     # If you change this, make sure to edit app/views/party_reports/_send_bookings.html.erb
-    # recipients = CHALMERS_MAIL << VO_MAIL
-    recipients = VO_MAIL
 
     subject = "Arrangemangsanmälan Hubben"
 
-    mail to: recipients, subject: subject, from: VO_MAIL
+    mail to: CHALMERS_TO, subject: subject, from: VO_MAIL, bcc: CHALMERS_BCC
   end
 
   def chalmers_message(msg)
-    # recipients = CHALMERS_MAIL << VO_MAIL
-    recipients = VO_MAIL
     subject = "Arrangemangsanmälan Hubben"
-    mail to: recipients, subject: subject, from: VO_MAIL do |format|
+    mail to: CHALMERS_TO, subject: subject, from: VO_MAIL, bcc: CHALMERS_BCC do |format|
       format.text { render text: msg }
     end
   end
 
   def remind_vo(bookings)
     @bookings = bookings
-    recipients = VO_MAIL
     subject = "Oskickad festanmälan inom 48h"
-    mail to: recipients, subject: subject
+    mail to: VO_MAIL, subject: subject
   end
 end
