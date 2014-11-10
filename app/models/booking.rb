@@ -28,6 +28,7 @@ class Booking < ActiveRecord::Base
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
   scope :waiting, -> { where('accepted IS NULL') }
   scope :accepted, -> { where('accepted = ?', true) }
+  scope :not_denied, -> { where('accepted IS NULL or accepted = ?', true) }
   scope :party_reported, -> { where(party: true) }
   scope :in_room, -> (room) { where(room: room) }
   scope :unsent, -> { where('sent IS NULL OR sent = ?', false) }
