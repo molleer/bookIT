@@ -86,9 +86,9 @@ end
 class Symbol
 	def itize
 		case self
-			when :digit, :styrit, :sexit, :fritid, :snit, :flashit
+			when :digit, :styrit, :sexit, :fritid, :snit
 				self.to_s.gsub /it/, 'IT'
-			when :drawit, :armit, :hookit
+			when :drawit, :armit, :hookit, :flashit
 				self.to_s.titleize.gsub /it/, 'IT'
 			when :'8bit'
 				'8-bIT'
