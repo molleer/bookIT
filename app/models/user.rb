@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
 	base_uri "https://account.chalmers.it/userInfo.php"
 
 	@@ADMIN_GROUPS = [:digit, :prit]
-	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit]
+	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit]
 
 
 	def groups
@@ -86,7 +86,7 @@ end
 class Symbol
 	def itize
 		case self
-			when :digit, :styrit, :sexit, :fritid, :snit
+			when :digit, :styrit, :sexit, :fritid, :snit, :flashit
 				self.to_s.gsub /it/, 'IT'
 			when :drawit, :armit, :hookit
 				self.to_s.titleize.gsub /it/, 'IT'
