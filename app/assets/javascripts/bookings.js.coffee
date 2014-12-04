@@ -25,11 +25,13 @@ setFormValues = (activeRadio) ->
 	options.first().attr('disabled', fest)
 
 	# prevents a person to book rooms only to be booked by groups
-	if options.length > 1
-		$('#booking_group').val(options[1].value)
+	if fest
+		if options.length > 1
+			$('#booking_group').val(options[1].value)
+		else
+			$('#booking_group')[0].setCustomValidity('Lokalen kan ej bokas som privatperson')
 	else
-		$('#booking_group')[0].setCustomValidity('Lokalen kan ej bokas som privatperson')
-
+		$('#booking_group')[0].setCustomValidity('')
 
 	# Disable booking_fest if not festrum
 	$('#booking_party').attr('checked', false) unless fest
