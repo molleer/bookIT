@@ -10,6 +10,7 @@ class Ability
     elsif user.in_group? :styrit
       can :manage, Booking, user_id: user.id
       can :accept, Booking
+      can :read, :all
 
     else user.present? # not nil
       can :manage, Booking, user_id: user.id    # a user can manage bookings he/she created
