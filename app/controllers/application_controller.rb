@@ -27,6 +27,6 @@ class ApplicationController < ActionController::Base
     end
 
     def not_signed_in
-      render text: 'Logga in på: <a href="https://account.chalmers.it">https://account.chalmers.it</a>'
+      render text: 'Logga in på: <a href="https://account.chalmers.it" target="_top">https://account.chalmers.it</a>'
     end
 end
