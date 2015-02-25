@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
 
   after_action :allow_iframe
 
+  rescue_from SecurityError, with: :not_signed_in
+
 
   def current_user
     if session[:cookie] == cookies[:chalmersItAuth] && session[:user].present?
@@ -22,5 +24,9 @@ class ApplicationController < ActionController::Base
   private
     def allow_iframe
       response.headers['X-Frame-Options'] = 'ALLOW-FROM https://chalmers.it'
+    end
+
+    def not_signed_in
+      render text: 'Logga in på: <a href="https://account.chalmers.it">https://account.chalmers.it</a>'
     end
 end
