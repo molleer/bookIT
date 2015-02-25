@@ -76,9 +76,7 @@ class User < ActiveRecord::Base
 				self.new(cid: resp['cid'], first_name: resp['firstname'], last_name: resp['lastname'],
 					nick: resp['nick'], mail: resp['mail'])
 			else
-				puts options.inspect
-				raise resp.parsed_response
-				abort 'Please sign in!'
+				raise SecurityError, 'Not signed in!'
 			end
 		end
 end
