@@ -198,6 +198,13 @@ describe Booking do
 			room: hubben,
 			begin_date: Time.utc(2014, 7, 7, 17, 0),
 			end_date: Time.utc(2014, 7, 8, 2, 0)).should be_valid
+
+		# 8-bit bugg
+		build(:booking,
+			title: '8-bit bugg',
+			room: gruppr,
+			begin_date: Time.utc(2014, 7, 6, 21, 0),
+			end_date: Time.utc(2014, 7, 8, 12, 0)).should_not be_valid
 	end
 
 
