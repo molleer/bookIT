@@ -159,39 +159,52 @@ describe Booking do
 
 		# LAN
 		build(:party_booking,
+			title: 'LAN',
 			room: hubben,
 			begin_date: Time.utc(2014, 7, 4, 17, 0),
 			end_date: Time.utc(2014, 7, 6, 15, 0)).should be_valid
 
 		# Måndagstest
 		build(:party_booking,
+			title: 'Måndagstest',
 			room: hubben,
 			begin_date: Time.utc(2014, 7, 7, 17, 0),
 			end_date: Time.utc(2014, 7, 8, 15, 0)).should_not be_valid
 
 		# Sön-Lör
 		build(:party_booking,
+			title: 'Sön-Lör',
 			room: hubben,
 			begin_date: Time.utc(2014, 7, 6, 12, 0),
 			end_date: Time.utc(2014, 7, 12, 15, 0)).should_not be_valid
 
 		# Fre-Lör
 		build(:party_booking,
+			title: 'Fre-Lör',
 			room: hubben,
 			begin_date: Time.utc(2014, 7, 4, 17, 0),
 			end_date: Time.utc(2014, 7, 5, 15, 0)).should be_valid
 
 		# Sön-Mån
 		build(:party_booking,
+			title: 'Sön-Mån',
 			room: hubben,
 			begin_date: Time.utc(2014, 7, 6, 12, 0),
 			end_date: Time.utc(2014, 7, 7, 8, 0)).should be_valid
 
 		# Standard festbokning
 		build(:party_booking,
+			title: 'Standard festbokning',
 			room: hubben,
 			begin_date: Time.utc(2014, 7, 7, 17, 0),
 			end_date: Time.utc(2014, 7, 8, 2, 0)).should be_valid
+
+		# 8-bit bugg
+		build(:booking,
+			title: '8-bit bugg',
+			room: gruppr,
+			begin_date: Time.utc(2014, 7, 6, 21, 0),
+			end_date: Time.utc(2014, 7, 8, 12, 0)).should_not be_valid
 	end
 
 
@@ -220,7 +233,6 @@ describe Booking do
 			day_mask: 0b1111100,
 			allow: false
 		)
-		puts Rule.all.inspect
 		create(:booking,
 			title: 'fest en hel helg',
 			description: 'festar hela helgeeeen!',

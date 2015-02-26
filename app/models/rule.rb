@@ -40,6 +40,30 @@ class Rule < ActiveRecord::Base
   validate :both_or_no_time
 
 
+  def self.merge(rules) # according to whiteboard
+    result = []
+    ts = []
+    rules.each do |r|
+      ts << [r.start_time, r]
+      ts << [r.stop_time, r]
+    end
+    return [] if ts.empty?
+    ts.sort_by!{ |t| t.first }
+
+    # first element -> elem, rest in ts
+    elem, *ts = ts
+    curr = [elem.first, elem.last.stop_time, elem.last]
+    ts.each do |time, rule|
+      next_rule = relevant_rules(rules, time).sort_by!{ |r| r.prio }.first
+      curr[1] = time
+      result << curr
+      break if next_rule.nil?
+
+      curr = [time, next_rule.stop_time, next_rule]
+    end
+    result.reject{ |e| e[0] == e[1] }
+  end
+
   def days_array=(hash)
     string = hash.values.join
     self.day_mask = string.to_i 2
@@ -52,6 +76,17 @@ class Rule < ActiveRecord::Base
 
     day_mask_array = day_mask.to_s(2).rjust(7, '0').split('')
     (0..6).zip(day_mask_array).to_h
+  end
+
+  def with_date!(date)
+    self.start_time = start_time.change(day: date.day,
+      month: date.month,
+      year: date.year)
+    self.stop_time = stop_time.change(day: date.day,
+      month: date.month,
+      year: date.year)
+
+    self
   end
 
   def applies?(day)
@@ -71,6 +106,13 @@ class Rule < ActiveRecord::Base
       end
       if self.stop_time.nil?
         errors.add(:stopt_time, 'måste anges om start_time är angivet')
+      end
+    end
+
+    def self.relevant_rules(rules, time)
+      rules.select do |rule|
+        # interval including start_time, but not stop_time: [start_time, stop_time)
+        (rule.start_time...rule.stop_time).cover? time
       end
     end
 

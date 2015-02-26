@@ -7,6 +7,7 @@ FactoryGirl.define do
 		sequence(:mail) { |n| "smurf#{n}@example.com" }
 
 		factory :nollkit_user do
+			groups [:nollkit]
 		end
 	end
 	factory :booking do
@@ -24,6 +25,7 @@ FactoryGirl.define do
 			description 'digIT har fest!'
 			association :room, factory: :hubben
 			party true
+			group 'nollkit'
 			association :user, factory: :nollkit_user
 			phone '0020202020'
 			party_responsible 'Johan Lindskogen'

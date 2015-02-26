@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
 	validates :cid, :nick, :mail, :first_name, :last_name, presence: true
 	validates :cid, :mail, uniqueness: true
 
+	attr_accessor :groups
+
 
 	base_uri "https://account.chalmers.it/userInfo.php"
 
