@@ -54,7 +54,6 @@ end
 group :test do
 	gem "factory_girl_rails"
 	gem "capybara"
-	gem 'guard-rspec', require: false
 	gem 'rb-fsevent'
 	gem 'timecop', '~> 0.7.1'
 end
