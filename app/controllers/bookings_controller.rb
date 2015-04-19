@@ -26,6 +26,7 @@ class BookingsController < ApplicationController
 
   # GET /bookings/1/edit
   def edit
+    redirect_to :back, alert: 'Bokning är redan ivägskickad, får ej längre ändras' if @booking.party_report.sent
     @booking.build_party_report unless @booking.party_report.present?
   end
 
@@ -42,6 +43,7 @@ class BookingsController < ApplicationController
   # PATCH/PUT /bookings/1
   # PATCH/PUT /bookings/1.json
   def update
+    redirect_to :back, alert: 'Bokning är redan ivägskickad, fär ej längre ändras' if @booking.party_report.sent
     respond_to do |format|
       if @booking.update(booking_params)
 

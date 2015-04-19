@@ -83,17 +83,17 @@ class PartyReportsController < ApplicationController
       begin
         if params[:sent] == '1'
           @report.update(sent: true, accepted: true)
-          redirect_to @report, notice: 'Festanmälan markerad som skickad.'
+          redirect_to @report.booking, notice: 'Festanmälan markerad som skickad.'
         else
           @report.update(sent: false)
-          redirect_to @report, notice: 'Festanmälan markerad som oskickad.'
+          redirect_to @report.booking, notice: 'Festanmälan markerad som oskickad.'
         end
 
       rescue ActiveRecord::RecordInvalid => e
-        redirect_to @report, alert: e.message
+        redirect_to @report.booking, alert: e.message
       end
     else
-      redirect_to @report, alert: 'Du har inte privilegier till att hantera festanmälningar'
+      redirect_to @report.booking, alert: 'Du har inte privilegier till att hantera festanmälningar'
     end
   end
 
