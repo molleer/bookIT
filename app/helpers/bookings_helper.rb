@@ -15,4 +15,12 @@ module BookingsHelper
 	def user_bookings_path(user)
 		bookings_path(filter: ([user.cid] + user.groups).join(' '))
 	end
+
+  def party_begin_date(booking)
+    booking.party_report.begin_date || booking.begin_date
+  end
+
+  def party_end_date(booking)
+    booking.party_report.end_date || booking.end_date
+  end
 end

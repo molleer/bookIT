@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.4'
+gem 'rails', '4.2.1'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -35,6 +35,11 @@ gem 'ri_cal', '~> 0.8.5'
 gem 'cancan' # user authorization
 gem 'httparty'
 
+
+# send party reports
+gem 'capybara'
+gem 'poltergeist'
+
 # logical deletes
 gem 'paranoia'
 
@@ -42,6 +47,8 @@ group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
+
+gem 'web-console', '~> 2.0', group: :development
 
 group :development, :test do
 	gem "rspec-rails"
@@ -53,8 +60,7 @@ end
 
 group :test do
 	gem "factory_girl_rails"
-	gem "capybara"
-	gem 'guard-rspec', require: false
+	# gem "capybara" - required higher up
 	gem 'rb-fsevent'
 	gem 'timecop', '~> 0.7.1'
 end

@@ -34,24 +34,39 @@ setFormValues = (activeRadio) ->
 		$('#booking_group')[0].setCustomValidity('')
 
 	# Disable booking_fest if not festrum
-	$('#booking_party').attr('checked', false) unless fest
+	$('#party').attr('checked', false) unless fest
 
 
-	$('#booking_party').trigger('change')
+	$('#party').trigger('change')
 	# $('.party-info-container').toggle fest
 
 formScripts = ->
-	$('.party-info-container').show() if $('#booking_party').prop('checked')
+	$('.party-info-container').show() if $('#party').prop('checked')
+	$('.show-click').each ->
+		return unless $(@).prop('checked')
+		klass = $(@).data('show')
+		$(klass).show()
+		$(@).parent().hide()
 	setFormValues($('.location-container input[type="radio"]:checked').first())
 
+	$('.repeat-booking-container').show() if $('#repeat_booking').prop('checked')
+	
+	$('#repeat_booking').on 'change', ->
+		$('.repeat-booking-container').toggle @checked
 
+	$('.show-click').on 'change', ->
+		klass = $(@).data('show')
+		$(klass).show()
+		$(@).parent().hide()
 
 	$('.location-container').on 'change', 'input[type="radio"]', ->
 		setFormValues(@)
 
-
-	$('#booking_party').on 'change', (e) ->
+	$('#party').on 'change', (e) ->
 		$('.party-info-container').toggle @checked
+		$('#booking_party_report_attributes_begin_date').val($('#booking_begin_date').val())
+		$('#booking_party_report_attributes_end_date').val($('#booking_end_date').val())
+
 	if window.location.href.match /new/
 		for name, value of JSON.parse(localStorage.getItem 'bookITStorage')
 			$elem = $("\##{name}")

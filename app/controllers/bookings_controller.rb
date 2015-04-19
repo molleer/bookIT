@@ -1,5 +1,5 @@
 class BookingsController < ApplicationController
-  before_action :set_booking, only: [:show, :edit, :update, :destroy, :accept, :reject]
+  before_action :set_booking, only: [:show, :edit, :update, :destroy]
   authorize_resource
 
   # GET /bookings
@@ -19,35 +19,31 @@ class BookingsController < ApplicationController
 
   # GET /bookings/new
   def new
-    @booking = current_user.bookings.build(room: Room.find_by(name: 'Hubben'))
+    date = DateTime.now.change(min: 0)
+    @booking = current_user.bookings.build(room: Room.find_by(name: 'Hubben'), begin_date: date, end_date: date + 2.hours)
+    @booking.build_party_report
   end
 
   # GET /bookings/1/edit
   def edit
+    redirect_to :back, alert: 'Bokning är redan ivägskickad, får ej längre ändras' if @booking.party_report.sent
+    @booking.build_party_report unless @booking.party_report.present?
   end
 
   # POST /bookings
   # POST /bookings.json
   def create
-    @booking = current_user.bookings.build(booking_params)
-
-    respond_to do |format|
-      if @booking.save
-
-        email_update # tell about the new booking
-
-        format.html { redirect_to @booking, notice: 'Booking was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @booking }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @booking.errors, status: :unprocessable_entity }
-      end
+    unless params[:repeat_booking]
+      create_single_booking
+    else
+      create_repeated_booking
     end
   end
 
   # PATCH/PUT /bookings/1
   # PATCH/PUT /bookings/1.json
   def update
+    redirect_to :back, alert: 'Bokning är redan ivägskickad, fär ej längre ändras' if @booking.party_report.sent
     respond_to do |format|
       if @booking.update(booking_params)
 
@@ -73,28 +69,51 @@ class BookingsController < ApplicationController
     end
   end
 
-  # GET /bookings/1/accept
-  def accept
-    if can? :accept, @booking
-      @booking.accept
-      redirect_to party_reports_path, notice: 'Festanmälan accepterad'
-    else
-      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
-    end
-  end
-
-  # GET /bookings/1/reject
-  def reject
-    if can? :accept, @booking
-      @booking.reject
-      redirect_to party_reports_path, notice: 'Festanmälan avslagen'
-    else
-      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
-    end
-  end
-
-
   private
+    def create_single_booking
+      @booking = current_user.bookings.build(booking_params)
+      respond_to do |format|
+        if @booking.save
+
+          email_update # tell about the new booking
+
+          format.html { redirect_to @booking, notice: 'Booking was successfully created.' }
+          format.json { render action: 'show', status: :created, location: @booking }
+        else
+          format.html { render action: 'new' }
+          format.json { render json: @booking.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+
+    def create_repeated_booking
+      @booking = current_user.bookings.build(booking_params)
+      @failed_bookings = []
+      nbr_succeeded = 0
+      end_date = params[:repeat_until].to_date
+      final_end_date = [end_date, Date.today + 6.months].min
+
+      while final_end_date >= @booking.begin_date
+        unless @booking.save
+          @failed_bookings << @booking
+        else
+          email_update # tell about the new booking
+          nbr_succeeded += 1
+        end
+
+        @booking = @booking.dup
+        @booking.begin_date += 1.week
+        @booking.end_date += 1.week
+      end
+
+      if @failed_bookings.any?
+        @booking = @failed_bookings.first
+        render action: 'new'
+      else
+        redirect_to @booking, notice: "#{nbr_succeeded} bookings was successfully created."  
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_booking
       @booking = Booking.find(params[:id])
@@ -102,7 +121,10 @@ class BookingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def booking_params
-      params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :party, :party_responsible, :liquor_license, :party_responsible_phone, :phone, :room_id, :title)
+      party_report_attributes = [:party_responsible_name, :party_responsible_phone, :party_responsible_mail,
+                                :co_party_responsible_name, :co_party_responsible_phone, :co_party_responsible_mail,
+                                :begin_date, :end_date, :liquor_license, :id]
+      params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :phone, :room_id, party_report_attributes: party_report_attributes)
     end
 
     def email_update

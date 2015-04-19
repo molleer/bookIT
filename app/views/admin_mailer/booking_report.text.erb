@@ -6,11 +6,11 @@
 Mellan följande tider:
 <%= @booking.booking_range %>
 
-<% if @booking.party -%>
+<% if @booking.party_report.present? -%>
 Bokningen har festanmälts.
-<%- end -%>
-<%- if @booking.liquor_license -%>
+<%- if @booking.party_report.liquor_license -%>
 Serveringstillstånd har begärts.
+<% end %>
 <% end %>
 
 Länk till bokningen: <%= @url %>

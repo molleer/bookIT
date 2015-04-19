@@ -1,50 +1,105 @@
 class PartyReportsController < ApplicationController
   before_action :set_booking, except: [:index, :send_bookings, :preview_bookings]
+  authorize_resource
 
   def index
-    if cannot? :accept, Booking
+    if cannot? :accept, PartyReport
       redirect_to bookings_path, notice: 'Du har inte tillåtelse att visa denna sidan!'
     end
 
-    bookings = Booking.party_reported
-    @not_accepted_bookings = bookings.waiting.order(:begin_date)
-    @unsent_bookings = bookings.accepted.unsent.order(:begin_date)
-    @sent_bookings = bookings.accepted.sent.limit(10).order(begin_date: :desc)
-    puts @sent_bookings.to_sql
+    @not_accepted_reports = PartyReport.waiting.order(:begin_date)
+    @unsent_reports = PartyReport.accepted.unsent.order(:begin_date)
+    @sent_reports = PartyReport.accepted.sent.limit(10).order(begin_date: :desc)
   end
 
   def reply
   end
 
   def send_reply
-    if @booking.present?
-      @booking.reject
-      UserMailer.reject_party(@booking, mail_params).deliver
-      redirect_to party_reports_path, notice: 'Festanmälan avslagen, mail har skickats till anmälaren'
+    if @report.present?
+      begin
+        @report.reject
+        UserMailer.reject_party(@report, mail_params).deliver
+        redirect_to party_reports_path, notice: 'Festanmälan avslagen, mail har skickats till anmälaren'
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to party_reports_path, alert: e.message
+      end
     end
   end
 
   def preview_bookings
-    bookings = Booking.where(id: params[:booking_ids]).order(:begin_date)
+    bookings = Booking.where(id: params[:report_ids]).order(:begin_date)
     mail = AdminMailer.chalmers_report(bookings)
     render json: {
       to: mail.to,
       bcc: mail.bcc,
       source: mail.body.raw_source,
-      booking_ids: params[:booking_ids]
+      report_ids: params[:report_ids]
     }
   end
 
   def send_bookings
-    AdminMailer.chalmers_message(params[:message]).deliver
+    @report = PartyReport.find(params[:report_ids])
+    Thread.new do
+      StudentPortalReporter.new.party_report(@report)
+    end
+    # AdminMailer.chalmers_message(params[:message]).deliver
 
-    Booking.where(id: params[:booking_ids]).update_all(sent: true)
+    PartyReport.where(id: params[:report_ids]).update_all(sent: true)
     redirect_to party_reports_path, notice: 'Festanmälan har skickats till Chalmers!'
+  end
+
+  # GET /bookings/1/accept
+  def accept
+    if can? :accept, @report
+      begin
+        @report.accept!
+        redirect_to party_reports_path, notice: 'Festanmälan accepterad'
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to party_reports_path, alert: e.message
+      end
+    else
+      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
+    end
+  end
+
+  # GET /bookings/1/reject
+  def reject
+    if can? :accept, @report
+      begin
+        @report.reject!
+        redirect_to party_reports_path, notice: 'Festanmälan avslagen'
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to party_reports_path, alert: e.message
+      end
+    else
+      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
+    end
+  end
+
+  # GET /bookings/1/mark_as_sent
+  def mark_as_sent
+    if can? :accept, @report
+      begin
+        if params[:sent] == '1'
+          @report.update(sent: true, accepted: true)
+          redirect_to @report.booking, notice: 'Festanmälan markerad som skickad.'
+        else
+          @report.update(sent: false)
+          redirect_to @report.booking, notice: 'Festanmälan markerad som oskickad.'
+        end
+
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to @report.booking, alert: e.message
+      end
+    else
+      redirect_to @report.booking, alert: 'Du har inte privilegier till att hantera festanmälningar'
+    end
   end
 
   private
     def set_booking
-      @booking = Booking.find(params[:id])
+      @report = PartyReport.find(params[:id])
     end
 
     def mail_params

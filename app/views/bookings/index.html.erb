@@ -6,7 +6,7 @@
 <% if can? :manage, Rule %>
   | <%= link_to 'Regler', rules_path %>
 <% end %>
-<% if can? :accept, Booking %>
+<% if can? :accept, PartyReport %>
   | <%= link_to 'Festanmälningar', party_reports_path %>
 <% end %>
 <br>
