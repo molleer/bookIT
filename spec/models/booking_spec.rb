@@ -2,27 +2,21 @@
 #
 # Table name: bookings
 #
-#  id                      :integer          not null, primary key
-#  user_id                 :string(255)
-#  begin_date              :datetime
-#  end_date                :datetime
-#  group                   :string(255)
-#  description             :text
-#  party_responsible       :string(255)
-#  party_responsible_phone :string(255)
-#  room_id                 :integer
-#  created_at              :datetime
-#  updated_at              :datetime
-#  title                   :string(255)
-#  party                   :boolean
-#  phone                   :string(255)
-#  liquor_license          :boolean
-#  accepted                :boolean
-#  sent                    :boolean
-#  deleted_at              :datetime
+#  id          :integer          not null, primary key
+#  user_id     :string(255)
+#  begin_date  :datetime
+#  end_date    :datetime
+#  group       :string(255)
+#  description :text(65535)
+#  room_id     :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#  title       :string(255)
+#  phone       :string(255)
+#  deleted_at  :datetime
 #
 
-require 'spec_helper'
+require 'rails_helper'
 
 describe Booking do
 
@@ -119,7 +113,8 @@ describe Booking do
 
 	it "should have a valid phone number" do
 		build(:booking, phone: '636').should_not be_valid
-		build(:party_booking, party_responsible_phone: '636').should_not be_valid
+		report = build(:party_report, party_responsible_phone: '636')
+		build(:party_booking, party_report: report).should_not be_valid
 	end
 
 	it "should not allow party in non-party room" do
@@ -237,7 +232,6 @@ describe Booking do
 			title: 'fest en hel helg',
 			description: 'festar hela helgeeeen!',
 			room: gruppr,
-			party: false,
 			begin_date: Time.utc(2014, 9, 6, 12, 0),
 			end_date: Time.utc(2014, 9, 6, 23, 0)
 		).should be_valid

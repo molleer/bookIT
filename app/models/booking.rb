@@ -2,24 +2,18 @@
 #
 # Table name: bookings
 #
-#  id                      :integer          not null, primary key
-#  user_id                 :string(255)
-#  begin_date              :datetime
-#  end_date                :datetime
-#  group                   :string(255)
-#  description             :text
-#  party_responsible       :string(255)
-#  party_responsible_phone :string(255)
-#  room_id                 :integer
-#  created_at              :datetime
-#  updated_at              :datetime
-#  title                   :string(255)
-#  party                   :boolean
-#  phone                   :string(255)
-#  liquor_license          :boolean
-#  accepted                :boolean
-#  sent                    :boolean
-#  deleted_at              :datetime
+#  id          :integer          not null, primary key
+#  user_id     :string(255)
+#  begin_date  :datetime
+#  end_date    :datetime
+#  group       :string(255)
+#  description :text(65535)
+#  room_id     :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#  title       :string(255)
+#  phone       :string(255)
+#  deleted_at  :datetime
 #
 
 class Booking < ActiveRecord::Base
@@ -37,27 +31,22 @@ class Booking < ActiveRecord::Base
   belongs_to :room
   belongs_to :user
 
+  has_one :party_report, dependent: :destroy
+
   acts_as_paranoid # make destroy -> logical delete
 
+  accepts_nested_attributes_for :party_report
+
   before_validation :format_phone # remove any non-numeric characters
-  before_validation :clear_party_options_unless_party
+
+  validate :must_be_party_room, if: 'party_report.present?'
 
   # essential validations
   validates :title, :description, :user, :room, :begin_date, :end_date, presence: true
   validates :phone, presence: true,length: { minimum: 6 }
-  validates_inclusion_of :party, :in => [true, false]
-
-  # validations if party is selected:
-  with_options if: :party do |f|
-    f.validates :party_responsible_phone, presence: true, length: { minimum: 6 }
-    f.validates :party_responsible, presence: true
-    f.validates_inclusion_of :liquor_license, :in => [true, false]
-    f.validate :must_be_party_room
-  end
 
   validate :must_be_allowed
   validate :must_not_exceed_max_duration, :must_not_collide, :must_be_group_in_room
-  # validate :disallow_liquor_license_unless_party
 
   validates_datetime :begin_date, after: -> { DateTime.now.beginning_of_day }
   validates_datetime :end_date, after: :begin_date
@@ -117,9 +106,7 @@ class Booking < ActiveRecord::Base
     end
 
     def format_phone
-      [:phone, :party_responsible_phone].each do |s|
-        self[s].gsub!(/[^0-9]/, '') if self[s].present?
-      end
+      self.phone.gsub!(/[^0-9]/, '') if self.phone
     end
 
     def must_be_party_room # called if party
@@ -143,23 +130,6 @@ class Booking < ActiveRecord::Base
             return
           end
         end
-      end
-    end
-
-    def disallow_liquor_license_unless_party
-      unless self.party
-
-        # errors.add(:liquor_license, 'kan ej begäras om inte festanmält') if self.liquor_license
-        # errors.add(:party_responsible_phone, 'får ej anges om inte festanmält') if self.party_responsible_phone.present?
-        # errors.add(:party_responsible, 'får ej anges om inte festanmält') if self.party_responsible.present?
-      end
-    end
-
-    def clear_party_options_unless_party
-      unless self.party
-        self.liquor_license = false
-        self.party_responsible = ""
-        self.party_responsible_phone = ""
       end
     end
 
