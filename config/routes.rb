@@ -5,6 +5,9 @@ BookIT::Application.routes.draw do
     member do
       get :reply
       post :send_reply
+      get :accept
+      get :reject
+      get :mark_as_sent
     end
   end
 
@@ -15,13 +18,7 @@ BookIT::Application.routes.draw do
     end
   end
 
-  resources :bookings do
-    member do
-      get :accept
-      get :reject
-      get :mark_as_sent
-    end
-  end
+  resources :bookings
 
   resources :rules, :rooms
   resources :terms, only: [:index, :edit, :update]

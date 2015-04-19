@@ -11,3 +11,10 @@ $ ->
 		return false
 	$('.send_bookings').click ->
 		$('#send_form').reveal()
+
+showEmail = (mail, url, id) ->
+	$('#email').val(mail)
+	$('#link').val(url)
+	$form = $('#mail_form form')
+	$form.attr('action', $form.data('url').replace('$$', id))
+	$('#mail_form').reveal()

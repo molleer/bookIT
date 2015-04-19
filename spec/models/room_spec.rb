@@ -10,7 +10,7 @@
 #  only_group  :boolean
 #
 
-require 'spec_helper'
+require 'rails_helper'
 
 describe Room do
   it "should have valid factories" do

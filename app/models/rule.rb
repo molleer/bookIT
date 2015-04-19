@@ -10,7 +10,7 @@
 #  stop_time  :time
 #  allow      :boolean
 #  prio       :integer
-#  reason     :text
+#  reason     :text(65535)
 #  title      :string(255)
 #  created_at :datetime
 #  updated_at :datetime

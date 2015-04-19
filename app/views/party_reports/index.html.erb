@@ -1,27 +1,27 @@
 <h1>Festanmälningar</h1>
 <%= link_to "Bokningar", bookings_path %>
-<% if @not_accepted_bookings.any? %>
+<% if @not_accepted_reports.any? %>
 	<h2>Att acceptera:</h2>
 	<em>Vid godkännande kommer endast personen som bokade att meddelas via mail</em>
-	<%= render 'bookinglist', bookings: @not_accepted_bookings, active: true %>
+	<%= render 'bookinglist', reports: @not_accepted_reports, active: true %>
 <% end %>
 
 
-<% if @unsent_bookings.any? %>
+<% if @unsent_reports.any? %>
 	<br>
 	<h2>Ej skickade:</h2>
 	<em>Festanmälningar väntandes på att bli skickade, klicka på 'Öppna massutskick'</em>
-	<%= render 'bookinglist', bookings: @unsent_bookings, active: false %>
+	<%= render 'bookinglist', reports: @unsent_reports, active: false %>
 	<br>
 	<button class="send_bookings">Öppna massutskick</button>
 <% end %>
 <%= render 'mail' %>
-<%= render 'send_bookings', bookings: @unsent_bookings %>
+<%= render 'send_bookings', reports: @unsent_reports %>
 
 
-<% if @sent_bookings.any? %>
+<% if @sent_reports.any? %>
 	<br>
 	<h2>Skickade:</h2>
 	<em>10 senaste festanmälningar skickade till Chalmers</em>
-	<%= render 'bookinglist', bookings: @sent_bookings, active: false %>
+	<%= render 'bookinglist', reports: @sent_reports, active: false %>
 <% end %>

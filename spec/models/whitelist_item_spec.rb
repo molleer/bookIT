@@ -14,7 +14,7 @@
 #  blacklist    :boolean
 #
 
-require 'spec_helper'
+require 'rails_helper'
 
 describe WhitelistItem do
 	it "should have valid factories" do

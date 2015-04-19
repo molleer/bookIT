@@ -9,8 +9,8 @@ class AdminMailer < ActionMailer::Base
 
     recipients = [PRIT_MAIL, @booking.user.mail]
 
-    recipients << VO_MAIL if @booking.party
-    subject = "#{@booking.party ? 'Festanmälan' : 'Bokning'} av #{@booking.room}, #{@booking.booking_range}"
+    recipients << VO_MAIL if @booking.party_report.present?
+    subject = "#{@booking.party_report.present? ? 'Festanmälan' : 'Bokning'} av #{@booking.room}, #{@booking.booking_range}"
 
     mail to: recipients, subject: subject, reply_to: @booking.user.mail
   end
