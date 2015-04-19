@@ -40,7 +40,7 @@
     </li>
     <li>
       <%= f.label :end_date %>
-      <%= datetime_local_helper(f, :end_date, DateTime.now + 2.hours) %>
+      <%= datetime_local_helper f, :end_date %>
     </li>
   </ul>
   <p>
@@ -54,23 +54,59 @@
     </li>
   </ul>
   <p class="party-container">
-    <%= f.label :party do %>
-      <%= f.check_box :party %> Jag vill även festanmäla
+    <%= label_tag :party do %>
+      <%= check_box_tag :party, 1, f.object.party_report.persisted? || params[:party] %> Jag vill även festanmäla
     <% end %>
   </p>
   <div class="party-info-container" style="display:none">
-    <ul>
-      <li>
-        <%= f.label :party_responsible %>
-        <%= f.text_field :party_responsible, data: { persist: true } %>
-      </li>
-      <li>
-        <%= f.label :party_responsible_phone %>
-        <%= f.text_field :party_responsible_phone, data: { persist: true } %>
-      </li>
-    </ul>
-    <%= f.label :liquor_license do %>
-      <%= f.check_box :liquor_license %> <%= Booking.human_attribute_name(:liquor_license) %>
+    <%= f.fields_for :party_report do |report| %>
+      <%= report.label :liquor_license do %>
+        <%= report.check_box :liquor_license %> <%= PartyReport.human_attribute_name(:liquor_license) %>
+      <% end %>
+      <ul>
+        <li>
+          <%= report.label PartyReport.human_attribute_name(:party_responsible_name) %>
+          <%= report.text_field :party_responsible_name, data: { persist: true } %>
+        </li>
+        <li>
+          <%= report.label PartyReport.human_attribute_name(:party_responsible_phone) %>
+          <%= report.text_field :party_responsible_phone, data: { persist: true } %>
+        </li>
+        <li>
+          <%= report.label PartyReport.human_attribute_name(:party_responsible_mail) %>
+          <%= report.text_field :party_responsible_mail, data: { persist: true } %>
+        </li>
+      </ul>
+      <%= label_tag :co_responsible do %>
+        <%= check_box_tag :co_responsible, 1, f.object.party_report.co_party_responsible_name.present?, data: { show: '.co-resp-show' }, class: 'show-click' %> Jag vill ha medansvarig
+      <% end %>
+      <ul class="co-resp-show" style="display:none">
+        <li>
+          <%= report.label PartyReport.human_attribute_name(:co_party_responsible_name) %>
+          <%= report.text_field :co_party_responsible_name %>
+        </li>
+        <li>
+          <%= report.label PartyReport.human_attribute_name(:co_party_responsible_phone) %>
+          <%= report.text_field :co_party_responsible_phone %>
+        </li>
+        <li>
+          <%= report.label PartyReport.human_attribute_name(:co_party_responsible_mail) %>
+          <%= report.text_field :co_party_responsible_mail %>
+        </li>
+      </ul>
+      <%= label_tag :custom_party_date do %>
+        <%= check_box_tag :custom_party_date, 1, f.object.party_report.begin_date && f.object.begin_date != f.object.party_report.begin_date, data: { show: '.custom-date-show' }, class: 'show-click' %> Festanmälan gäller inte hela bokningstiden
+      <% end %>
+      <ul class="custom-date-show" style="display:none">
+        <li>
+          <%= report.label PartyReport.human_attribute_name(:begin_date) %>
+          <%= datetime_local_helper report, :begin_date, party_begin_date(f.object) %>
+        </li>
+        <li>
+          <%= report.label PartyReport.human_attribute_name(:end_date) %>
+          <%= datetime_local_helper report, :end_date, party_end_date(f.object) %>
+        </li>
+      </ul>
     <% end %>
   </div>
   <div>

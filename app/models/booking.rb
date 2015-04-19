@@ -20,13 +20,7 @@ class Booking < ActiveRecord::Base
   scope :by_group_or_user, -> (name) { where('user_id IN (?) OR `group` IN (?)', name, name) }
   scope :in_future, -> { where('end_date >= ?', DateTime.now) }
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
-  scope :waiting, -> { where('accepted IS NULL') }
-  scope :accepted, -> { where('accepted = ?', true) }
-  scope :not_denied, -> { where('accepted IS NULL or accepted = ?', true) }
-  scope :party_reported, -> { where(party: true) }
   scope :in_room, -> (room) { where(room: room) }
-  scope :unsent, -> { where('sent IS NULL OR sent = ?', false) }
-  scope :sent, -> { with_deleted.where('sent = ?', true) }
 
   belongs_to :room
   belongs_to :user
@@ -51,18 +45,23 @@ class Booking < ActiveRecord::Base
   validates_datetime :begin_date, after: -> { DateTime.now.beginning_of_day }
   validates_datetime :end_date, after: :begin_date
 
+
+  def user
+    @user ||= User.find(self.user_id)
+  end
+
   def group_sym
     group.to_sym
   end
 
   def status_text
-    if accepted
-      if sent
+    if party_report && party_report.accepted
+      if party_report && party_report.sent
         return 'Godkänd och skickad till Chalmers'
       else
         return 'Godkänd, ej skickad till Chalmers'
       end
-    elsif accepted.nil?
+    elsif party_report && party_report.accepted.nil?
       return 'Väntar på godkännande av VO'
     else
       return 'Avslagen'
@@ -79,24 +78,6 @@ class Booking < ActiveRecord::Base
       ary << I18n.localize(end_date, format: DATE_AND_TIME)
     end
     ary.join ' - '
-  end
-
-  def accept
-    self.accepted = true
-    save!
-  end
-
-  def reject
-    self.accepted = false
-    save!
-  end
-
-  def accepted?
-    self.accepted == true
-  end
-
-  def rejected?
-    self.accepted == false
   end
 
   private

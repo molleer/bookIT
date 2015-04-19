@@ -1,6 +1,5 @@
 class BookingsController < ApplicationController
-  before_action :set_booking, only: [:show, :edit, :update, :destroy, 
-                                      :accept, :reject, :mark_as_sent]
+  before_action :set_booking, only: [:show, :edit, :update, :destroy]
   authorize_resource
 
   # GET /bookings
@@ -20,11 +19,14 @@ class BookingsController < ApplicationController
 
   # GET /bookings/new
   def new
-    @booking = current_user.bookings.build(room: Room.find_by(name: 'Hubben'))
+    date = DateTime.now.change(min: 0)
+    @booking = current_user.bookings.build(room: Room.find_by(name: 'Hubben'), begin_date: date, end_date: date + 2.hours)
+    @booking.build_party_report
   end
 
   # GET /bookings/1/edit
   def edit
+    @booking.build_party_report unless @booking.party_report.present?
   end
 
   # POST /bookings
@@ -74,54 +76,6 @@ class BookingsController < ApplicationController
     end
   end
 
-  # GET /bookings/1/accept
-  def accept
-    if can?(:accept, @booking)
-      begin
-        @booking.accept
-        redirect_to party_reports_path, notice: 'Festanmälan accepterad'
-      rescue ActiveRecord::RecordInvalid => e
-        redirect_to party_reports_path, alert: e.message
-      end
-    else
-      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
-    end
-  end
-
-  # GET /bookings/1/reject
-  def reject
-    if can?(:accept, @booking)
-      begin
-        @booking.reject
-        redirect_to party_reports_path, notice: 'Festanmälan avslagen'
-      rescue ActiveRecord::RecordInvalid => e
-        redirect_to party_reports_path, alert: e.message
-      end
-    else
-      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
-    end
-  end
-
-  # GET /bookings/1/mark_as_sent
-  def mark_as_sent
-    if can?(:accept, @booking)
-      begin
-        if params[:sent]=='1' 
-          @booking.update(sent: true, accepted: true)
-          redirect_to @booking, notice: 'Booking was marked as sent.'
-        else
-          @booking.update(sent: false)
-          redirect_to @booking, notice: 'Booking was marked as unsent.'
-        end
-        
-      rescue ActiveRecord::RecordInvalid => e
-        redirect_to @booking, alert: e.message
-      end
-    else
-      redirect_to @booking, alert: 'Du har inte privilegier till att hantera festanmälningar'
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_booking
@@ -130,7 +84,10 @@ class BookingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def booking_params
-      params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :party, :party_responsible, :liquor_license, :party_responsible_phone, :phone, :room_id, :title)
+      party_report_attributes = [:party_responsible_name, :party_responsible_phone, :party_responsible_mail,
+                                :co_party_responsible_name, :co_party_responsible_phone, :co_party_responsible_mail,
+                                :begin_date, :end_date, :liquor_license, :id]
+      params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :phone, :room_id, party_report_attributes: party_report_attributes)
     end
 
     def email_update

@@ -1,9 +1,9 @@
 <div id="send_form" class="reveal-modal medium">
 	<h2>Masskicka festanmälan</h2>
 	<%= form_tag send_bookings_party_reports_url, method: :post do %>
-		<% bookings.each do |b| %>
+		<% reports.each do |r| %>
 			<%= label_tag do %>
-				<%= check_box_tag 'booking_ids[]', b.id, true %><%= b.title %>
+				<%= check_box_tag 'report_ids[]', r.id, true %><%= r.title %>
 			<% end %><br>
 		<% end %>
 		<br>
