@@ -211,6 +211,8 @@ sv:
         liquor_license: Serveringstillstånd
         room_id: Lokal
         room: Lokal
+        repeat_booking: "Repetera bokning"
+        repeat_until: "Repetera tills"
     errors:
       models:
         booking:

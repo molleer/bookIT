@@ -44,14 +44,18 @@ formScripts = ->
 	$('.party-info-container').show() if $('#booking_party').prop('checked')
 	setFormValues($('.location-container input[type="radio"]:checked').first())
 
-
-
+	$('.repeat-booking-container').show() if $('#repeat_booking').prop('checked')
+	
 	$('.location-container').on 'change', 'input[type="radio"]', ->
 		setFormValues(@)
 
 
 	$('#booking_party').on 'change', (e) ->
 		$('.party-info-container').toggle @checked
+
+	$('#repeat_booking').on 'change', ->
+		$('.repeat-booking-container').toggle @checked
+
 	if window.location.href.match /new/
 		for name, value of JSON.parse(localStorage.getItem 'bookITStorage')
 			$elem = $("\##{name}")

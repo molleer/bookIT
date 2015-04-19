@@ -14,6 +14,22 @@
     </div>
   <% end %>
 
+ <% if @failed_bookings and @failed_bookings.any? %>
+      <div id="error-repeated-bookings" class="message-warning">
+        <h3><%= @failed_bookings.size %> bokningar misslyckades att sparas </h3>
+        <ul>
+        <% @failed_bookings.each do |fb| %>
+          <ul>
+          <h4><%= fb.begin_date.strftime "%F" %></h4>
+          <% fb.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+          </ul>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
   <p class="title-container">
     <%= f.label :title %>
     <%= f.text_field :title, placeholder: "Ex. spelkväll med drawIT" %>
@@ -79,6 +95,13 @@
         <%= check_box 'term', 'accepted', required: true %> Jag har läst igenom och accepterar <%= link_to 'bokningsvillkoren', '#', data: { 'reveal-id' => "terms_#{i}"}%>
       <% end %>
     <% end %>
+    <%= label_tag :repeat_booking do %>
+      <%= check_box_tag :repeat_booking %> Jag vill repetera denna bokning veckoligen
+    <% end %>
+    <div class="repeat-booking-container" style="display:none">
+      <%= label_tag Booking.human_attribute_name(:repeat_until) %>
+      <%= date_field_tag :repeat_until %>
+    </div>
   </div>
   <br>
   <div class="actions">

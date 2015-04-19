@@ -30,19 +30,10 @@ class BookingsController < ApplicationController
   # POST /bookings
   # POST /bookings.json
   def create
-    @booking = current_user.bookings.build(booking_params)
-
-    respond_to do |format|
-      if @booking.save
-
-        email_update # tell about the new booking
-
-        format.html { redirect_to @booking, notice: 'Booking was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @booking }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @booking.errors, status: :unprocessable_entity }
-      end
+    unless params[:repeat_booking]
+      create_single_booking
+    else
+      create_repeated_booking
     end
   end
 
@@ -123,6 +114,50 @@ class BookingsController < ApplicationController
   end
 
   private
+    def create_single_booking
+      @booking = current_user.bookings.build(booking_params)
+      respond_to do |format|
+        if @booking.save
+
+          email_update # tell about the new booking
+
+          format.html { redirect_to @booking, notice: 'Booking was successfully created.' }
+          format.json { render action: 'show', status: :created, location: @booking }
+        else
+          format.html { render action: 'new' }
+          format.json { render json: @booking.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+
+    def create_repeated_booking
+      @booking = current_user.bookings.build(booking_params)
+      @failed_bookings = []
+      nbr_succeeded = 0
+      end_date = params[:repeat_until].to_date
+      final_end_date = [end_date, Date.today + 6.months].min
+
+      while final_end_date >= @booking.begin_date
+        unless @booking.save
+          @failed_bookings << @booking
+        else
+          email_update # tell about the new booking
+          nbr_succeeded += 1
+        end
+
+        @booking = @booking.dup
+        @booking.begin_date += 1.week
+        @booking.end_date += 1.week
+      end
+
+      if @failed_bookings.any?
+        @booking = @failed_bookings.first
+        render action: 'new'
+      else
+        redirect_to @booking, notice: "#{nbr_succeeded} bookings was successfully created."  
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_booking
       @booking = Booking.find(params[:id])
