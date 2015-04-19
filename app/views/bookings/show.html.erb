@@ -6,7 +6,7 @@
   <% if @booking.group.present? %>
   <br><strong>Förening:</strong> <%= @booking.group_sym.itize if @booking.group.present? %>
   <% end %>
-  <% if @booking.party && current_user.admin? %>
+  <% if @booking.party && can?(:accept, Booking) %>
   <br><strong><%= Booking.human_attribute_name(:party_responsible) %>:</strong>
     <%= @booking.party_responsible %> (<%= @booking.party_responsible_phone %>)
   <% end %>
@@ -22,3 +22,14 @@ Bokningens status: <%= @booking.status_text %>.
 <% end %>
 <%= link_to 'Redigera', edit_booking_path(@booking), class: 'btn btn-boring' %>
 <%= link_to 'Alla bokningar', bookings_path, class: 'btn btn-boring' %>
+<br>
+<% if @booking.party && can?(:accept, Booking) %>
+  <br>
+  <%= link_to 'Markera bokning skickad', 
+  mark_as_sent_booking_path(@booking, sent: 1),
+  class: 'btn btn-boring' unless @booking.sent %>
+
+  <%= link_to 'Markera bokning oskickad', 
+  mark_as_sent_booking_path(@booking, sent: 0),
+  class: 'btn btn-boring' if @booking.sent %>
+<% end %>

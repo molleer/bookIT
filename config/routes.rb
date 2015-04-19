@@ -19,6 +19,7 @@ BookIT::Application.routes.draw do
     member do
       get :accept
       get :reject
+      get :mark_as_sent
     end
   end
 

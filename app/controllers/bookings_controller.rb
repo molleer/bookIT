@@ -1,5 +1,6 @@
 class BookingsController < ApplicationController
-  before_action :set_booking, only: [:show, :edit, :update, :destroy, :accept, :reject]
+  before_action :set_booking, only: [:show, :edit, :update, :destroy, 
+                                      :accept, :reject, :mark_as_sent]
   authorize_resource
 
   # GET /bookings
@@ -101,6 +102,25 @@ class BookingsController < ApplicationController
     end
   end
 
+  # GET /bookings/1/mark_as_sent
+  def mark_as_sent
+    if can?(:accept, @booking)
+      begin
+        if params[:sent]=='1' 
+          @booking.update(sent: true, accepted: true)
+          redirect_to @booking, notice: 'Booking was marked as sent.'
+        else
+          @booking.update(sent: false)
+          redirect_to @booking, notice: 'Booking was marked as unsent.'
+        end
+        
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to @booking, alert: e.message
+      end
+    else
+      redirect_to @booking, alert: 'Du har inte privilegier till att hantera festanmälningar'
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

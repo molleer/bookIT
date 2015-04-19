@@ -68,7 +68,11 @@ class Booking < ActiveRecord::Base
 
   def status_text
     if accepted
-      return 'Godkänd'
+      if sent
+        return 'Godkänd och skickad till Chalmers'
+      else
+        return 'Godkänd, ej skickad till Chalmers'
+      end
     elsif accepted.nil?
       return 'Väntar på godkännande av VO'
     else
