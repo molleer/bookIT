@@ -18,9 +18,13 @@ class PartyReportsController < ApplicationController
 
   def send_reply
     if @booking.present?
-      @booking.reject
-      UserMailer.reject_party(@booking, mail_params).deliver
-      redirect_to party_reports_path, notice: 'Festanmälan avslagen, mail har skickats till anmälaren'
+      begin
+        @booking.reject
+        UserMailer.reject_party(@booking, mail_params).deliver
+        redirect_to party_reports_path, notice: 'Festanmälan avslagen, mail har skickats till anmälaren'
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to party_reports_path, alert: e.message
+      end
     end
   end
 
@@ -36,7 +40,11 @@ class PartyReportsController < ApplicationController
   end
 
   def send_bookings
-    AdminMailer.chalmers_message(params[:message]).deliver
+    @bookings = Booking.find(params[:booking_ids])
+    Thread.new do
+      StudentPortalReporter.new.party_report(@bookings)
+    end
+    # AdminMailer.chalmers_message(params[:message]).deliver
 
     Booking.where(id: params[:booking_ids]).update_all(sent: true)
     redirect_to party_reports_path, notice: 'Festanmälan har skickats till Chalmers!'

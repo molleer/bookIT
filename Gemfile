@@ -35,6 +35,11 @@ gem 'ri_cal', '~> 0.8.5'
 gem 'cancan' # user authorization
 gem 'httparty'
 
+
+# send party reports
+gem 'capybara'
+gem 'poltergeist'
+
 # logical deletes
 gem 'paranoia'
 
@@ -42,6 +47,8 @@ group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
+
+gem 'web-console', '~> 2.0', group: :development
 
 group :development, :test do
 	gem "rspec-rails"
@@ -53,7 +60,7 @@ end
 
 group :test do
 	gem "factory_girl_rails"
-	gem "capybara"
+	# gem "capybara" - required higher up
 	gem 'rb-fsevent'
 	gem 'timecop', '~> 0.7.1'
 end

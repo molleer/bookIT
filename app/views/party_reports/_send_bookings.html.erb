@@ -1,25 +1,13 @@
 <div id="send_form" class="reveal-modal medium">
 	<h2>Masskicka festanmälan</h2>
-	<%= form_tag preview_bookings_party_reports_url, method: :get do %>
+	<%= form_tag send_bookings_party_reports_url, method: :post do %>
 		<% bookings.each do |b| %>
 			<%= label_tag do %>
 				<%= check_box_tag 'booking_ids[]', b.id, true %><%= b.title %>
 			<% end %><br>
 		<% end %>
 		<br>
-		<%= submit_tag 'Förhandsgranska mail', class: 'button preview_mail' %>
-	<% end %>
-	<%= form_tag send_bookings_party_reports_url,
-				id: 'send_msg_form', class: 'hidden' do %>
-		<textarea class="message-preview" name="message"></textarea>
-		<br>
-		<br>
-		<%= submit_tag 'Skicka mail', class: 'close-reveal-modal button' %>
-		<br>
-		<small>
-			Mail kommer skickas från vo@chalmers.it till:
-			<ul class="message-recipients"></ul>
-		</small>
+		<%= submit_tag 'Skicka festanmälningar', class: 'button preview_mail' %>
 	<% end %>
 	<a href="#" class="close-reveal-modal">&times;</a>
 </div>

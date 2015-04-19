@@ -55,6 +55,7 @@ GEM
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
     chunky_png (1.3.4)
+    cliver (0.3.2)
     coderay (1.1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
@@ -115,6 +116,11 @@ GEM
       mini_portile (~> 0.6.0)
     paranoia (2.1.1)
       activerecord (~> 4.0)
+    poltergeist (1.6.0)
+      capybara (~> 2.1)
+      cliver (~> 0.3.1)
+      multi_json (~> 1.0)
+      websocket-driver (>= 0.2.0)
     rack (1.6.0)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -199,6 +205,14 @@ GEM
       json (>= 1.8.0)
     validates_timeliness (3.0.14)
       timeliness (~> 0.3.6)
+    web-console (2.1.2)
+      activemodel (>= 4.0)
+      binding_of_caller (>= 0.7.2)
+      railties (>= 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+    websocket-driver (0.5.4)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.2)
     xpath (2.0.0)
       nokogiri (~> 1.3)
     zurb-foundation (3.2.5)
@@ -226,6 +240,7 @@ DEPENDENCIES
   mysql2
   nokogiri
   paranoia
+  poltergeist
   rails (= 4.2.1)
   rb-fsevent
   redcarpet
@@ -238,4 +253,5 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   validates_timeliness (~> 3.0)
+  web-console (~> 2.0)
   zurb-foundation (~> 3.0)

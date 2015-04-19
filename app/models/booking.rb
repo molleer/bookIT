@@ -90,12 +90,12 @@ class Booking < ActiveRecord::Base
 
   def accept
     self.accepted = true
-    save
+    save!
   end
 
   def reject
     self.accepted = false
-    save
+    save!
   end
 
   def accepted?

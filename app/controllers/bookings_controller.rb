@@ -75,9 +75,13 @@ class BookingsController < ApplicationController
 
   # GET /bookings/1/accept
   def accept
-    if can? :accept, @booking
-      @booking.accept
-      redirect_to party_reports_path, notice: 'Festanmälan accepterad'
+    if can?(:accept, @booking)
+      begin
+        @booking.accept
+        redirect_to party_reports_path, notice: 'Festanmälan accepterad'
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to party_reports_path, alert: e.message
+      end
     else
       redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
     end
@@ -85,9 +89,13 @@ class BookingsController < ApplicationController
 
   # GET /bookings/1/reject
   def reject
-    if can? :accept, @booking
-      @booking.reject
-      redirect_to party_reports_path, notice: 'Festanmälan avslagen'
+    if can?(:accept, @booking)
+      begin
+        @booking.reject
+        redirect_to party_reports_path, notice: 'Festanmälan avslagen'
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to party_reports_path, alert: e.message
+      end
     else
       redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
     end
