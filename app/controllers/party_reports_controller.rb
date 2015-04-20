@@ -7,9 +7,11 @@ class PartyReportsController < ApplicationController
       redirect_to bookings_path, notice: 'Du har inte tillåtelse att visa denna sidan!'
     end
 
-    @not_accepted_reports = PartyReport.waiting.order(:begin_date)
-    @unsent_reports = PartyReport.accepted.unsent.order(:begin_date)
-    @sent_reports = PartyReport.accepted.sent.limit(10).order(begin_date: :desc)
+    sorted = PartyReport.joins(:booking).order('bookings.begin_date')
+
+    @not_accepted_reports = sorted.waiting
+    @unsent_reports = sorted.accepted.unsent
+    @sent_reports = sorted.accepted.sent.limit(10).order(sent_at: :desc)
   end
 
   def reply
@@ -45,7 +47,7 @@ class PartyReportsController < ApplicationController
     end
     # AdminMailer.chalmers_message(params[:message]).deliver
 
-    PartyReport.where(id: params[:report_ids]).update_all(sent: true)
+    PartyReport.where(id: params[:report_ids]).update_all(sent_at: Time.zone.now)
     redirect_to party_reports_path, notice: 'Festanmälan har skickats till Chalmers!'
   end
 
@@ -82,10 +84,10 @@ class PartyReportsController < ApplicationController
     if can? :accept, @report
       begin
         if params[:sent] == '1'
-          @report.update(sent: true, accepted: true)
+          @report.update(sent_at: Time.zone.now, accepted: true)
           redirect_to @report.booking, notice: 'Festanmälan markerad som skickad.'
         else
-          @report.update(sent: false)
+          @report.update(sent_at: nil)
           redirect_to @report.booking, notice: 'Festanmälan markerad som oskickad.'
         end
 

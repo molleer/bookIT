@@ -24,8 +24,8 @@ class PartyReport < ActiveRecord::Base
   scope :waiting, -> { where('accepted IS NULL') }
   scope :accepted, -> { where('accepted = ?', true) }
   scope :not_denied, -> { where('accepted IS NULL or accepted = ?', true) }
-  scope :sent, -> { with_deleted.where('sent = ?', true) }
-  scope :unsent, -> { where('sent IS NULL OR sent = ?', false) }
+  scope :sent, -> { with_deleted.where('sent_at IS NOT NULL') }
+  scope :unsent, -> { where('sent_at IS NULL') }
 
   belongs_to :booking
 
@@ -39,6 +39,11 @@ class PartyReport < ActiveRecord::Base
 
 
   before_save :remove_dates
+
+
+  def sent?
+    self.sent_at.present?
+  end
 
   def submit_begin_date
     self.begin_date || booking.begin_date
