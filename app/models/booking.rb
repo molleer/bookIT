@@ -56,7 +56,7 @@ class Booking < ActiveRecord::Base
 
   def status_text
     if party_report && party_report.accepted
-      if party_report && party_report.sent
+      if party_report && party_report.sent?
         return 'Godkänd och skickad till Chalmers'
       else
         return 'Godkänd, ej skickad till Chalmers'
