@@ -27,9 +27,9 @@ Bokningens status: <%= @booking.status_text %>.
   <br>
   <%= link_to 'Markera bokning skickad',
   mark_as_sent_party_report_path(@booking.party_report, sent: 1),
-  class: 'btn btn-boring' unless @booking.party_report.sent %>
+  class: 'btn btn-boring' unless @booking.party_report.sent? %>
 
   <%= link_to 'Markera bokning oskickad',
   mark_as_sent_party_report_path(@booking.party_report, sent: 0),
-  class: 'btn btn-boring' if @booking.party_report.sent %>
+  class: 'btn btn-boring' if @booking.party_report.sent? %>
 <% end %>
