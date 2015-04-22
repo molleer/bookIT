@@ -42,9 +42,9 @@ class PartyReportsController < ApplicationController
 
   def send_bookings
     @report = PartyReport.find(params[:report_ids])
-    Thread.new do
+    # Thread.new do
       StudentPortalReporter.new.party_report(@report)
-    end
+    # end
     # AdminMailer.chalmers_message(params[:message]).deliver
 
     PartyReport.where(id: params[:report_ids]).update_all(sent_at: Time.zone.now)
