@@ -71,7 +71,7 @@
   </ul>
   <p class="party-container">
     <%= label_tag :party do %>
-      <%= check_box_tag :party, 1, f.object.party_report.persisted? || params[:party] %> Jag vill även festanmäla
+      <%= check_box_tag :party, 1, f.object.party_report && (f.object.party_report.persisted? || params[:party]) %> Jag vill även festanmäla
     <% end %>
   </p>
   <div class="party-info-container" style="display:none">
@@ -111,7 +111,7 @@
         </li>
       </ul>
       <%= label_tag :custom_party_date do %>
-        <%= check_box_tag :custom_party_date, 1, f.object.party_report.begin_date && f.object.begin_date != f.object.party_report.begin_date, data: { show: '.custom-date-show' }, class: 'show-click' %> Festanmälan gäller inte hela bokningstiden
+        <%= check_box_tag :custom_party_date, 1, show_party_date?(f.object), data: { show: '.custom-date-show' }, class: 'show-click' %> Festanmälan gäller inte hela bokningstiden
       <% end %>
       <ul class="custom-date-show" style="display:none">
         <li>
@@ -131,13 +131,15 @@
         <%= check_box 'term', 'accepted', required: true %> Jag har läst igenom och accepterar <%= link_to 'bokningsvillkoren', '#', data: { 'reveal-id' => "terms_#{i}"}%>
       <% end %>
     <% end %>
-    <%= label_tag :repeat_booking do %>
-      <%= check_box_tag :repeat_booking %> Jag vill repetera denna bokning veckoligen
+    <% if f.object.new_record? # don't allow repeated bookings on already created booking object %>
+      <%= label_tag :repeat_booking do %>
+        <%= check_box_tag :repeat_booking %> Jag vill repetera denna bokning veckoligen
+      <% end %>
+      <div class="repeat-booking-container" style="display:none">
+        <%= label_tag Booking.human_attribute_name(:repeat_until) %>
+        <%= date_field_tag :repeat_until %>
+      </div>
     <% end %>
-    <div class="repeat-booking-container" style="display:none">
-      <%= label_tag Booking.human_attribute_name(:repeat_until) %>
-      <%= date_field_tag :repeat_until %>
-    </div>
   </div>
   <br>
   <div class="actions">

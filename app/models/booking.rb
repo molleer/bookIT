@@ -25,7 +25,7 @@ class Booking < ActiveRecord::Base
   belongs_to :room
   belongs_to :user
 
-  has_one :party_report, dependent: :destroy
+  has_one :party_report, dependent: :destroy, inverse_of: :booking
 
   acts_as_paranoid # make destroy -> logical delete
 

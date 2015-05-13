@@ -228,4 +228,11 @@ sv:
               after: 'är innan idag'
             end_date:
               after: 'är innan startdatum'
+        party_report:
+          attributes:
+            begin_date:
+              before_booking: 'är innan bokningens tidsintervall'
+            end_date:
+              after_booking: 'är efter bokningens tidsintervall'
+              before_begin_date: 'är innan startdatum'
       <<: *errors

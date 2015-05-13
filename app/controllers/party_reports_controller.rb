@@ -21,7 +21,7 @@ class PartyReportsController < ApplicationController
     if @report.present?
       begin
         @report.reject
-        UserMailer.reject_party(@report, mail_params).deliver
+        UserMailer.reject_party(@report, mail_params).deliver_now
         redirect_to party_reports_path, notice: 'Festanmälan avslagen, mail har skickats till anmälaren'
       rescue ActiveRecord::RecordInvalid => e
         redirect_to party_reports_path, alert: e.message
@@ -45,7 +45,7 @@ class PartyReportsController < ApplicationController
     # Thread.new do
       StudentPortalReporter.new.party_report(@report)
     # end
-    # AdminMailer.chalmers_message(params[:message]).deliver
+    # AdminMailer.chalmers_message(params[:message]).deliver_now
 
     PartyReport.where(id: params[:report_ids]).update_all(sent_at: Time.zone.now)
     redirect_to party_reports_path, notice: 'Festanmälan har skickats till Chalmers!'

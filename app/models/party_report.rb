@@ -26,6 +26,8 @@ class PartyReport < ActiveRecord::Base
   scope :not_denied, -> { where('accepted IS NULL or accepted = ?', true) }
   scope :sent, -> { with_deleted.where('sent_at IS NOT NULL') }
   scope :unsent, -> { where('sent_at IS NULL') }
+  scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
+  scope :in_future, -> { where('end_date >= ?', DateTime.now) }
 
   belongs_to :booking
 
@@ -35,22 +37,18 @@ class PartyReport < ActiveRecord::Base
 
   validates :party_responsible_name, presence: true
   validates :party_responsible_phone, presence: true, length: { minimum: 6 }
+
+  validate :duration_is_inside_booking
+
   validates_inclusion_of :liquor_license, :in => [true, false]
-
-
-  before_save :remove_dates
 
 
   def sent?
     self.sent_at.present?
   end
 
-  def submit_begin_date
-    self.begin_date || booking.begin_date
-  end
-
-  def submit_end_date
-    self.end_date || booking.end_date
+  def has_custom_date?
+    begin_date != booking.begin_date || end_date != booking.end_date
   end
 
   def accept!
@@ -73,12 +71,9 @@ class PartyReport < ActiveRecord::Base
 
   private
 
-    def remove_dates
-      if booking.begin_date == self.begin_date
-        self.begin_date = nil
-      end
-      if booking.end_date == self.end_date
-        self.end_date = nil
-      end
+    def duration_is_inside_booking
+      errors.add(:begin_date, :before_booking) unless begin_date >= booking.begin_date
+      errors.add(:end_date, :after_booking) unless end_date <= booking.end_date
+      errors.add(:end_date, :before_begin_date) unless begin_date < end_date
     end
 end
