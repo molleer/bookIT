@@ -23,4 +23,8 @@ module BookingsHelper
   def party_end_date(booking)
     booking.party_report.end_date || booking.end_date
   end
+
+  def show_party_date?(booking)
+    booking.persisted? && booking.party_report.has_custom_date?
+  end
 end
