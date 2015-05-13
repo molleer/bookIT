@@ -73,7 +73,7 @@ class RoomsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
-      @room = Room.find(params[:id])
+      @room = Room.find_by(name: params[:id].downcase)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

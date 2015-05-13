@@ -7,7 +7,7 @@
 
 <p>
   <strong>Festrum:</strong>
-  <%= @room.allow_party %>
+  <%= @room.allow_party ? 'Ja!' : 'Nej.' %>
 </p>
 
 <%= link_to 'Edit', edit_room_path(@room) %> |
