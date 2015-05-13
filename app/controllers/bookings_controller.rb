@@ -61,7 +61,7 @@ class BookingsController < ApplicationController
   # DELETE /bookings/1
   # DELETE /bookings/1.json
   def destroy
-    UserMailer.reject_booking(@booking, params[:reason]).deliver unless current_user == @booking.user
+    UserMailer.reject_booking(@booking, params[:reason]).deliver_now unless current_user == @booking.user
     @booking.destroy
     respond_to do |format|
       format.html { redirect_to bookings_url }
@@ -133,7 +133,7 @@ class BookingsController < ApplicationController
 
     def email_update
       # Send mail to P.R.I.T. (and maybe vo)
-      AdminMailer.booking_report(@booking).deliver
+      AdminMailer.booking_report(@booking).deliver_now
     end
 
     def party_report_sent?
