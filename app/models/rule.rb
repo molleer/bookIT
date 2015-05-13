@@ -79,10 +79,10 @@ class Rule < ActiveRecord::Base
   end
 
   def with_date!(date)
-    self.start_time = start_time.change(day: date.day,
+    self.start_time = (start_time || Time.new(2000, 1, 1, 0, 0, 0)).change(day: date.day,
       month: date.month,
       year: date.year)
-    self.stop_time = stop_time.change(day: date.day,
+    self.stop_time = (stop_time || Time.new(2000, 1, 1, 23, 59, 0)).change(day: date.day,
       month: date.month,
       year: date.year)
 

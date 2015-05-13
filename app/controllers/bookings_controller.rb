@@ -26,7 +26,7 @@ class BookingsController < ApplicationController
 
   # GET /bookings/1/edit
   def edit
-    redirect_to :back, alert: 'Bokning är redan ivägskickad, får ej längre ändras' if @booking.party_report.sent?
+    redirect_to :back, alert: 'Bokning är redan ivägskickad, får ej längre ändras' and return if party_report_sent?
     @booking.build_party_report unless @booking.party_report.present?
   end
 
@@ -43,7 +43,7 @@ class BookingsController < ApplicationController
   # PATCH/PUT /bookings/1
   # PATCH/PUT /bookings/1.json
   def update
-    redirect_to :back, alert: 'Bokning är redan ivägskickad, fär ej längre ändras' if @booking.party_report.sent?
+    redirect_to :back, alert: 'Bokning är redan ivägskickad, fär ej längre ändras' and return if party_report_sent?
     respond_to do |format|
       if @booking.update(booking_params)
 
@@ -61,7 +61,7 @@ class BookingsController < ApplicationController
   # DELETE /bookings/1
   # DELETE /bookings/1.json
   def destroy
-    UserMailer.reject_booking(@booking, params[:reason]).deliver unless current_user == @booking.user
+    UserMailer.reject_booking(@booking, params[:reason]).deliver_now unless current_user == @booking.user
     @booking.destroy
     respond_to do |format|
       format.html { redirect_to bookings_url }
@@ -110,7 +110,7 @@ class BookingsController < ApplicationController
         @booking = @failed_bookings.first
         render action: 'new'
       else
-        redirect_to @booking, notice: "#{nbr_succeeded} bookings was successfully created."  
+        redirect_to @booking, notice: "#{nbr_succeeded} bookings was successfully created."
       end
     end
 
@@ -121,14 +121,22 @@ class BookingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def booking_params
-      party_report_attributes = [:party_responsible_name, :party_responsible_phone, :party_responsible_mail,
-                                :co_party_responsible_name, :co_party_responsible_phone, :co_party_responsible_mail,
-                                :begin_date, :end_date, :liquor_license, :id]
+      party_report_attributes = []
+      if params[:party]
+        party_report_attributes = [:party_responsible_name, :party_responsible_phone, :party_responsible_mail,
+          :co_party_responsible_name, :co_party_responsible_phone, :co_party_responsible_mail,
+          :begin_date, :end_date, :liquor_license, :id]
+      end
+
       params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :phone, :room_id, party_report_attributes: party_report_attributes)
     end
 
     def email_update
       # Send mail to P.R.I.T. (and maybe vo)
-      AdminMailer.booking_report(@booking).deliver
+      AdminMailer.booking_report(@booking).deliver_now
+    end
+
+    def party_report_sent?
+      @booking.party_report && @booking.party_report.sent?
     end
 end

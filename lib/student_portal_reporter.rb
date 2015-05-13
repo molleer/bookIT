@@ -31,10 +31,10 @@ class StudentPortalReporter
 
       approval_type = b.liquor_license == '1' ? 'Sökt' : 'Ej aktuellt'
       deltagare = 75
-      start_date = b.submit_begin_date.strftime '%F'
-      end_date = b.submit_end_date.strftime '%F'
-      start_time = b.submit_begin_date.strftime '%R'
-      end_time = b.submit_end_date.strftime '%R'
+      start_date = b.begin_date.strftime '%F'
+      end_date = b.end_date.strftime '%F'
+      start_time = b.begin_date.strftime '%R'
+      end_time = b.end_date.strftime '%R'
 
       within("#aspnetForm") do
         fill_in 'ctl00_ctl19_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl00_ctl00_ctl00_ctl04_ctl00_ctl00_TextField', with: b.title
