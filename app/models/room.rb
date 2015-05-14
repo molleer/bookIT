@@ -22,6 +22,6 @@ class Room < ActiveRecord::Base
 	end
 
   def to_param
-    name.downcase
+    name.parameterize
   end
 end

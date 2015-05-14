@@ -1,7 +1,12 @@
 class RoomCalendar
-	def initialize(room)
+	def initialize(room, url)
+		interval = 2.months
 		@calendar = RiCal.Calendar do |cal|
-			room.bookings.within(2.months.from_now).each do |b|
+			cal.add_x_property 'x_wr_calname', "#{room.name} - bookIT"
+			cal.add_x_property 'x_wr_caldesc', "Bokningar av #{room.name} ifrån bookIT"
+			cal.add_x_property 'url', url
+			cal.prodid = 'bookIT'
+			room.bookings.from_date(interval.ago).each do |b|
 				cal.event do |e|
 					e.summary = b.title
 					e.description = b.description

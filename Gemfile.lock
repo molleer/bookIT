@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/ctide/ri_cal.git
+  revision: 8f3f73abfcfe4cb80099afc0d72b4693b5ef4776
+  specs:
+    ri_cal (0.8.8)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -152,7 +158,6 @@ GEM
     rb-fsevent (0.9.4)
     rdoc (4.2.0)
     redcarpet (3.2.3)
-    ri_cal (0.8.8)
     rspec-core (3.2.3)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.1)
@@ -244,7 +249,7 @@ DEPENDENCIES
   rails (= 4.2.1)
   rb-fsevent
   redcarpet
-  ri_cal (~> 0.8.5)
+  ri_cal!
   rspec-rails
   sass-rails (~> 4.0.0)
   sdoc

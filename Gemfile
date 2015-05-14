@@ -31,7 +31,7 @@ gem 'jbuilder', '~> 1.2'
 # Dependencies for bookIT
 gem 'nokogiri'
 gem 'validates_timeliness', '~> 3.0'
-gem 'ri_cal', '~> 0.8.5'
+gem 'ri_cal', git: 'https://github.com/ctide/ri_cal.git'
 gem 'cancan' # user authorization
 gem 'httparty'
 
