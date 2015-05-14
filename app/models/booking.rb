@@ -19,10 +19,11 @@
 class Booking < ActiveRecord::Base
   scope :by_group_or_user, -> (name) { where('user_id IN (?) OR `group` IN (?)', name, name) }
   scope :in_future, -> { where('end_date >= ?', DateTime.now) }
+  scope :from_date, -> (time = 1.month.ago) { where('begin_date >= ?', time) }
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
   scope :in_room, -> (room) { where(room: room) }
 
-  belongs_to :room
+  belongs_to :room, touch: true
   belongs_to :user
 
   has_one :party_report, dependent: :destroy, inverse_of: :booking
