@@ -23,7 +23,7 @@ class Booking < ActiveRecord::Base
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
   scope :in_room, -> (room) { where(room: room) }
 
-  belongs_to :room
+  belongs_to :room, touch: true
   belongs_to :user
 
   has_one :party_report, dependent: :destroy, inverse_of: :booking
