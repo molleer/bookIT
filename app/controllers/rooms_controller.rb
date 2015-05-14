@@ -1,5 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :edit, :update, :destroy]
+  authorize_resource
 
   # GET /rooms
   # GET /rooms.json
@@ -14,9 +15,11 @@ class RoomsController < ApplicationController
       format.html
       format.json
       format.ics do
-        send_data(RoomCalendar.new(@room),
-                    filename: "#{@room.name}.txt",
-                    disposition: :inline)
+        calendar = Rails.cache.fetch "#{@room.cache_key}/ics", expires_in: 24.hours do
+          cal_url = room_url(@room, format: :ics)
+          RoomCalendar.new(@room, cal_url).to_s
+        end
+        send_data(calendar, filename: "#{@room.to_param}.ics", disposition: :inline)
       end
     end
   end
@@ -73,7 +76,7 @@ class RoomsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
-      @room = Room.find(params[:id])
+      @room = Room.find_by(name: params[:id].downcase)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
