@@ -7,11 +7,11 @@ class PartyReportsController < ApplicationController
       redirect_to bookings_path, notice: 'Du har inte tillåtelse att visa denna sidan!'
     end
 
-    sorted = PartyReport.joins(:booking).order('bookings.begin_date')
+    sorted = PartyReport.order(:begin_date)
 
     @not_accepted_reports = sorted.waiting
     @unsent_reports = sorted.accepted.unsent
-    @sent_reports = sorted.accepted.sent.limit(10).order(sent_at: :desc)
+    @sent_reports = PartyReport.accepted.sent.limit(10).order(sent_at: :desc)
   end
 
   def reply
