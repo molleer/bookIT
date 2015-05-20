@@ -42,6 +42,8 @@ class PartyReport < ActiveRecord::Base
 
   validates_inclusion_of :liquor_license, :in => [true, false]
 
+  before_validation :set_begin_end_date
+
 
   def sent?
     self.sent_at.present?
@@ -75,5 +77,10 @@ class PartyReport < ActiveRecord::Base
       errors.add(:begin_date, :before_booking) unless begin_date >= booking.begin_date
       errors.add(:end_date, :after_booking) unless end_date <= booking.end_date
       errors.add(:end_date, :before_begin_date) unless begin_date < end_date
+    end
+
+    def set_begin_end_date
+      self.begin_date ||= booking.begin_date
+      self.end_date ||= booking.end_date
     end
 end
