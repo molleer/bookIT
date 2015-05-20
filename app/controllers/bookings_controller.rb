@@ -124,8 +124,9 @@ class BookingsController < ApplicationController
       party_report_attributes = []
       if params[:party]
         party_report_attributes = [:party_responsible_name, :party_responsible_phone, :party_responsible_mail,
-          :co_party_responsible_name, :co_party_responsible_phone, :co_party_responsible_mail,
-          :begin_date, :end_date, :liquor_license, :id]
+          :co_party_responsible_name, :co_party_responsible_phone, :co_party_responsible_mail, :liquor_license, :id]
+
+        party_report_attributes << [:begin_date, :end_date] if params[:custom_party_date]
       end
 
       params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :phone, :room_id, party_report_attributes: party_report_attributes)
