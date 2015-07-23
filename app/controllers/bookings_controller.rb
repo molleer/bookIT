@@ -33,7 +33,7 @@ class BookingsController < ApplicationController
 
   # GET /bookings/1/edit
   def edit
-    redirect_to :back, alert: 'Bokning är redan ivägskickad, får ej längre ändras' if party_report_sent?
+    redirect_to :back, alert: 'Bokning är redan ivägskickad, får ej längre ändras' and return if party_report_sent?
     @booking.build_party_report unless @booking.party_report.present?
   end
 
@@ -131,8 +131,9 @@ class BookingsController < ApplicationController
       party_report_attributes = []
       if params[:party]
         party_report_attributes = [:party_responsible_name, :party_responsible_phone, :party_responsible_mail,
-          :co_party_responsible_name, :co_party_responsible_phone, :co_party_responsible_mail,
-          :begin_date, :end_date, :liquor_license, :id]
+          :co_party_responsible_name, :co_party_responsible_phone, :co_party_responsible_mail, :liquor_license, :id]
+
+        party_report_attributes << [:begin_date, :end_date] if params[:custom_party_date]
       end
 
       params.require(:booking).permit(:title, :group, :begin_date, :end_date, :description, :phone, :room_id, party_report_attributes: party_report_attributes)

@@ -7,7 +7,7 @@ class AdminMailer < ActionMailer::Base
     @booking = booking
     @url = booking_url(@booking)
 
-    recipients = [PRIT_MAIL, @booking.user.mail]
+    recipients = [ORDF_PRIT_MAIL, @booking.user.mail]
 
     recipients << VO_MAIL if @booking.party_report.present?
     subject = "#{@booking.party_report.present? ? 'Festanmälan' : 'Bokning'} av #{@booking.room}, #{@booking.booking_range}"

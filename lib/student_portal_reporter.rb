@@ -24,7 +24,7 @@ class StudentPortalReporter
         fill_in 'ctl00_ContentPlaceHolder1_UsernameTextBox', with: Rails.application.secrets.vo_usr
         fill_in 'ctl00_ContentPlaceHolder1_PasswordTextBox', with: Rails.application.secrets.vo_pwd
       end
-      find_button('Logga in').trigger('click')
+      find_button('ctl00_ContentPlaceHolder1_SubmitButton').trigger('click')
     end
 
     reports.each do |b|
