@@ -1,6 +1,8 @@
 class BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :edit, :update, :destroy]
+  before_action :restrict_access, only: [:current]
   authorize_resource
+  skip_authorize_resource  :only => :current
 
   # GET /bookings
   # GET /bookings.json
@@ -15,6 +17,11 @@ class BookingsController < ApplicationController
   # GET /bookings/1
   # GET /bookings/1.json
   def show
+  end
+
+  def current
+    now = DateTime.now
+    @current = Booking.in_room(Room.find_by(name: 'Hubben')).where('begin_date <= ? and end_date >= ?', now, now).first
   end
 
   # GET /bookings/new
@@ -138,5 +145,11 @@ class BookingsController < ApplicationController
 
     def party_report_sent?
       @booking.party_report && @booking.party_report.sent?
+    end
+
+    def restrict_access
+      authenticate_or_request_with_http_token do |token, options|
+        ApiKey.exists?(access_token: token)
+      end
     end
 end
