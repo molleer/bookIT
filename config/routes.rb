@@ -22,7 +22,8 @@ BookIT::Application.routes.draw do
 
   resources :rules, :rooms
   resources :terms, only: [:index, :edit, :update]
-
+  
+  get 'current' => 'bookings#current'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
