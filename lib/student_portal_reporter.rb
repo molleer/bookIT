@@ -27,6 +27,10 @@ class StudentPortalReporter
       find_button('ctl00_ContentPlaceHolder1_SubmitButton').trigger('click')
     end
 
+    unless current_url == ANMALAN_AV_ARRANGEMANG_URL
+      visit ANMALAN_AV_ARRANGEMANG_URL
+    end
+
     reports.each do |b|
 
       approval_type = b.liquor_license == '1' ? 'Sökt' : 'Ej aktuellt'
