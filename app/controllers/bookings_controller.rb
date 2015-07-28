@@ -1,6 +1,6 @@
 class BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :edit, :update, :destroy]
-  before_action :restrict_access, only: [:current]
+ # before_action :restrict_access, only: [:current]
   authorize_resource :except => [:current] 
 
   # GET /bookings
