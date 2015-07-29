@@ -31,6 +31,8 @@ class StudentPortalReporter
       visit ANMALAN_AV_ARRANGEMANG_URL
     end
 
+    sleep 0.5
+
     reports.each do |b|
 
       approval_type = b.liquor_license == '1' ? 'Sökt' : 'Ej aktuellt'
