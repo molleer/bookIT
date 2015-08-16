@@ -1,8 +1,7 @@
 class BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :edit, :update, :destroy]
-  before_action :restrict_access, only: [:current]
-  authorize_resource
-  skip_authorize_resource  :only => :current
+ # before_action :restrict_access, only: [:current]
+  authorize_resource :except => [:current] 
 
   # GET /bookings
   # GET /bookings.json
@@ -149,7 +148,7 @@ class BookingsController < ApplicationController
     end
 
     def restrict_access
-      authenticate_or_request_with_http_token do |token, options|
+      authenticate_with_http_token do |token, options|
         ApiKey.exists?(access_token: token)
       end
     end

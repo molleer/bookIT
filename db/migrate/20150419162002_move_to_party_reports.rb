@@ -1,6 +1,7 @@
 class MoveToPartyReports < ActiveRecord::Migration
+
   def up
-    Booking.party_reported.find_each do |b|
+    Booking.where(party: true).find_each do |b|
       booking_attrs = b.slice(:party_responsible_phone, :liquor_license, :sent, :accepted, :created_at, :begin_date, :end_date)
       p booking_attrs
       PartyReport.create(booking_attrs) do |pr|

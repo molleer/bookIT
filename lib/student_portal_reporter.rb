@@ -35,6 +35,12 @@ class StudentPortalReporter
     end
     Rails.logger.info("Succesfully logged in") 
 
+    unless current_url == ANMALAN_AV_ARRANGEMANG_URL
+      visit ANMALAN_AV_ARRANGEMANG_URL
+    end
+
+    sleep 0.5
+
     reports.each do |b|
       Rails.logger.info("Starting report")
       begin

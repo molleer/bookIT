@@ -7,6 +7,6 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 
-Room.create([ { name: "Hubben", allow_party: true, only_group: true }, { name: "Grupprummet", allow_party: false, only_group: false }])
+Room.create([ { name: "Hubben", allow_party: true, only_group: true }, { name: "Grupprummet", allow_party: false, only_group: false }, { name: "HASen", allow_party: false, only_group: false }])
 
 Term.create(title: 'Checklista', content: File.read('checklista.md'))
