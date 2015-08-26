@@ -66,7 +66,11 @@
   <ul class="phone-and-groups-container">
     <li>
       <%= f.label :group, "Boka som" %>
-      <%= f.collection_select :group, @user.groups, :to_s, :itize, include_blank: @user.full_name %>
+      <% if @user.admin? && @editing %>
+        <%= f.collection_select :group, [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit], :to_s, :itize, include_blank: @user.full_name %>
+      <% else %>
+        <%= f.collection_select :group, @user.groups, :to_s, :itize, include_blank: @user.full_name %>
+      <% end %>
     </li>
   </ul>
   <p class="party-container">
