@@ -99,7 +99,11 @@ class Booking < ActiveRecord::Base
       unless group.present?
         errors.add(:room, 'kan ej bokas som privatperson') if room.only_group
       else
-        errors.add(:group, 'är du ej medlem i') unless user.in_group? group.to_sym || user.admin?
+        unless user.in_group? group.to_sym
+          if !user.admin?
+            errors.add(:group, 'är du ej medlem i')
+          end
+        end
       end
     end
 
