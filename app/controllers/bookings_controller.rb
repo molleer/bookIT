@@ -32,6 +32,7 @@ class BookingsController < ApplicationController
 
   # GET /bookings/1/edit
   def edit
+    @editing = true
     redirect_to :back, alert: 'Bokning är redan ivägskickad, får ej längre ändras' and return if party_report_sent?
     @booking.build_party_report unless @booking.party_report.present?
   end
