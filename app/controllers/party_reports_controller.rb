@@ -11,7 +11,7 @@ class PartyReportsController < ApplicationController
 
     @not_accepted_reports = sorted.waiting
     @unsent_reports = sorted.accepted.unsent
-    @sent_reports = PartyReport.accepted.sent.limit(10).order(sent_at: :desc)
+    @sent_reports = PartyReport.accepted.sent.limit(10).order(sent_at: :desc).where(:deleted_at => nil)
   end
 
   def reply
