@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 	base_uri "https://account.chalmers.it/userInfo.php"
 
 	@@ADMIN_GROUPS = [:digit, :prit, :styrit]
-	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit]
+	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit, :valberedningen]
 
 
 	def groups
@@ -98,6 +98,8 @@ class Symbol
 				'P.R.I.T.'
 			when :fanbarerit
 				'FanbärerIT'
+			when :valberedningen
+				'Valberedningen'
 			else
 				self.to_s
 		end
