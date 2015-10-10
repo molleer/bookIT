@@ -13,6 +13,14 @@ class BookingsController < ApplicationController
     end
   end
 
+  def calendar_data
+    @bookings = Booking.all
+
+    if params[:start] && params[:end]
+      @bookings = Booking.between(params[:start], params[:end])
+    end
+  end
+
   # GET /bookings/1
   # GET /bookings/1.json
   def show

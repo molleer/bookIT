@@ -18,7 +18,11 @@ BookIT::Application.routes.draw do
     end
   end
 
-  resources :bookings
+  resources :bookings do
+    collection do
+      get :calendar_data
+    end
+  end
 
   resources :rules, :rooms
   resources :terms, only: [:index, :edit, :update]

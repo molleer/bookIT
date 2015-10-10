@@ -23,20 +23,31 @@
   <% end %>
 <% end %>
 <br><br>
-<table class="bookings-index">
-<% @bookings.each do |booking| %>
-  <tr>
-    <td><%= link_to booking.title, booking %></td>
-    <td><%= booking.booking_range %></td>
-    <td><%= booking.room %></td>
-    <td>
-      <% if can? :manage, booking %>
-        <%= link_to 'Ändra', edit_booking_path(booking) %> <%= link_to 'Radera', booking, method: :delete, class: ('others' unless booking.user == current_user), data: { id: booking.id } %>
-      <% end %>
-    </td>
-  </tr>
-<% end %>
-</table>
 
+<dl class="tabs">
+  <dd class="active"><a href="#simple1">Calendar</a></dd>
+  <dd><a href="#simple2">List</a></dd>
+</dl>
+<ul class="tabs-content">
+  <li class="active" id="simple1Tab">
+    <div id="calendar"></div>
+  </li>
+  <li id="simple2Tab">
+    <table class="bookings-index">
+    <% @bookings.each do |booking| %>
+      <tr>
+        <td><%= link_to booking.title, booking %></td>
+        <td><%= booking.booking_range %></td>
+        <td><%= booking.room %></td>
+        <td>
+          <% if can? :manage, booking %>
+            <%= link_to 'Ändra', edit_booking_path(booking) %> <%= link_to 'Radera', booking, method: :delete, class: ('others' unless booking.user == current_user), data: { id: booking.id } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+  </li>
+</ul>
 
 <%= render 'mail' %>

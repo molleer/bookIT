@@ -19,6 +19,7 @@
 class Booking < ActiveRecord::Base
   scope :by_group_or_user, -> (name) { where('user_id IN (?) OR `group` IN (?)', name, name) }
   scope :in_future, -> { where('end_date >= ?', DateTime.now) }
+  scope :between, -> (from, to) { where('begin_date >= ? AND end_date <= ?', from, to) }
   scope :from_date, -> (time = 1.month.ago) { where('begin_date >= ?', time) }
   scope :within, -> (time = 1.month.from_now) { where('begin_date <= ?', time) }
   scope :in_room, -> (room) { where(room: room) }

@@ -18,6 +18,12 @@ $ ->
 		$('#mail_form').reveal()
 		return false
 
+	$('#calendar').fullCalendar
+		events: '/bookings/calendar_data.json'
+		defaultView: 'agendaWeek'
+		firstDay: 1
+		scrollTime: '10:00:00'
+
 setFormValues = (activeRadio) ->
 	fest = $(activeRadio).data 'fest'
 	$('.party-container').toggle fest
@@ -50,7 +56,7 @@ formScripts = ->
 	setFormValues($('.location-container input[type="radio"]:checked').first())
 
 	$('.repeat-booking-container').show() if $('#repeat_booking').prop('checked')
-	
+
 	$('#repeat_booking').on 'change', ->
 		$('.repeat-booking-container').toggle @checked
 
@@ -95,3 +101,4 @@ formScripts = ->
 				end_date.val(begin_date.val())
 			else
 				begin_date.val(end_date.val())
+

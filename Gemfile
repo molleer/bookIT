@@ -18,6 +18,8 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
+gem 'fullcalendar-rails'
+gem 'momentjs-rails'
 
 gem 'compass-rails'
 gem 'zurb-foundation', '~> 3.0'
