@@ -1,7 +1,7 @@
 class BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :edit, :update, :destroy]
  # before_action :restrict_access, only: [:current]
-  authorize_resource :except => [:current] 
+  authorize_resource :except => [:current]
 
   # GET /bookings
   # GET /bookings.json
@@ -17,7 +17,7 @@ class BookingsController < ApplicationController
     @bookings = Booking.all
 
     if params[:start] && params[:end]
-      @bookings = Booking.between(params[:start], params[:end])
+      @bookings = Booking.between(params[:start], Date.parse(params[:end]) + 1.day)
     end
   end
 
