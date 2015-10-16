@@ -23,6 +23,7 @@ $ ->
 		defaultView: 'agendaWeek'
 		firstDay: 1
 		scrollTime: '10:00:00'
+		axisFormat: 'HH:mm'
 
 setFormValues = (activeRadio) ->
 	fest = $(activeRadio).data 'fest'
