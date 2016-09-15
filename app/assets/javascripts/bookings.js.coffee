@@ -91,15 +91,3 @@ formScripts = ->
 		localStorage.setItem 'bookITStorage', JSON.stringify store
 
 
-	# dis amount of UX... changes end_date to begin_date if end_date > begin_date
-	$('.booking-dates-container').on 'change', 'input', ->
-		$this = $(@)
-		$other = $('.booking-dates-container input').not($this)
-		begin_date = $('#booking_begin_date')
-		end_date = $('#booking_end_date')
-		if begin_date.val() > end_date.val()
-			if $this.is(begin_date)
-				end_date.val(begin_date.val())
-			else
-				begin_date.val(end_date.val())
-
