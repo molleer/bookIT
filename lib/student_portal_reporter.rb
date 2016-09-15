@@ -26,7 +26,7 @@ class StudentPortalReporter
 
   def correct_minute_string(minute_string)
     minute = (minute_string[3..4].to_i / 5) * 5
-    if minute < 10 then "0#{minute}" else minute.to_s end
+    minute.to_s.rjust(2, '0')
   end
 
   def party_report(reports)
