@@ -15,6 +15,10 @@ class StudentPortalReporter
     Capybara.default_driver = :poltergeist_debug
   end
 
+  def correct_minute_string(minute_string)
+    minute = (minute_string[3..4].to_i / 5) * 5
+    minute.to_s.rjust(2, '0')
+  end
 
   def party_report(reports)
     visit LOGIN_URL
@@ -47,21 +51,23 @@ class StudentPortalReporter
         approval_type = b.liquor_license == '1' ? 'Sökt' : 'Ej aktuellt'
         deltagare = 75
         start_date = b.begin_date.strftime '%F'
-        end_date = b.end_date.strftime '%F'
         start_time = b.begin_date.strftime '%R'
+        start_minute = correct_minute_string start_time
+        end_date = b.end_date.strftime '%F'
         end_time = b.end_date.strftime '%R'
-  
+        end_minute = correct_minute_string end_time
+
           within("#aspnetForm") do
-             fill_in 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl00_ctl00_ctl00_ctl04_ctl00_ctl00_TextField', with: b.title
+            fill_in 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl00_ctl00_ctl00_ctl04_ctl00_ctl00_TextField', with: b.title
             select 'Hubben', from: 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl01_ctl00_ctl00_ctl04_ctl00_Lookup'
             fill_in 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl02_ctl00_ctl00_ctl04_ctl00_ctl00_TextField', with: deltagare
             check 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl03_ctl00_ctl00_ctl04_ctl00_ctl00'
             fill_in 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl04_ctl00_ctl00_ctl04_ctl00_ctl00_DateTimeField_DateTimeFieldDate', with: start_date
             select start_time[0..2], from: 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl04_ctl00_ctl00_ctl04_ctl00_ctl00_DateTimeField_DateTimeFieldDateHours'
-            select start_time[3..4], from: 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl04_ctl00_ctl00_ctl04_ctl00_ctl00_DateTimeField_DateTimeFieldDateMinutes'
+            select start_minute, from: 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl04_ctl00_ctl00_ctl04_ctl00_ctl00_DateTimeField_DateTimeFieldDateMinutes'
             fill_in 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl05_ctl00_ctl00_ctl04_ctl00_ctl00_DateTimeField_DateTimeFieldDate', with: end_date
             select end_time[0..2], from: 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl05_ctl00_ctl00_ctl04_ctl00_ctl00_DateTimeField_DateTimeFieldDateHours'
-            select end_time[3..4], from: 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl05_ctl00_ctl00_ctl04_ctl00_ctl00_DateTimeField_DateTimeFieldDateMinutes'
+            select end_minute, from: 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl05_ctl00_ctl00_ctl04_ctl00_ctl00_DateTimeField_DateTimeFieldDateMinutes'
             fill_in 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl06_ctl00_ctl00_ctl04_ctl00_ctl00_TextField', with: b.group
             select approval_type, from: 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl07_ctl00_ctl00_ctl04_ctl00_DropDownChoice'
             fill_in 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl08_ctl00_ctl00_ctl04_ctl00_ctl00_TextField', with: b.party_responsible_name
@@ -84,9 +90,9 @@ class StudentPortalReporter
   
         visit ANMALAN_AV_ARRANGEMANG_URL
 
-      rescue Capybara::ElementNotFound
+      rescue Capybara::ElementNotFound => e
         save_and_open_page
-        raise "error, ElementNotFound, saved page to app root"
+        raise "error, saved page to app root, #{e.message}"
       end
     end
   end
