@@ -1,15 +1,15 @@
 class UserMailer < ActionMailer::Base
   default from: "bookit@chalmers.it"
 
-  def reject_party(booking, mail_params)
-    @booking = booking
+  def reject_party(report, mail_params)
+    @report = report
     @params = mail_params
-    mail to: @params[:email], subject: "Din bokning \"#{@booking.title}\" i #{@booking.room} godkändes ej"
+    mail to: @params[:email], subject: "Din bokning \"#{@report.title}\" godkändes ej"
   end
 
-  def reject_booking(booking, reason)
-    @booking = booking
+  def reject_booking(report, reason)
+    @report = report
     @reason = reason
-    mail to: booking.user.mail, subject: "Din bokning \"#{@booking.title}\" i #{@booking.room} avslogs"
+    mail to: report.user.mail, subject: "Din bokning \"#{@report.title}\" avslogs"
   end
 end

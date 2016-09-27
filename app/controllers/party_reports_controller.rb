@@ -1,5 +1,5 @@
 class PartyReportsController < ApplicationController
-  before_action :set_booking, except: [:index, :send_bookings, :preview_bookings]
+  before_action :set_booking, except: [:index, :send_bookings, :preview_bookings, :send_reply]
   authorize_resource
 
   def index
@@ -19,9 +19,10 @@ class PartyReportsController < ApplicationController
   end
 
   def send_reply
+    @report = PartyReport.find_by booking_id: params[:id]
     if @report.present?
       begin
-        @report.reject
+        @report.reject!
         UserMailer.reject_party(@report, mail_params).deliver_now
         redirect_to party_reports_path, notice: 'Festanmälan avslagen, mail har skickats till anmälaren'
       rescue ActiveRecord::RecordInvalid => e
