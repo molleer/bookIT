@@ -11,6 +11,8 @@ $ ->
 		return false
 	$('.send_bookings').click ->
 		$('#send_form').reveal()
+	$('.select_all').click ->
+		$('#send_checkboxes input').prop('checked', $(this).prop('checked'))
 
 showEmail = (mail, url, id) ->
 	$('#email').val(mail)
