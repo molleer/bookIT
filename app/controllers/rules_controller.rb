@@ -1,5 +1,6 @@
 class RulesController < ApplicationController
   before_action :set_rule, only: [:show, :edit, :update, :destroy]
+  authorize_resources
 
   def index
     @rules = Rule.all.order :prio
