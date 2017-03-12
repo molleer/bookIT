@@ -25,6 +25,8 @@ $ ->
 		scrollTime: '10:00:00'
 		axisFormat: 'HH:mm'
 
+	$('#calendar_link').trigger('click')
+
 setFormValues = (activeRadio) ->
 	fest = $(activeRadio).data 'fest'
 	$('.party-container').toggle fest
