@@ -1,7 +1,10 @@
+<%= link_to "Party reports", party_reports_url %>
+
 <% @reports.each do |report| %>
-<%= report.title %>
-<%= report.group %>
-<%= report.party_responsible_name %>
-<%= report.booking.booking_range %>
-<% unless report == @reports.last %>---------<% end %>
+<%= report %>
+Titel:        <%= report.title %>
+Bokad av:     <%= report.group %>
+Festansvarig: <%= report.party_responsible_name %>
+Period:       <%= report.booking.booking_range %>
+<% unless report == @reports.last %><hr><% end %>
 <% end %>
