@@ -1,7 +1,6 @@
-<%= link_to "Party reports", party_reports_url %>
+<%= party_reports_url %>
 
 <% @reports.each do |report| %>
-<%= report %>
 Titel:        <%= report.title %>
 Bokad av:     <%= report.group %>
 Festansvarig: <%= report.party_responsible_name %>
