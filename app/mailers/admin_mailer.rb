@@ -31,8 +31,8 @@ class AdminMailer < ActionMailer::Base
     end
   end
 
-  def remind_vo(bookings)
-    @bookings = bookings
+  def remind_vo(reports)
+    @reports = reports
     subject = "Oskickad festanmälan inom 48h"
     mail to: VO_MAIL, subject: subject
   end
