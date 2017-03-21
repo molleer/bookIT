@@ -45,7 +45,8 @@ Rails.application.configure do
   config.force_ssl = true
 
   config.action_mailer.default_url_options = {
-    host: 'bookit.chalmers.it'
+    host: 'bookit.chalmers.it',
+    protocol: 'https'
   }
 
   # Use the lowest log level to ensure availability of diagnostic information
