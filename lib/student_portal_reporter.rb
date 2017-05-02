@@ -10,6 +10,7 @@ class StudentPortalReporter
 
   LOGIN_URL = "https://student.portal.chalmers.se/_layouts/Chalmers/Authenticate.aspx?Source=/sv/studentliv/anmalanavarrangemang/Sidor/AnmalanAvArrangemang.aspx"
   ANMALAN_AV_ARRANGEMANG_URL = "https://student.portal.chalmers.se/sv/studentliv/anmalanavarrangemang/Sidor/AnmalanAvArrangemang.aspx?authenticated"
+  SUCCESS_CONTENT = /Tack för din anmälan av detta arrangemang/i
 
   def initialize
     Capybara.default_driver = :poltergeist_debug
@@ -81,13 +82,22 @@ class StudentPortalReporter
           # puts "Sent #{b.title} to Chalmers"
           find_button('ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_toolBarTbl_RightRptControls_ctl00_ctl00_diidIOSaveItem').trigger('click')
           # page.driver.debug
-          if page.has_content?(/Tack för din anmälan av detta arrangemang/i)
+
+
+          tries_left = 10
+          until page.has_content?(SUCCESS_CONTENT) or tries_left == 0
+            Rails.logger.info("Couldn't find success content yet. Tries left: #{tries_left}")
+            tries_left-=1
+            sleep 0.5
+          end
+
+          if page.has_content?(SUCCESS_CONTENT)
             Rails.logger.info("Report submitted")
           else
             save_and_open_page
-            raise "error, Failed to submit report, saved page to app root"
+            raise "error, Unable to see success content, check your mail to see if it was successful, saved page to app root"
           end
-  
+
         visit ANMALAN_AV_ARRANGEMANG_URL
 
       rescue Capybara::ElementNotFound => e
