@@ -21,11 +21,26 @@ class StudentPortalReporter
     minute.to_s.rjust(2, '0')
   end
 
-  def party_report(reports)
+  def try_10_times(wait_between_tries, on_attempt_failed, on_all_failed)
+    tries = 0
+    begin
+      yield
+    rescue
+      if tries < 10
+        on_attempt_failed.call(tries, 10, wait_between_tries)
+        sleep wait_between_tries
+        tries += 1
+        retry
+      else
+        on_all_failed.call(tries)
+      end
+    end
+
+  end
+
+  def try_login
     visit LOGIN_URL
-    Rails.logger.info("Starting login")
-    while current_url != ANMALAN_AV_ARRANGEMANG_URL
-      Rails.logger.info("Trying to login.. ")
+    Rails.logger.info("Trying to login.. ")
       begin
         within("#aspnetForm") do
           fill_in 'ctl00_ContentPlaceHolder1_UsernameTextBox', with: Rails.application.secrets.vo_usr
@@ -33,12 +48,23 @@ class StudentPortalReporter
         end
       rescue Capybara::ElementNotFound
         save_and_open_page
-        raise "Failed to login, saving page to app root."
+        raise "Failed to login, elements not found, saving page to app root."
       end
-      #find_button('ctl00_ContentPlaceHolder1_SubmitButton').trigger('click')
       click_button('ctl00_ContentPlaceHolder1_SubmitButton')
-    end
-    Rails.logger.info("Succesfully logged in") 
+  end
+
+  def party_report(reports)
+    Rails.logger.info("Starting login")
+
+    login_attemt_failed = ->(current_try, max_tries, wait_time) {Rails.logger.info("Login attemt #{current_try}/#{max_tries} failed, waiting #{wait_time} and trying again.")}
+    unable_to_login = ->(tries) {
+      Rails.logger.info("All #{tries} login attemts failed. Are corrent login credentials being used?")
+      save_and_open_page
+      raise "Unable to login to studentportalen, check the logs, saved page to app root"
+    }
+    try_10_times 0.5, login_attemt_failed, unable_to_login do try_login end
+
+    Rails.logger.info("Succesfully logged in")
 
     unless current_url == ANMALAN_AV_ARRANGEMANG_URL
       visit ANMALAN_AV_ARRANGEMANG_URL
@@ -79,24 +105,21 @@ class StudentPortalReporter
             fill_in 'ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl13_ctl00_ctl00_ctl04_ctl00_ctl00_TextField', with: b.co_party_responsible_mail
             # fill_in 'ctl00_ctl19_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_ctl05_ctl14_ctl00_ctl00_ctl04_ctl00_ctl00_TextField', with: comments
           end
-          # puts "Sent #{b.title} to Chalmers"
-          find_button('ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_toolBarTbl_RightRptControls_ctl00_ctl00_diidIOSaveItem').trigger('click')
-          # page.driver.debug
+        # puts "Sent #{b.title} to Chalmers"
+        find_button('ctl00_m_g_2ec8a987_c320_462d_8231_f85b57c1503e_ctl00_ctl00_toolBarTbl_RightRptControls_ctl00_ctl00_diidIOSaveItem').trigger('click')
+        # page.driver.debug
 
-
-          tries_left = 10
-          until page.has_content?(SUCCESS_CONTENT) or tries_left == 0
-            Rails.logger.info("Couldn't find success content yet. Tries left: #{tries_left}")
-            tries_left-=1
-            sleep 0.5
-          end
-
-          if page.has_content?(SUCCESS_CONTENT)
-            Rails.logger.info("Report submitted")
-          else
+        on_attempt_failed = ->(current_try, max_tries, time_between_tries) {
+          Rails.logger.info("Couldn't find success content yet. Trying again in #{time_between_tries} sec. Try #{current_try}/#{max_tries}")
+        }
+        on_all_failed = ->(tries) {
             save_and_open_page
             raise "error, Unable to see success content, check your mail to see if it was successful, saved page to app root"
-          end
+        }
+
+        try_10_times 0.5, on_attempt_failed, on_all_failed do
+          raise "error" unless page.has_content?(SUCCESS_CONTENT)
+        end
 
         visit ANMALAN_AV_ARRANGEMANG_URL
 
@@ -106,4 +129,6 @@ class StudentPortalReporter
       end
     end
   end
+
+
 end
