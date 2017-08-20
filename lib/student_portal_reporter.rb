@@ -62,16 +62,18 @@ class StudentPortalReporter
   def try_login
     visit LOGIN_URL
     Rails.logger.info("Trying to login.. ")
-      begin
-        within("#aspnetForm") do
-          fill_in 'ctl00_ContentPlaceHolder1_UsernameTextBox', with: Rails.application.secrets.vo_usr
-          fill_in 'ctl00_ContentPlaceHolder1_PasswordTextBox', with: Rails.application.secrets.vo_pwd
-        end
-      rescue Capybara::ElementNotFound
-        save_and_open_page
-        raise "Failed to login, elements not found, saving page to app root."
+
+    begin
+      within("#aspnetForm") do
+        fill_in 'ctl00_ContentPlaceHolder1_UsernameTextBox', with: Rails.application.secrets.vo_usr
+        fill_in 'ctl00_ContentPlaceHolder1_PasswordTextBox', with: Rails.application.secrets.vo_pwd
       end
-      click_button('ctl00_ContentPlaceHolder1_SubmitButton')
+    rescue Capybara::ElementNotFound
+      return if first('#' + FIELD_IDS[:title]) # If the title field is found, then we're already logged in.
+      save_and_open_page
+      raise "Failed to login, elements not found, saving page to app root."
+    end
+    click_button('ctl00_ContentPlaceHolder1_SubmitButton')
   end
 
   def party_report(reports)
