@@ -75,7 +75,7 @@ class StudentPortalReporter
     reports.each do |b|
       Rails.logger.info("Starting report")
       begin
-        approval_type = b.liquor_license == '1' ? 'Sökt' : 'Ej aktuellt'
+        approval_type = b.liquor_license ? 'Sökt' : 'Ej aktuellt'
         deltagare = 75
         start_date = b.begin_date.strftime '%F'
         start_time = b.begin_date.strftime '%R'
