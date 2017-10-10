@@ -38,7 +38,7 @@ class BookingsController < ApplicationController
   def today
     now = DateTime.now
 
-    @bookings = Booking.where('end_date >= ? or begin_date <= ?', now - 2.hours, now + 24.hours)
+    @bookings = Booking.where('(end_date >= ? and begin_date <= ?) or (begin_date <= ? and end_date >= ?)', now - 2.hours, now - 2.hours, now + 24.hours, now + 24.hours)
     render :index
   end
 
