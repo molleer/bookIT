@@ -28,7 +28,11 @@ class BookingsController < ApplicationController
 
   def current
     now = DateTime.now
-    @current = Booking.in_room(Room.find_by(name: 'Hubben')).where('begin_date <= ? and end_date >= ?', now, now).first
+    hubben = Room.find_by(name: 'Hubben')
+    @current = Booking.in_room(hubben).where('begin_date <= ? and end_date >= ?', now, now).first
+    unless @current.present?
+      render json: {error: 'No current booking'}
+    end
   end
 
   # GET /bookings/new
