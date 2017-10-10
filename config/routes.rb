@@ -21,12 +21,13 @@ BookIT::Application.routes.draw do
   resources :bookings do
     collection do
       get :calendar_data
+      get :today
     end
   end
 
   resources :rules, :rooms
   resources :terms, only: [:index, :edit, :update]
-  
+
   get 'current' => 'bookings#current'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

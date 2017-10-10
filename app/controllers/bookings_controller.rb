@@ -35,6 +35,13 @@ class BookingsController < ApplicationController
     end
   end
 
+  def today
+    now = DateTime.now
+
+    @bookings = Booking.where('begin_date between ? and ?', now, now + 24.hours)
+    render :index
+  end
+
   # GET /bookings/new
   def new
     date = DateTime.now.change(min: 0)
