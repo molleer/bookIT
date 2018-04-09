@@ -1,0 +1,16 @@
+version: '3'
+services:
+  db:
+    image: nouchka/sqlite3
+    volumes:
+       - devDB:/opt/sqlite
+  web:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+volumes:
+   devDB:
