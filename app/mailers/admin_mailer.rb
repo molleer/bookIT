@@ -10,7 +10,7 @@ class AdminMailer < ActionMailer::Base
     recipients = [ORDF_PRIT_MAIL, @booking.user.mail]
 
     recipients << VO_MAIL if @booking.party_report.present?
-    subject = "#{@booking.party_report.present? ? 'Festanmälan' : 'Bokning'} av #{@booking.room}, #{@booking.booking_range}"
+    subject = "#{@booking.party_report.present? ? 'Aktivitetsanmälan' : 'Bokning'} av #{@booking.room}, #{@booking.booking_range}"
 
     mail to: recipients, subject: subject, reply_to: @booking.user.mail
   end
@@ -33,7 +33,7 @@ class AdminMailer < ActionMailer::Base
 
   def remind_vo(reports)
     @reports = reports
-    subject = "Oskickad festanmälan inom 48h"
+    subject = "Oskickad aktivitetsanmälan inom 48h"
     mail to: VO_MAIL, subject: subject
   end
 end

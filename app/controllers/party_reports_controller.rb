@@ -24,7 +24,7 @@ class PartyReportsController < ApplicationController
       begin
         @report.reject!
         UserMailer.reject_party(@report, mail_params).deliver_now
-        redirect_to party_reports_path, notice: 'Festanmälan avslagen, mail har skickats till anmälaren'
+        redirect_to party_reports_path, notice: 'Aktivitetsanmälan avslagen, mail har skickats till anmälaren'
       rescue ActiveRecord::RecordInvalid => e
         redirect_to party_reports_path, alert: e.message
       end
@@ -50,7 +50,7 @@ class PartyReportsController < ApplicationController
     # AdminMailer.chalmers_message(params[:message]).deliver_now
 
     PartyReport.where(id: params[:report_ids]).update_all(sent_at: Time.zone.now)
-    redirect_to party_reports_path, notice: 'Festanmälan har skickats till Chalmers!'
+    redirect_to party_reports_path, notice: 'Aktivitetsanmälan har skickats till Chalmers!'
   end
 
   # GET /bookings/1/accept
@@ -58,7 +58,7 @@ class PartyReportsController < ApplicationController
     if can? :accept, @report
       begin
         @report.accept!
-        redirect_to party_reports_path, notice: 'Festanmälan accepterad'
+        redirect_to party_reports_path, notice: 'Aktivitetsanmälan accepterad'
       rescue ActiveRecord::RecordInvalid => e
         redirect_to party_reports_path, alert: e.message
       end
@@ -72,7 +72,7 @@ class PartyReportsController < ApplicationController
     if can? :accept, @report
       begin
         @report.reject!
-        redirect_to party_reports_path, notice: 'Festanmälan avslagen'
+        redirect_to party_reports_path, notice: 'Aktivitetsanmälan avslagen'
       rescue ActiveRecord::RecordInvalid => e
         redirect_to party_reports_path, alert: e.message
       end
@@ -87,10 +87,10 @@ class PartyReportsController < ApplicationController
       begin
         if params[:sent] == '1'
           @report.update(sent_at: Time.zone.now, accepted: true)
-          redirect_to @report.booking, notice: 'Festanmälan markerad som skickad.'
+          redirect_to @report.booking, notice: 'Aktivitetsanmälan markerad som skickad.'
         else
           @report.update(sent_at: nil)
-          redirect_to @report.booking, notice: 'Festanmälan markerad som oskickad.'
+          redirect_to @report.booking, notice: 'Aktivitetsanmälan markerad som oskickad.'
         end
 
       rescue ActiveRecord::RecordInvalid => e
