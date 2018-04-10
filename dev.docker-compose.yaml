@@ -1,9 +1,13 @@
 version: '3'
 services:
   db:
-    image: nouchka/sqlite3
-    volumes:
-       - devDB:/opt/sqlite
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: bookit
+      MYSQL_USER: bookit
+      MYSQL_PASSWORD: hej
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
   web:
     build:
       context: .

@@ -18,7 +18,7 @@ RUN chown -R ruby /app
 USER ruby
 
 # Database defaults
-ENV DATABASE_NAME devDB
+ENV DATABASE_NAME bookit
 ENV DATABASE_HOST database
 ENV DATABASE_USER root
 ENV DATABASE_PASSWORD hello
