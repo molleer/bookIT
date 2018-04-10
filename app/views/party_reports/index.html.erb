@@ -1,4 +1,4 @@
-<h1>Festanmälningar</h1>
+<h1>Aktivitetsanmälningar</h1>
 <%= link_to "Bokningar", bookings_path %>
 <% if @not_accepted_reports.any? %>
 	<h2>Att acceptera:</h2>
@@ -10,7 +10,7 @@
 <% if @unsent_reports.any? %>
 	<br>
 	<h2>Ej skickade:</h2>
-	<em>Festanmälningar väntandes på att bli skickade, klicka på 'Öppna massutskick'</em>
+	<em>Aktivitetsanmälningar väntandes på att bli skickade, klicka på 'Öppna massutskick'</em>
 	<%= render 'bookinglist', reports: @unsent_reports, active: false %>
 	<br>
 	<button class="send_bookings">Öppna massutskick</button>
