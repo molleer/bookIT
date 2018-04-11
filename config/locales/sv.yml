@@ -213,9 +213,9 @@ sv:
       party_report:
         begin_date: Startdatum
         end_date: Slutdatum
-        party_responsible_name: Festansvarig
-        party_responsible_phone: Tel festansvarig
-        party_responsible_mail: Email till festansvarig
+        party_responsible_name: Aktivitetsansvarig
+        party_responsible_phone: Tel aktivitetsansvarig
+        party_responsible_mail: Email till aktivitetsansvarig
         co_party_responsible_name: Medansvarig
         co_party_responsible_phone: Tel medansvarig
         co_party_responsible_mail: Email till medansvarig

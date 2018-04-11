@@ -63,7 +63,7 @@ class PartyReportsController < ApplicationController
         redirect_to party_reports_path, alert: e.message
       end
     else
-      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
+      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera aktivitetsanmälningar'
     end
   end
 
@@ -77,7 +77,7 @@ class PartyReportsController < ApplicationController
         redirect_to party_reports_path, alert: e.message
       end
     else
-      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera festanmälningar'
+      redirect_to party_reports_path, alert: 'Du har inte privilegier till att hantera aktivitetsanmälningar'
     end
   end
 
@@ -97,7 +97,7 @@ class PartyReportsController < ApplicationController
         redirect_to @report.booking, alert: e.message
       end
     else
-      redirect_to @report.booking, alert: 'Du har inte privilegier till att hantera festanmälningar'
+      redirect_to @report.booking, alert: 'Du har inte privilegier till att hantera aktivitetsanmälningar'
     end
   end
 
