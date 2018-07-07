@@ -40,7 +40,7 @@ Rails.application.configure do
   config.assets.digest = true
 
   #enable displaying information when application is run in a docker container
-  config.web_console.whitelisted_ips = '172.23.0.0/12'
+  config.web_console.whitelisted_ips = '172.16.0.0/12'
 
   # Adds additional error checking when serving assets at runtime.
   # Checks for improperly declared sprockets dependencies.

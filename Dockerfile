@@ -4,6 +4,8 @@ RUN apt-get update && apt-get install -y \
 net-tools \
 nodejs
 
+apt-get clean
+
 #Install gems
 RUN mkdir /app
 WORKDIR /app
@@ -21,6 +23,7 @@ ENV DATABASE_NAME bookIT
 ENV DATABASE_HOST db
 ENV DATABASE_USER bookIT
 ENV DATABASE_PASSWORD password
+ENV DATABASE_ADAPTER mysql2
 #In production, Host is set to naboo.chlamers.it
 # Start server
 ENV RAILS_ENV production

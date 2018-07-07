@@ -5,6 +5,8 @@ RUN apt-get update && apt-get install -y \
 net-tools \
 nodejs
 
+RUN apt-get clean
+
 #Install gems
 RUN mkdir /app
 WORKDIR /app
@@ -22,6 +24,7 @@ ENV DATABASE_NAME bookit
 ENV DATABASE_HOST db
 ENV DATABASE_USER bookit
 ENV DATABASE_PASSWORD password
+ENV DATABASE_ADAPTER mysql2
 
 # Start server
 ENV RAILS_ENV development
