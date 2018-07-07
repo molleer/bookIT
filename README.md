@@ -18,7 +18,7 @@ rake db:seed
 ### Setup med docker:
 för att bygga en lokal utvecklings miljö:
 ```
-docker-compose -f dev.docker-compose.yaml run --build
+docker-compose -f dev.docker-compose.yaml up --build
 ```
 För att lösa Autentiering mot accounts, lägg till:
 ```
@@ -28,7 +28,7 @@ i `/etc/hosts`
 
 För att starta:
 ```
-docker-compose -f dev.docker-compose run
+docker-compose -f dev.docker-compose up 
 ```
 
 ### rake tasks
