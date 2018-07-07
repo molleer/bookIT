@@ -16,7 +16,7 @@ rake db:seed
 ```
 
 ### Setup med docker:
-för att bygga en lokal produktions miljö:
+för att bygga en lokal utvecklings miljö:
 ```
 docker-compose -f dev.docker-compose.yaml run --build
 ```

@@ -1,13 +1,15 @@
-version: '3'
+version: '2'
 services:
   db:
-    image: mysql
+    image: mariadb
     restart: always
     environment:
       MYSQL_DATABASE: bookit
       MYSQL_USER: bookit
-      MYSQL_PASSWORD: hej
+      MYSQL_PASSWORD: password
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    ports:
+      - 3306:3306
   web:
     build:
       context: .

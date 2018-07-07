@@ -39,6 +39,9 @@ Rails.application.configure do
   # yet still be able to expire them through the digest params.
   config.assets.digest = true
 
+  #enable displaying information when application is run in a docker container
+  config.web_console.whitelisted_ips = '172.23.0.0/12'
+
   # Adds additional error checking when serving assets at runtime.
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
