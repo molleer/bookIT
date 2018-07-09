@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y \
 net-tools \
 nodejs
 
-apt-get clean
+RUN apt-get clean
 
 #Install gems
 RUN mkdir /app
