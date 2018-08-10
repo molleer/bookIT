@@ -15,8 +15,23 @@ Kör följande kommando för att skapa 'Hubben' och 'Grupprummet':
 rake db:seed
 ```
 
+### Setup med docker:
+för att bygga en lokal utvecklings miljö:
+```
+docker-compose up --build
+```
+För att lösa Autentiering mot accounts, lägg till:
+```
+0.0.0.0       local.chalmers.it
+```
+i `/etc/hosts`
 
-
+För att starta:
+```
+docker-compose up
+```
+"bookIT" finns sedan på:  
+"local.chalmers.it:3000"
 
 ### rake tasks
 Lägg till följande till cron: `cd path_to_bookit && path_to_rake RAILS_ENV=production bookit:remind`
