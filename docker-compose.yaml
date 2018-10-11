@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_DATABASE: bookit
       MYSQL_USER: bookit
-      MYSQL_PASSWORD: iamapassword
+      MYSQL_PASSWORD: password
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     ports:
       - 3306:3306
@@ -14,10 +14,9 @@ services:
     build:
       context: .
       dockerfile: dev.Dockerfile
-    command: bash -c "sh wait_for_db.sh && sh start.sh"  
     ports:
       - "3000:3000"
     depends_on:
       - db
-    volumes:
-      - .:/app
+volumes:
+   devDB:
