@@ -3,7 +3,8 @@ FROM ruby:2.3.3
 RUN apt-get update && apt-get install -y \
 #Packages
 net-tools \
-nodejs
+nodejs \
+netcat 
 
 RUN apt-get clean
 
@@ -23,7 +24,7 @@ USER ruby
 ENV DATABASE_NAME bookit
 ENV DATABASE_HOST db
 ENV DATABASE_USER bookit
-ENV DATABASE_PASSWORD password
+ENV DATABASE_PASSWORD iamapassword
 ENV DATABASE_ADAPTER mysql2
 
 # Start server
