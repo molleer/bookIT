@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   db:
     image: mariadb
@@ -14,8 +14,13 @@ services:
     build:
       context: .
       dockerfile: dev.Dockerfile
+    volumes:
+      - .:/app
     ports:
       - "3000:3000"
+    environment:
+      - OAUTH_ID=xxx
+      - OAUTH_SECRET=xxx
     depends_on:
       - db
 volumes:

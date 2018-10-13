@@ -8,7 +8,6 @@ nodejs
 RUN apt-get clean
 
 #Install gems
-RUN mkdir /app
 WORKDIR /app
 COPY Gemfile* /app/
 RUN bundle install

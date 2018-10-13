@@ -29,8 +29,10 @@ BookIT::Application.routes.draw do
   resources :terms, only: [:index, :edit, :update]
 
   get 'current' => 'bookings#current'
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
+
+  get "/auth/account", as: :signin
+  match 'auth/:provider/callback' => 'sessions#create', via: [:get, :post]
+  get 'signout' => 'sessions#destroy', as: :signout
 
   # You can have the root of your site routed with "root"
   root 'bookings#index'
