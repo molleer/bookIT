@@ -147,7 +147,7 @@
   </div>
   <br>
   <div class="actions">
-    <%= link_to 'Radera', @booking, method: :delete, class: 'btn btn-dangerous', data: { id: @booking.id } %>
+    <%= link_to 'Radera', @booking, method: :delete, class: 'btn btn-dangerous', data: { id: @booking.id } unless f.object.new_record? %>
     <%= link_to "Alla bokningar", bookings_path, class: 'btn btn-boring'%>
     <%= f.submit %>
   </div>
