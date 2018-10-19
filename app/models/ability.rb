@@ -13,8 +13,10 @@ class Ability
       #can :accept, PartyReport
       #can :read, :all
 
-    else user.present? # not nil
+    else
       can :manage, Booking, user_id: user.id    # a user can manage bookings he/she created
+      can :manage, Booking, group: user.groups  # a user can manage bookings if in same group
+
       cannot :accept, PartyReport
       can :read, :all
 
