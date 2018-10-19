@@ -38,7 +38,7 @@ class Booking < ActiveRecord::Base
   validate :must_be_party_room, if: 'party_report.present?'
 
   # essential validations
-  validates :title, :description, :user, :room, :begin_date, :end_date, presence: true
+  validates :title, :description, :user_id, :room, :begin_date, :end_date, presence: true
   validates :phone, presence: true,length: { minimum: 6 }
 
   validate :must_be_allowed
