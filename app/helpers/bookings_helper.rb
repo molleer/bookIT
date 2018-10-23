@@ -13,7 +13,7 @@ module BookingsHelper
 	end
 
 	def user_bookings_path(user)
-		bookings_path(filter: ([user.cid] + user.groups).join(' '))
+		bookings_path(filter: ([user.cid] + user.symbol_groups).join(' '))
 	end
 
   def party_begin_date(booking)

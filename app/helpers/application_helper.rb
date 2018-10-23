@@ -1,5 +1,10 @@
 module ApplicationHelper
 
+  def logout_path(return_to)
+    return_to = "?return_to=#{return_to}" if return_to
+    "#{Rails.configuration.account_ip}/logout#{return_to}"
+  end
+
 	def datetime_local_dateformat(date)
 		date.strftime "%Y-%m-%dT%H:%M"
 	end

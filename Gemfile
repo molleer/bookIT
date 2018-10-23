@@ -7,6 +7,10 @@ gem 'rails', '4.2.1'
 gem 'sqlite3'
 gem 'mysql2'
 
+# active resource but for the 20th-century
+gem 'her', '~> 1.0.2'
+gem 'request_store', '~> 1.4.1'
+
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
@@ -34,8 +38,7 @@ gem 'jbuilder', '~> 1.2'
 gem 'nokogiri'
 gem 'validates_timeliness', '~> 3.0'
 gem 'ri_cal', git: 'https://github.com/ctide/ri_cal.git'
-gem 'cancan' # user authorization
-gem 'httparty'
+gem 'cancancan', '~> 2.0' # user authorization
 
 
 # send party reports
@@ -44,6 +47,8 @@ gem 'poltergeist'
 
 # logical deletes
 gem 'paranoia'
+
+gem 'omniauth-oauth2', '~> 1.3.1'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

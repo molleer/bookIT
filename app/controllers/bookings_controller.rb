@@ -45,7 +45,7 @@ class BookingsController < ApplicationController
   # GET /bookings/new
   def new
     date = DateTime.now.change(min: 0)
-    @booking = current_user.bookings.build(room: Room.find_by(name: 'Hubben'), begin_date: date, end_date: date + 2.hours)
+    @booking = Booking.new(user_id: current_user.cid, room: Room.find_by(name: 'Hubben'), begin_date: date, end_date: date + 2.hours)
     @booking.build_party_report
   end
 
@@ -97,7 +97,7 @@ class BookingsController < ApplicationController
 
   private
     def create_single_booking
-      @booking = current_user.bookings.build(booking_params)
+      @booking = Booking.new({user_id: current_user.cid}.merge(booking_params))
       respond_to do |format|
         if @booking.save
 
@@ -113,7 +113,7 @@ class BookingsController < ApplicationController
     end
 
     def create_repeated_booking
-      @booking = current_user.bookings.build(booking_params)
+      @booking = Booking.new({user_id: current_user.cid}.merge(booking_params))
       @failed_bookings = []
       nbr_succeeded = 0
       end_date = params[:repeat_until].to_date
