@@ -6,7 +6,7 @@
   <% if @booking.group.present? %>
   <br><strong>Förening:</strong> <%= @booking.group_sym.itize if @booking.group.present? %>
   <% end %>
-  <% if @booking.party_report.present? && can?(:accept, Booking) %>
+  <% if @booking.party_report.present? && can?(:accept, PartyReport) %>
     <br><strong><%= Booking.human_attribute_name(:party_responsible) %>:</strong>
     <%= @booking.party_report.party_responsible_name %> (<%= @booking.party_report.party_responsible_phone %>)
   <% end %>
