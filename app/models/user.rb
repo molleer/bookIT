@@ -17,7 +17,7 @@ class User
 	has_many :bookings
 
 	@@ADMIN_GROUPS = [:digit, :prit, :styrit]
-	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit, :valberedningen, :laggit, :fikit]
+	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit, :valberedningen, :laggit, :fikit, :dpo]
 
 	def cid
 		uid
