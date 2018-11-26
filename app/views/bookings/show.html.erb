@@ -23,7 +23,7 @@ Bokningens status: <%= @booking.status_text %>.
 <%= link_to 'Redigera', edit_booking_path(@booking), class: 'btn btn-boring' if can?(:edit, @booking) %>
 <%= link_to 'Alla bokningar', bookings_path, class: 'btn btn-boring' %>
 <br>
-<% if @booking.party_report.present? && can?(:accept, Booking) %>
+<% if @booking.party_report.present? && can?(:accept, PartyReport) %>
   <br>
   <%= link_to 'Markera bokning skickad',
   mark_as_sent_party_report_path(@booking.party_report, sent: 1),
