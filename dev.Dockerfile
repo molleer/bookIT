@@ -13,10 +13,6 @@ COPY Gemfile* /app/
 RUN bundle install
 
 #Upload source
-COPY . /app
-RUN useradd ruby
-RUN chown -R ruby /app
-USER ruby
 
 # Database defaults
 ENV DATABASE_NAME bookit
@@ -25,12 +21,20 @@ ENV DATABASE_USER bookit
 ENV DATABASE_PASSWORD password
 ENV DATABASE_ADAPTER mysql2
 
+ENV ACCOUNT_ADDRESS http://localhost:8081
+ENV OAUTH_ID 1RbbpBxHO2TCkHObrVFnsVsC5kLyjMLDFc6koNxNJ33it1pdHK1hBSbbWOxRKSyGj6OAHskavXo
+ENV OAUTH_SECRET TTSAq4XuBq8lhIbzgw1AjD7mZX2ZwDe4YJrhOo87saORbaKb5rP6JvYA1zIawBrv5mIzLJLWrmM
+
 # Start server
 ENV RAILS_ENV development
 ENV RACK_ENV development
 ENV SECRET_KEY_BASE secret
 ENV PORT 3000
-EXPOSE 3000
+EXPOSE 3001
 
+COPY . /app
+RUN useradd ruby
+RUN chown -R ruby /app
+USER ruby
 
 CMD ["sh", "start.sh"]

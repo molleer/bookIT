@@ -24,6 +24,10 @@ ENV DATABASE_HOST db
 ENV DATABASE_USER bookIT
 ENV DATABASE_PASSWORD password
 ENV DATABASE_ADAPTER mysql2
+
+ENV ACCOUNT_ADDRESS https://gamma.chalmers.it
+
+
 #In production, Host is set to naboo.chlamers.it
 # Start server
 ENV RAILS_ENV production
