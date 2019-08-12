@@ -1,4 +1,4 @@
-Her::API.setup url: Rails.configuration.account_ip do |c|
+Her::API.setup url: "#{Rails.configuration.account_ip}/api" do |c|
   # Request
   c.use AccountTokenAuth
   c.use Faraday::Request::UrlEncoded
