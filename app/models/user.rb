@@ -20,8 +20,8 @@ class User
 	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit, :valberedningen, :laggit, :fikit, :dpo, :superadmin]
 
 	# This MUST be fixed to user cid, but using cid outright causes infinite recursion
-	def cid
-		id
+	def uid
+		cid
 	end
 
 	def group_name
