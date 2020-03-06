@@ -38,6 +38,7 @@ services:
       DEFAULT_CLIENT_SECRET: secret
       DEFAULT_REDIRECT_URI: http://localhost:3001/auth/account/callback
       DEFAULT_API_KEY: key
+      IS_MOCKING_CLIENT: "true"
     ports:
       - 8081:8081
     depends_on:
