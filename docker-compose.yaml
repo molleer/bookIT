@@ -1,28 +1,78 @@
-version: '3'
+version: "2"
 services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dev.Dockerfile
+    image: bookit_backend:dev
+    ports:
+      - 4000:4000
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - redis
+      - gamma-backend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    image: bookit_frontend:dev
+    ports:
+      - 3001:3000
+    volumes:
+      - ./frontend:/usr/src/app
+    depends_on:
+      - backend
   db:
-    image: mariadb
+    image: postgres:12
     restart: always
     environment:
-      MYSQL_DATABASE: bookit
-      MYSQL_USER: bookit
-      MYSQL_PASSWORD: password
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-    ports:
-      - 3306:3306
-  web:
-    build:
-      context: .
-      dockerfile: dev.Dockerfile
-    command: bash -c 'rm -f tmp/pids/server.pid && sh start.sh'
+      POSTGRES_DB: bookit
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
     volumes:
-      - .:/app
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3000:3000"
+    - 5432:5432
+  redis:
+    image: redis:5.0.8
+    ports:
+    - 6379:6379
+  gamma-backend:
+    image: cthit/gamma-backend
     environment:
-      - OAUTH_ID=xxx
-      - OAUTH_SECRET=xxx
+      DB_HOST: gamma-db
+      SERVER_PORT: 8081
+      FRONTEND_CLIENT_ID: 7hAdUEtMo4MgFnA7ZoZ41ohTe1NNRoJmjL67Gf0NIrrBnauyhc
+      FRONTEND_CLIENT_SECRET: secret
+      FRONTEND_REDIRECT_URI: http://localhost:3000/login
+      SUCCESSFUL_LOGIN: http://localhost:3000
+      DEFAULT_CLIENT_NAME: name
+      DEFAULT_CLIENT_ID: id
+      DEFAULT_CLIENT_SECRET: secret
+      DEFAULT_REDIRECT_URI: http://localhost:3001/auth/account/callback
+      DEFAULT_API_KEY: key
+      CORS_ALLOWED_ORIGIN: "*"
+      IS_MOCKING_CLIENT: "true"
+      ADMIN_PASSWORD: password
+      ROOT_DEBUG_LEVEL: info
+    ports:
+      - 8081:8081
     depends_on:
-      - db
-volumes:
-   devDB:
+      - gamma-db
+  gamma-frontend:
+    image: cthit/gamma-frontend:latest
+    ports:
+      - 3000:8080
+  gamma-db:
+    image: postgres:10
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    restart: always
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+    - 8080:8080
