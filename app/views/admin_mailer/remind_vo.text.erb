@@ -1,9 +1,0 @@
-<%= party_reports_url %>
-
-<% @reports.each do |report| %>
-Titel:        <%= report.title %>
-Bokad av:     <%= report.group %>
-Aktivitetsansvarig: <%= report.party_responsible_name %>
-Period:       <%= report.booking.booking_range %>
-<% unless report == @reports.last %><hr><% end %>
-<% end %>

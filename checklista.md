@@ -19,4 +19,4 @@ går!
 
 M v h  
 **P.R.I.T.**  
-*(Vid frågor, ring __Mjölnir__ på __073 - 038 63 42__)*
+*(Vid frågor, ring __Någon?__ på __073 13 37 123__)*

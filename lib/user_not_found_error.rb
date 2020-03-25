@@ -1,2 +1,0 @@
-class UserNotFoundError < StandardError
-end

@@ -1,9 +1,0 @@
-<h1>Villkor</h1>
-
-<% @terms.each_with_index do |term| %>
-  <article>
-    <h3><%= term.title %> (<%= term.active ? 'Aktiv' : 'Inaktiv' %>)</h3>
-    <p><%= markdown term.content %></p>
-    <%= link_to 'Redigera', edit_term_path(term) %>
-  </article>
-<% end %>
