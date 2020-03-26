@@ -19,8 +19,8 @@ CREATE TABLE reservation (
 );
 
 CREATE TABLE reserved_room (
-    reservation_id UUID REFERENCES reservation(id) ON DELETE CASCADE ,
-    room_id UUID REFERENCES room(id) ON DELETE CASCADE ,
+    reservation_id UUID REFERENCES reservation(id) ON DELETE CASCADE,
+    room_id UUID REFERENCES room(id) ON DELETE CASCADE,
     PRIMARY KEY (reservation_id, room_id)
 );
 
@@ -42,15 +42,4 @@ CREATE VIEW unaccepted_reservations AS (
 CREATE VIEW accepted_reservations AS (
     SELECT * FROM reservation
     WHERE accepted = TRUE
-);
-
--- Gives information about all the bookings for each room
-CREATE VIEW room_reservation_information AS (
-    SELECT
-        reserved_room.room_id,
-        reservation.id, title, description, accepted, begin_date, end_date, created_at, updated_at
-    FROM
-        reserved_room INNER JOIN reservation
-    ON
-        reserved_room.reservation_id = reservation.id
 );
