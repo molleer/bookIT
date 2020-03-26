@@ -1,18 +1,12 @@
-FROM node:10.15
-
-RUN mkdir -p /usr/src/app/
-RUN chown -R node /usr/src/app
-
-USER node
+FROM node:13.2.0
 
 WORKDIR /usr/src/app
-
 COPY package.json .
 COPY package-lock.json .
 
 RUN npm install
 
-COPY . .
+COPY src src
 
 EXPOSE 4000
 

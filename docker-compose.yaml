@@ -20,7 +20,8 @@ services:
     ports:
       - 3001:3000
     volumes:
-      - ./frontend:/usr/src/app
+      - ./frontend/src:/usr/src/app/src
+      - ./frontend/public:/usr/src/app/public
     depends_on:
       - backend
   db:
@@ -61,9 +62,9 @@ services:
     depends_on:
       - gamma-db
   gamma-frontend:
-    image: cthit/gamma-frontend:latest
+    image: cthit/gamma-frontend:development
     ports:
-      - 3000:8080
+      - 3000:3000
   gamma-db:
     image: postgres:10
     environment:
