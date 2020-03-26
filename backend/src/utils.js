@@ -37,7 +37,7 @@ const initDB = (host = "db", port = 5432) => {
 
 const getPool = () => pool;
 
-const query = (sql, values, convertResult = result => result) =>
+const query = (sql, values, convertResult) =>
     new Promise((resolve, reject) => {
         pool.query(sql, values, (errors, results) => {
             if (errors) {
@@ -89,6 +89,26 @@ const renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => ({
 
 const getApp = () => app;
 
+const yupToFormErrors = yupError => {
+    const errors = {};
+    if (yupError.inner) {
+        for (var i = 0; i < yupError.inner.length; i++) {
+            const fieldError = yupError.inner[i];
+            errors[fieldError.path] = fieldError.message;
+        }
+    }
+    return errors;
+};
+
+const validateSchema = async (schema, data) => {
+    const [schemaErr] = await to(
+        schema.validate(data, {
+            abortEarly: false,
+        })
+    );
+    return schemaErr == null ? null : yupToFormErrors(schemaErr);
+};
+
 module.exports = {
     query,
     get,
@@ -103,4 +123,5 @@ module.exports = {
     isUUID,
     renameProp,
     getApp,
+    validateSchema,
 };

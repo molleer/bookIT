@@ -1,17 +1,23 @@
 const uuid = require("uuid/v4");
+const yup = require("yup");
 const { deleteRoom } = require("../db/room.db");
 const { editRoom } = require("../db/room.db");
 const { getRoom } = require("../db/room.db");
 const { getRooms } = require("../db/room.db");
 const { addRoom } = require("../db/room.db");
-const { put, del, post, get, to, isUUID } = require("../utils");
+const { put, del, post, get, to, isUUID, validateSchema } = require("../utils");
+
+const roomSchema = yup.object().shape({
+    name: yup.string("name must be a string").required("name is required"),
+});
 
 const handleAddRoom = async (req, res) => {
     const id = uuid();
-    const { name } = req.body;
 
-    if (req.body == null || name == null || name.trim() === "") {
-        res.status(400).send("no name provided");
+    const schemaErrors = await validateSchema(roomSchema, req.body);
+
+    if (schemaErrors != null) {
+        res.status(422).send(schemaErrors);
         return;
     }
 
@@ -25,7 +31,6 @@ const handleAddRoom = async (req, res) => {
 };
 
 const handleGetRooms = async (req, res) => {
-    console.log("lol2");
     const [err, rooms] = await to(getRooms());
 
     if (err) {
@@ -60,6 +65,13 @@ const handleEditRoom = async (req, res) => {
     const { id } = req.params;
     if (!isUUID(id)) {
         res.status(400).send("id is not an UUID");
+        return;
+    }
+
+    const schemaErrors = await validateSchema(roomSchema, req.body);
+
+    if (schemaErrors != null) {
+        res.status(422).send(schemaErrors);
         return;
     }
 
