@@ -25,7 +25,8 @@ class User
 	end
 
 	def group_name
-		self.relationships.map { | g | g["superGroup"]["name"].to_sym }
+		puts self.attributes
+		self.groups.map { | g | g["superGroup"]["name"].to_sym }
 	end
 
 	def symbol_groups

@@ -20,18 +20,15 @@ services:
     depends_on:
       - db
     environment:
-      SUCCESSFUL_LOGIN: http://localhost:3000
       OAUTH_ID: id
       OAUTH_SECRET: secret
+      ACCOUNT_ADDRESS: http://localhost:8081
     network_mode: host
   gamma_backend:
     image: cthit/gamma-backend
     environment:
-      DB_HOST: gamma_db
+      DB_HOST: 0.0.0.0
       SERVER_PORT: 8081
-      FRONTEND_CLIENT_ID: 7hAdUEtMo4MgFnA7ZoZ41ohTe1NNRoJmjL67Gf0NIrrBnauyhc
-      FRONTEND_CLIENT_SECRET: secret
-      FRONTEND_REDIRECT_URI: http://localhost:3000/login
       SUCCESSFUL_LOGIN: http://localhost:3000
       DEFAULT_CLIENT_NAME: name
       DEFAULT_CLIENT_ID: id
@@ -39,10 +36,14 @@ services:
       DEFAULT_REDIRECT_URI: http://localhost:3001/auth/account/callback
       DEFAULT_API_KEY: key
       IS_MOCKING_CLIENT: "true"
+      REDIS_HOST: localhost
+      REDIS_PASSWORD: ""
+      COOKIE_DOMAIN: localhost
     ports:
       - 8081:8081
     depends_on:
       - gamma_db
+    network_mode: host
   gamma_frontend:
     image: cthit/gamma-frontend:development
     environment:
@@ -57,9 +58,15 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
     restart: always
+    ports:
+    - 5432:5432
   adminer:
     image: adminer
     ports:
       - 8082:8080
+  redis:
+    image: redis
+    ports:
+    - 6379:6379
 volumes:
-   devDB:
+  devDB:
