@@ -15,7 +15,7 @@ Rails.application.configure do
 
   # mailcatcher conf (install gem separately with 'gem install mailcatcher')
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+  config.action_mailer.smtp_settings = { :address => ENV["SMTP_ADDRESS"] == nil ? "localhost" : ENV["SMTP_ADDRESS"], :port => ENV["SMTP_PORT"] == nil ? 25 : ENV["SMTP_PORT"] }
 
   config.action_mailer.default_url_options = {
     host: 'localhost:3000'
