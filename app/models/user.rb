@@ -16,15 +16,21 @@ class User
 
 	has_many :bookings
 
-	@@ADMIN_GROUPS = [:digit, :prit, :styrit]
-	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit, :valberedningen, :laggit, :fikit, :dpo]
+	@@ADMIN_GROUPS = [:digit, :prit, :styrit, :superadmin]
+	@@FILTER = [:digit, :styrit, :prit, :nollkit, :sexit, :fanbarerit, :'8bit', :drawit, :armit, :hookit, :fritid, :snit, :flashit, :valberedningen, :laggit, :fikit, :dpo, :superadmin]
 
-	def cid
-		uid
+	# This MUST be fixed to user cid, but using cid outright causes infinite recursion
+	def uid
+		cid
+	end
+
+	def group_name
+		puts self.attributes
+		self.groups.map { | g | g["superGroup"]["name"].to_sym }
 	end
 
 	def symbol_groups
-		@groups ||= (self.groups.map(&:to_sym) & @@FILTER)
+		@groups ||= (group_name(&:to_sym) & @@FILTER)
 	end
 
 	def admin?
@@ -40,7 +46,7 @@ class User
 	end
 
 	def to_s
-		"#{given_name} '#{nickname}' #{surname}"
+		"#{firstName} '#{nick}' #{lastName}"
 	end
 
 	alias_method :full_name, :to_s

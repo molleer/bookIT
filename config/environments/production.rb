@@ -53,6 +53,9 @@ Rails.application.configure do
   # when problems arise.
   config.log_level = :debug
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { :address => ENV["SMTP_ADDRESS"] == nil ? "smtp-relay.gmail.com" : ENV["SMTP_ADDRESS"], :port => ENV["SMTP_PORT"] == nil ? 25 : ENV["SMTP_PORT"] }
+
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
 
@@ -81,5 +84,5 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-  config.account_ip = 'https://beta-account.chalmers.it'
+  config.account_ip = ENV["ACCOUNT_ADDRESS"] == nil ? "https://gamma.chalmers.it" : ENV["ACCOUNT_ADDRESS"]
 end

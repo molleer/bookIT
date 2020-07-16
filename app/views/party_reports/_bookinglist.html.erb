@@ -21,7 +21,7 @@
 			<td><%= report.liquor_license ? 'Ja' : 'Nej' %></td>
 			<% if active %>
 				<td><%= link_to '✔', accept_party_report_path(report), class: 'btn', disabled: report.accepted? %></td>
-				<td><%= link_to '✘', reject_party_report_path(report), class: 'btn btn-dangerous reject', data: { mail: report.booking.user.mail, url: booking_url(report.booking), id: report.booking.id }, disabled: report.rejected? %></td>
+				<td><%= link_to '✘', reject_party_report_path(report), class: 'btn btn-dangerous reject', data: { mail: report.booking.user.email, url: booking_url(report.booking), id: report.booking.id }, disabled: report.rejected? %></td>
 			<% end %>
 		</tr>
 	<% end %>

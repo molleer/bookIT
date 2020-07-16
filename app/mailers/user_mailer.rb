@@ -10,6 +10,6 @@ class UserMailer < ActionMailer::Base
   def reject_booking(report, reason)
     @report = report
     @reason = reason
-    mail to: report.user.mail, subject: "Din bokning \"#{@report.title}\" avslogs"
+    mail to: report.user.email, subject: "Din bokning \"#{@report.title}\" avslogs"
   end
 end
