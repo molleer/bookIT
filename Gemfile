@@ -55,7 +55,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'web-console', '~> 2.0', group: :development
+gem 'web-console', '~> 2.1', group: :development
 
 group :development, :test do
 	gem "rspec-rails"
