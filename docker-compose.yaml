@@ -10,7 +10,7 @@ services:
         ports:
             - 4000:4000
         volumes:
-            - ./backend:/usr/src/app
+            - ./backend/src:/usr/src/app/src
         depends_on:
             - redis
             - gamma-backend
