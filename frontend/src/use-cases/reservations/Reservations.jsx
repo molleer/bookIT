@@ -2,7 +2,11 @@ import React from "react";
 import FullCallendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { DigitDesign } from "@cthit/react-digit-components";
+import {
+    DigitDesign,
+    DigitButtonGroup,
+    DigitButton,
+} from "@cthit/react-digit-components";
 
 const Reservations = () => {
     return (
@@ -11,6 +15,18 @@ const Reservations = () => {
                 size={{ width: "95%" }}
                 style={{ marginTop: "2rem" }}
             >
+                <DigitButtonGroup
+                    primary
+                    outlined
+                    buttons={[
+                        {
+                            text: "Skapa bokning",
+                        },
+                        {
+                            text: "Dina bokningar",
+                        },
+                    ]}
+                />
                 <DigitDesign.CardBody>
                     <FullCallendar
                         eventTimeFormat={{
