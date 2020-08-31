@@ -24,7 +24,7 @@ const getAuthenticationMiddleware = () => {
                         );
                         console.log(err.response);
                     } else {
-                        res.status(500);
+                        res.status(500).end();
                         console.log(err);
                     }
                 } else {

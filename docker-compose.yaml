@@ -1,109 +1,120 @@
 version: "3"
 networks:
-    gamma:
+  gamma:
+  bookit:
 services:
-    backend:
-        build:
-            context: ./backend
-            dockerfile: dev.Dockerfile
-        image: bookit_backend:dev
-        ports:
-            - 4000:4000
-        volumes:
-            - ./backend/src:/usr/src/app/src
-        depends_on:
-            - redis
-            - gamma-backend
-    frontend:
-        build:
-            context: ./frontend
-            dockerfile: dev.Dockerfile
-        image: bookit_frontend:dev
-        stdin_open: true
-        ports:
-            - 3001:3000
-        volumes:
-            - ./frontend/src:/usr/src/app/src
-            - ./frontend/public:/usr/src/app/public
-        depends_on:
-            - backend
-    db:
-        image: postgres:12
-        restart: unless-stopped
-        environment:
-            POSTGRES_DB: bookit
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: example
-        volumes:
-            - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-        ports:
-            - 5432:5432
-    redis:
-        image: redis:5.0.8
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dev.Dockerfile
+    image: bookit_backend:dev
+    ports:
+      - 4000:4000
+    volumes:
+      - ./backend/src:/usr/src/app/src
+    depends_on:
+      - redis
+      - gamma-backend
+      - db
+    networks:
+      - gamma
+      - bookit
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    image: bookit_frontend:dev
+    stdin_open: true
+    ports:
+      - 3001:3000
+    volumes:
+      - ./frontend/src:/usr/src/app/src
+      - ./frontend/public:/usr/src/app/public
+    depends_on:
+      - backend
+    networks:
+      - bookit
+  db:
+    image: postgres:12
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bookit
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    networks:
+      - bookit
+  redis:
+    image: redis:5.0.8
+    networks:
+      - bookit
 
-    ########### GAMMA NETWORK ###########
+  ########### GAMMA NETWORK ###########
 
-    gamma-frontend:
-        image: cthit/gamma-frontend:development
-        environment:
-            HTTP_PROXY: http://gamma-backend:8081
-        depends_on:
-            - gamma-backend
-        networks:
-            - gamma
-        ports:
-            - 3000:3000
+  gamma-frontend:
+    image: cthit/gamma-frontend:development
+    environment:
+      HTTP_PROXY: http://gamma-backend:8081
+    depends_on:
+      - gamma-backend
+    networks:
+      - gamma
+    ports:
+      - 3000:3000
 
-    gamma-backend:
-        image: cthit/gamma-backend:development
-        environment:
-            # Default admin user name = admin
-            # Default admin password  = password
+  gamma-backend:
+    image: cthit/gamma-backend:development
+    environment:
+      # Default admin user name = admin
+      # Default admin password  = password
 
-            DB_USER: user
-            DB_PASSWORD: password
-            DB_HOST: gamma-db
-            DB_PORT: 5432
-            DB_NAME: postgres
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_HOST: gamma-db
+      DB_PORT: 5432
+      DB_NAME: postgres
 
-            REDIS_HOST: gamma-redis
-            REDIS_PASSWORD: ""
-            REDIS_PORT: 6379
+      REDIS_HOST: gamma-redis
+      REDIS_PASSWORD: ""
+      REDIS_PORT: 6379
 
-            GOTIFY_KEY: "123abc"
-            GOTIFY_URL: http://gamma-gotify:8080/mail
+      GOTIFY_KEY: "123abc"
+      GOTIFY_URL: http://gamma-gotify:8080/mail
 
-            DEFAULT_CLIENT_NAME: demo
-            DEFAULT_CLIENT_ID: id
-            DEFAULT_CLIENT_SECRET: secret
-            DEFAULT_REDIRECT_URI: http://localhost:3001/auth/account/callback
-            DEFAULT_API_KEY: key
+      DEFAULT_CLIENT_NAME: demo
+      DEFAULT_CLIENT_ID: id
+      DEFAULT_CLIENT_SECRET: secret
+      DEFAULT_REDIRECT_URI: http://localhost:3001/auth/account/callback
+      DEFAULT_API_KEY: key
 
-            SERVER_PORT: 8081
-            SUCCESSFUL_LOGIN: http://localhost:3000
-            CORS_ALLOWED_ORIGIN: http://localhost:3000
-            BACKEND_URI: http://localhost:8081/api/
-            PRODUCTION: "false"
-            COOKIE_DOMAIN: localhost
-            IS_MOCKING_CLIENT: "true"
-        depends_on:
-            - gamma-redis
-            - gamma-db
-        networks:
-            - gamma
-        ports:
-            - 8081:8081
+      SERVER_PORT: 8081
+      SUCCESSFUL_LOGIN: http://localhost:3000
+      CORS_ALLOWED_ORIGIN: http://localhost:3000
+      BACKEND_URI: http://localhost:8081/api/
+      PRODUCTION: "false"
+      COOKIE_DOMAIN: localhost
+      IS_MOCKING_CLIENT: "true"
+    depends_on:
+      - gamma-redis
+      - gamma-db
+    networks:
+      - gamma
+    ports:
+      - 8081:8081
 
-    gamma-redis:
-        image: redis:5.0
-        networks:
-            - gamma
+  gamma-redis:
+    image: redis:5.0
+    networks:
+      - gamma
 
-    gamma-db:
-        image: postgres:10
-        environment:
-            POSTGRES_USER: user
-            POSTGRES_DB: postgres
-            POSTGRES_PASSWORD: password
-        networks:
-            - gamma
+  gamma-db:
+    image: postgres:10
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: password
+    networks:
+      - gamma
