@@ -6,9 +6,24 @@ import {
     DigitDesign,
     DigitButtonGroup,
     DigitButton,
+    useDigitCustomDialog,
 } from "@cthit/react-digit-components";
+import { useEffect } from "react";
+import NewReservationFrom from "./new-reservation-form";
 
 const Reservations = () => {
+    const [openDialog] = useDigitCustomDialog({
+        title: "Skapa ny bokning",
+    });
+
+    useEffect(() => {
+        openDialog({
+            renderMain: () => (
+                <NewReservationFrom onSubmit={values => console.log(values)} />
+            ),
+        });
+    }, []);
+
     return (
         <div style={{ display: "flex", justifyContent: "center" }}>
             <DigitDesign.Card
