@@ -2,6 +2,8 @@ version: "3"
 networks:
   gamma:
   bookit:
+volumes:
+  node_modules:
 services:
   backend:
     build:
@@ -30,6 +32,7 @@ services:
     volumes:
       - ./frontend/src:/usr/src/app/src
       - ./frontend/public:/usr/src/app/public
+      - node_modules:/urs/src/app/node_modules
     depends_on:
       - backend
     networks:
