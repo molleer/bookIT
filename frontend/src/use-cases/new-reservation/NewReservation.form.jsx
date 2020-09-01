@@ -6,6 +6,7 @@ import {
     DigitLayout,
     DigitButton,
     DigitDateAndTimePicker,
+    DigitTextArea,
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
 
@@ -24,11 +25,28 @@ const TimePicker = ({ name, label }) => {
     return <DigitDateAndTimePicker {...timeValues} upperLabel={label} />;
 };
 
+const Description = () => {
+    const descriptionValues = useDigitFormField("description");
+    return (
+        <DigitTextArea
+            size={{ width: "100%" }}
+            rows={5}
+            rowsMax={8}
+            {...descriptionValues}
+            upperLabel="Beskrivning"
+        />
+    );
+};
+
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
-    phone: yup.string().required(),
+    phone: yup.string().matches(),
     begin_date: yup.date().required(),
     end_date: yup.date().required(),
+    /*is_activity: yup.bool(),
+    activity_contact_number: yup.lazy(({ is_activity }) =>
+        is_activity ? yup.string() : yup.string().required()
+    ),*/
 });
 
 const NewReservationFrom = ({ onSubmit }) => {
@@ -39,6 +57,8 @@ const NewReservationFrom = ({ onSubmit }) => {
                 phone: "",
                 begin_date: new Date(),
                 end_date: new Date(),
+                /*is_activity: false,
+                activity_contact_number: "",*/
             }}
             validationSchema={validationSchema}
             onSubmit={values => {
@@ -55,6 +75,7 @@ const NewReservationFrom = ({ onSubmit }) => {
                         <TimePicker name="begin_date" label="Startdatum" />
                         <TimePicker name="end_date" label="Slutdatum" />
                     </DigitLayout.Row>
+                    <Description />
                     <DigitButton raised submit text="Submit" />
                 </DigitLayout.Column>
             )}
