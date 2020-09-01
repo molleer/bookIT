@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { postRequest } from "../../../api/utils/api";
-import { DigitHeader, DigitNavLink } from "@cthit/react-digit-components";
+import { DigitHeaderDrawer, DigitNavLink } from "@cthit/react-digit-components";
 
 const Header = ({ children }) => {
     const history = useHistory();
@@ -23,7 +23,7 @@ const Header = ({ children }) => {
     }, [window.location.search]);
 
     return (
-        <DigitHeader
+        <DigitHeaderDrawer
             title={"BookIT"}
             renderDrawer={() => (
                 <>
