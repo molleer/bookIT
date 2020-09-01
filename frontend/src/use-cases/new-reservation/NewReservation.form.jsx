@@ -14,7 +14,6 @@ const Title = () => {
     return <DigitTextField {...titleValues} upperLabel="Titel" />;
 };
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 const PhoneNumber = ({ name, label }) => {
     const phoneValues = useDigitFormField(name);
     return <DigitTextField {...phoneValues} upperLabel={label} />;
@@ -27,7 +26,7 @@ const TimePicker = ({ name, label }) => {
 
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
-    phone: yup.string().matches(phoneRegExp),
+    phone: yup.string().required(),
     begin_date: yup.date().required(),
     end_date: yup.date().required(),
 });
@@ -53,11 +52,8 @@ const NewReservationFrom = ({ onSubmit }) => {
                     <Title />
                     <PhoneNumber name="phone" label="Telefonnummer" />
                     <DigitLayout.Row>
-                        {/**
-                            //TODO: Can not find utils in context. You either a) forgot to wrap your component tree in MuiPickersUtilsProvider; or b) mixed named and direct file imports.  Recommendation: use named imports from the module index.
-                            <TimePicker name="begin_date" label="Startdatum" />
-                            <TimePicker name="end_date" label="Slutdatum" />
-                         */}
+                        <TimePicker name="begin_date" label="Startdatum" />
+                        <TimePicker name="end_date" label="Slutdatum" />
                     </DigitLayout.Row>
                     <DigitButton raised submit text="Submit" />
                 </DigitLayout.Column>
