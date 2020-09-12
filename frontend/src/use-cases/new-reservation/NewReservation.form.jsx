@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
     useDigitFormField,
     DigitTextField,
@@ -9,10 +9,13 @@ import {
     DigitTextArea,
     DigitSelect,
     useDigitFormFieldArray,
+    DigitCheckbox,
+    DigitText,
     //DigitRadioButtonGroup,
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 const Title = () => {
     const titleValues = useDigitFormField("title");
@@ -43,6 +46,19 @@ const TimePicker = ({ name, label }) => {
     return <DigitDateAndTimePicker {...timeValues} upperLabel={label} />;
 };
 
+const Description = () => {
+    const descriptionValues = useDigitFormField("description");
+    return (
+        <DigitTextArea
+            size={{ width: "100%" }}
+            rows={5}
+            rowsMax={8}
+            {...descriptionValues}
+            upperLabel="Beskrivning"
+        />
+    );
+};
+
 const BookAs = ({ groups }) => {
     const dropDownValues = useDigitFormField("bookAs");
     const getGroups = () => {
@@ -64,17 +80,54 @@ BookAs.propTypes = {
     groups: PropTypes.arrayOf(PropTypes.string),
 };
 
-const Description = () => {
-    const descriptionValues = useDigitFormField("description");
+const ActivityRegistration = () => {
+    const activityValues = useDigitFormField("isActivity");
+    const permitValues = useDigitFormField("permit");
+    const repNameValues = useDigitFormField("responsible_name");
+    const repNumberValues = useDigitFormField("responsible_number");
+    const repEmailValues = useDigitFormField("responsible_email");
+    const [isActivity, setIsActivity] = useState(false);
     return (
-        <DigitTextArea
-            size={{ width: "100%" }}
-            rows={5}
-            rowsMax={8}
-            {...descriptionValues}
-            upperLabel="Beskrivning"
-        />
+        <>
+            <DigitCheckbox
+                {...activityValues}
+                onChange={e => {
+                    setIsActivity(e.target.checked);
+                    return activityValues.onChange(e);
+                }}
+                label="Jag vill aktivitetsanmäla"
+                size={{ width: "100%" }}
+            />
+            {isActivity && (
+                <>
+                    <DigitCheckbox
+                        {...permitValues}
+                        label="Serveringstillstånd"
+                    />
+                    <DigitLayout.Row>
+                        <DigitTextField
+                            {...repNameValues}
+                            upperLabel="Namn aktivitetsansvarig"
+                        />
+                        <DigitTextField
+                            {...repNumberValues}
+                            upperLabel="Tel aktivitetsansvarig"
+                        />
+                        <DigitTextField
+                            {...repEmailValues}
+                            upperLabel="Email aktivitetsansvarig"
+                        />
+                    </DigitLayout.Row>
+                </>
+            )}
+        </>
     );
+};
+
+const whenTrue = {
+    is: true,
+    then: yup.string().required(),
+    otherwise: yup.string(),
 };
 
 const validationSchema = yup.object().shape({
@@ -84,6 +137,11 @@ const validationSchema = yup.object().shape({
     begin_date: yup.date().required(),
     end_date: yup.date().required(),
     bookAs: yup.string().required(),
+    isActivity: yup.bool().required(),
+    permit: yup.bool(),
+    responsible_name: yup.string().when("isActivity", whenTrue),
+    responsible_number: yup.string().when("isActivity", whenTrue),
+    responsible_email: yup.string().when("isActivity", whenTrue),
     /*is_activity: yup.bool(),
     activity_contact_number: yup.lazy(({ is_activity }) =>
         is_activity ? yup.string() : yup.string().required()
@@ -94,11 +152,18 @@ const NewReservationFrom = ({ onSubmit }) => {
     return (
         <DigitForm
             initialValues={{
-                title: "",
-                phone: "",
+                title: "Event",
+                phone: "123",
                 //room: "hubben",
                 begin_date: new Date(),
                 end_date: new Date(),
+                description: "Hi there",
+                bookAs: "digIT",
+                isActivity: false,
+                permit: false,
+                responsible_name: "",
+                responsible_number: "",
+                responsible_email: "",
                 /*is_activity: false,
                 activity_contact_number: "",*/
             }}
@@ -131,6 +196,7 @@ const NewReservationFrom = ({ onSubmit }) => {
                     </DigitLayout.Row>
                     <Description />
                     <BookAs groups={["digIT", "fikIT"]} />
+                    <ActivityRegistration />
                     <DigitButton raised submit text="Submit" />
                 </DigitLayout.Column>
             )}
