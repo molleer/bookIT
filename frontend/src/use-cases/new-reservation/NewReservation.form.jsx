@@ -1,32 +1,23 @@
-import React, { useCallback } from "react";
+import React from "react";
 import {
     useDigitFormField,
-    DigitTextField,
     DigitForm,
     DigitLayout,
     DigitButton,
-    DigitDateAndTimePicker,
-    DigitTextArea,
-    DigitSelect,
-    useDigitFormFieldArray,
     DigitCheckbox,
     DigitText,
     //DigitRadioButtonGroup,
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
-import PropTypes from "prop-types";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-
-const Title = () => {
-    const titleValues = useDigitFormField("title");
-    return <DigitTextField {...titleValues} upperLabel="Titel" />;
-};
-
-const PhoneNumber = ({ name, label }) => {
-    const phoneValues = useDigitFormField(name);
-    return <DigitTextField {...phoneValues} upperLabel={label} />;
-};
+import {
+    Title,
+    PhoneNumber,
+    TimePicker,
+    Description,
+    BookAs,
+    ActivityRegistration,
+    AgreeToTerms,
+} from "./elements";
 
 //TODO: Uncomment when PR #423 is merged in RDC
 /*const Rooms = ({ rooms }) => {
@@ -41,100 +32,6 @@ const PhoneNumber = ({ name, label }) => {
         />
     );
 };*/
-
-const TimePicker = ({ name, label }) => {
-    const timeValues = useDigitFormField(name);
-    return <DigitDateAndTimePicker {...timeValues} upperLabel={label} />;
-};
-
-const Description = () => {
-    const descriptionValues = useDigitFormField("description");
-    return (
-        <DigitTextArea
-            size={{ width: "100%" }}
-            rows={5}
-            rowsMax={8}
-            {...descriptionValues}
-            upperLabel="Beskrivning"
-        />
-    );
-};
-
-const BookAs = ({ groups }) => {
-    const dropDownValues = useDigitFormField("bookAs");
-    const getGroups = () => {
-        const groupObject = {};
-        for (var i = 0; i < groups.length; i++)
-            groupObject[groups[i]] = groups[i];
-        return groupObject;
-    };
-    return (
-        <DigitSelect
-            {...dropDownValues}
-            upperLabel="Boka som"
-            valueToTextMap={getGroups()}
-        />
-    );
-};
-
-BookAs.propTypes = {
-    groups: PropTypes.arrayOf(PropTypes.string),
-};
-
-const ActivityRegistration = () => {
-    const activityValues = useDigitFormField("isActivity");
-    const permitValues = useDigitFormField("permit");
-    const repNameValues = useDigitFormField("responsible_name");
-    const repNumberValues = useDigitFormField("responsible_number");
-    const repEmailValues = useDigitFormField("responsible_email");
-    const [isActivity, setIsActivity] = useState(false);
-    return (
-        <>
-            <DigitCheckbox
-                {...activityValues}
-                onChange={e => {
-                    setIsActivity(e.target.checked);
-                    return activityValues.onChange(e);
-                }}
-                label="Jag vill aktivitetsanmäla"
-                size={{ width: "100%" }}
-            />
-            {isActivity && (
-                <>
-                    <DigitCheckbox
-                        {...permitValues}
-                        label="Serveringstillstånd"
-                    />
-                    <DigitLayout.Row>
-                        <DigitTextField
-                            {...repNameValues}
-                            upperLabel="Namn aktivitetsansvarig"
-                        />
-                        <DigitTextField
-                            {...repNumberValues}
-                            upperLabel="Tel aktivitetsansvarig"
-                        />
-                        <DigitTextField
-                            {...repEmailValues}
-                            upperLabel="Email aktivitetsansvarig"
-                        />
-                    </DigitLayout.Row>
-                </>
-            )}
-        </>
-    );
-};
-
-const AgreeToTerm = () => {
-    const termsValues = useDigitFormField("agreeToTerms");
-    return (
-        <DigitCheckbox
-            {...termsValues}
-            label="Jag har läst igenom och accepterar bokningsvillkoren*"
-            size={{ width: "100%" }}
-        />
-    );
-};
 
 const whenTrue = {
     is: true,
@@ -161,26 +58,28 @@ const validationSchema = yup.object().shape({
     ),*/
 });
 
+const initialValues = {
+    title: "Event",
+    phone: "123",
+    //room: "hubben",
+    begin_date: new Date(),
+    end_date: new Date(),
+    description: "Hi there",
+    bookAs: "digIT",
+    isActivity: false,
+    permit: false,
+    responsible_name: "",
+    responsible_number: "",
+    responsible_email: "",
+    agreeToTerms: false,
+    /*is_activity: false,
+    activity_contact_number: "",*/
+};
+
 const NewReservationFrom = ({ onSubmit }) => {
     return (
         <DigitForm
-            initialValues={{
-                title: "Event",
-                phone: "123",
-                //room: "hubben",
-                begin_date: new Date(),
-                end_date: new Date(),
-                description: "Hi there",
-                bookAs: "digIT",
-                isActivity: false,
-                permit: false,
-                responsible_name: "",
-                responsible_number: "",
-                responsible_email: "",
-                agreeToTerms: false,
-                /*is_activity: false,
-                activity_contact_number: "",*/
-            }}
+            initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={values => {
                 validationSchema
@@ -211,7 +110,7 @@ const NewReservationFrom = ({ onSubmit }) => {
                     <Description />
                     <BookAs groups={["digIT", "fikIT"]} />
                     <ActivityRegistration />
-                    <AgreeToTerm />
+                    <AgreeToTerms />
                     <a href="https://prit.chalmers.it/Bokningsvillkor.pdf">
                         <DigitText.Subtitle text="*bokningsvillkoren" />
                     </a>
