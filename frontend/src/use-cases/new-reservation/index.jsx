@@ -1,10 +1,6 @@
 import React from "react";
 import NewReservationFrom from "./NewReservation.form";
-import {
-    DigitDesign,
-    DigitLayout,
-    DigitText,
-} from "@cthit/react-digit-components";
+import { DigitDesign, DigitLayout } from "@cthit/react-digit-components";
 
 const NewReservation = () => (
     <DigitLayout.Center>

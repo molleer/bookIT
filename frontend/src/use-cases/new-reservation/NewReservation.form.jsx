@@ -7,6 +7,7 @@ import {
     DigitButton,
     DigitDateAndTimePicker,
     DigitTextArea,
+    //DigitRadioButtonGroup,
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
 
@@ -19,6 +20,20 @@ const PhoneNumber = ({ name, label }) => {
     const phoneValues = useDigitFormField(name);
     return <DigitTextField {...phoneValues} upperLabel={label} />;
 };
+
+//TODO: Uncomment when PR #423 is merged in RDC
+/*const Rooms = ({ rooms }) => {
+    const roomValues = useDigitFormField("room");
+    return (
+        <DigitRadioButtonGroup
+            {...roomValues}
+            upperLabel="Lokal"
+            radioButtons={rooms.map(room => {
+                return { ...room, primary: true };
+            })}
+        />
+    );
+};*/
 
 const TimePicker = ({ name, label }) => {
     const timeValues = useDigitFormField(name);
@@ -41,6 +56,7 @@ const Description = () => {
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
     phone: yup.string().matches(),
+    room: yup.string().required(),
     begin_date: yup.date().required(),
     end_date: yup.date().required(),
     /*is_activity: yup.bool(),
@@ -55,6 +71,7 @@ const NewReservationFrom = ({ onSubmit }) => {
             initialValues={{
                 title: "",
                 phone: "",
+                //room: "hubben",
                 begin_date: new Date(),
                 end_date: new Date(),
                 /*is_activity: false,
@@ -71,6 +88,18 @@ const NewReservationFrom = ({ onSubmit }) => {
                 <DigitLayout.Column>
                     <Title />
                     <PhoneNumber name="phone" label="Telefonnummer" />
+                    {/*<Rooms
+                        rooms={[
+                            {
+                                id: "hubben",
+                                label: "Hubben",
+                            },
+                            {
+                                id: "grupprummet",
+                                label: "Grupprummet",
+                            },
+                        ]}
+                    />*/}
                     <DigitLayout.Row>
                         <TimePicker name="begin_date" label="Startdatum" />
                         <TimePicker name="end_date" label="Slutdatum" />

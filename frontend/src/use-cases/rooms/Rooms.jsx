@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { createRoom } from "../../api/rooms/post.rooms";
 
 const Rooms = () => {
-    const [_, setRooms] = useState(null);
+    const [, setRooms] = useState(null);
 
     useEffect(() => {
         getRooms().then(response => setRooms(response.data));

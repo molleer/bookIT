@@ -2,8 +2,7 @@ import React from "react";
 import FullCallendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { DigitDesign, DigitButtonGroup } from "@cthit/react-digit-components";
-import NewReservationFrom from "../new-reservation/NewReservation.form";
+import { DigitButtonGroup } from "@cthit/react-digit-components";
 import { Redirect } from "react-router-dom";
 import { useState } from "react";
 

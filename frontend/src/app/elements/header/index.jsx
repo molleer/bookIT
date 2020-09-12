@@ -20,7 +20,7 @@ const Header = ({ children }) => {
                     console.log(error);
                 });
         }
-    }, [window.location.search]);
+    }, [history]);
 
     return (
         <DigitHeaderDrawer
