@@ -5,6 +5,7 @@ import Description from "./Description";
 import BookAs from "./BookAs";
 import ActivityRegistration from "./ActivityRegistration";
 import AgreeToTerms from "./AgreeToTerms";
+import WeeklyRepetition from "./WeeklyRepetition";
 
 export {
     Title,
@@ -14,4 +15,5 @@ export {
     BookAs,
     ActivityRegistration,
     AgreeToTerms,
+    WeeklyRepetition,
 };

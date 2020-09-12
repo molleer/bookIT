@@ -17,7 +17,9 @@ import {
     BookAs,
     ActivityRegistration,
     AgreeToTerms,
+    WeeklyRepetition,
 } from "./elements";
+import { useState } from "react";
 
 //TODO: Uncomment when PR #423 is merged in RDC
 /*const Rooms = ({ rooms }) => {
@@ -52,6 +54,8 @@ const validationSchema = yup.object().shape({
     responsible_number: yup.string().when("isActivity", whenTrue),
     responsible_email: yup.string().when("isActivity", whenTrue),
     agreeToTerms: yup.mixed().oneOf([true]),
+    wants_repetition: yup.bool(),
+    repeat_to: yup.date(),
     /*is_activity: yup.bool(),
     activity_contact_number: yup.lazy(({ is_activity }) =>
         is_activity ? yup.string() : yup.string().required()
@@ -72,6 +76,8 @@ const initialValues = {
     responsible_number: "",
     responsible_email: "",
     agreeToTerms: false,
+    wants_repetition: false,
+    repeat_to: new Date(),
     /*is_activity: false,
     activity_contact_number: "",*/
 };
@@ -111,6 +117,7 @@ const NewReservationFrom = ({ onSubmit }) => {
                     <BookAs groups={["digIT", "fikIT"]} />
                     <ActivityRegistration />
                     <AgreeToTerms />
+                    <WeeklyRepetition />
                     <a href="https://prit.chalmers.it/Bokningsvillkor.pdf">
                         <DigitText.Subtitle text="*bokningsvillkoren" />
                     </a>
