@@ -7,9 +7,12 @@ import {
     DigitButton,
     DigitDateAndTimePicker,
     DigitTextArea,
+    DigitSelect,
+    useDigitFormFieldArray,
     //DigitRadioButtonGroup,
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
+import PropTypes from "prop-types";
 
 const Title = () => {
     const titleValues = useDigitFormField("title");
@@ -40,6 +43,27 @@ const TimePicker = ({ name, label }) => {
     return <DigitDateAndTimePicker {...timeValues} upperLabel={label} />;
 };
 
+const BookAs = ({ groups }) => {
+    const dropDownValues = useDigitFormField("bookAs");
+    const getGroups = () => {
+        const groupObject = {};
+        for (var i = 0; i < groups.length; i++)
+            groupObject[groups[i]] = groups[i];
+        return groupObject;
+    };
+    return (
+        <DigitSelect
+            {...dropDownValues}
+            upperLabel="Boka som"
+            valueToTextMap={getGroups()}
+        />
+    );
+};
+
+BookAs.propTypes = {
+    groups: PropTypes.arrayOf(PropTypes.string),
+};
+
 const Description = () => {
     const descriptionValues = useDigitFormField("description");
     return (
@@ -55,10 +79,11 @@ const Description = () => {
 
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
-    phone: yup.string().matches(),
-    room: yup.string().required(),
+    phone: yup.string().required(),
+    //room: yup.string().required(),
     begin_date: yup.date().required(),
     end_date: yup.date().required(),
+    bookAs: yup.string().required(),
     /*is_activity: yup.bool(),
     activity_contact_number: yup.lazy(({ is_activity }) =>
         is_activity ? yup.string() : yup.string().required()
@@ -105,6 +130,7 @@ const NewReservationFrom = ({ onSubmit }) => {
                         <TimePicker name="end_date" label="Slutdatum" />
                     </DigitLayout.Row>
                     <Description />
+                    <BookAs groups={["digIT", "fikIT"]} />
                     <DigitButton raised submit text="Submit" />
                 </DigitLayout.Column>
             )}
