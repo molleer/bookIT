@@ -1,10 +1,8 @@
 import React from "react";
 import {
-    useDigitFormField,
     DigitForm,
     DigitLayout,
     DigitButton,
-    DigitCheckbox,
     DigitText,
     //DigitRadioButtonGroup,
 } from "@cthit/react-digit-components";
@@ -19,7 +17,6 @@ import {
     AgreeToTerms,
     WeeklyRepetition,
 } from "./elements";
-import { useState } from "react";
 
 //TODO: Uncomment when PR #423 is merged in RDC
 /*const Rooms = ({ rooms }) => {

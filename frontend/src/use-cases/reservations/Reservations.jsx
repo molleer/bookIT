@@ -4,7 +4,26 @@ import { Redirect } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "./views/Calendar";
 import PhoneCalendar from "./views/PhoneCaendar";
-import { useEffect } from "react";
+const events = [
+    {
+        title: "Styrit Möte",
+        start: "2020-08-29T06:00",
+        end: "2020-08-29T07:00",
+        display: "block",
+    },
+    {
+        title: "Styrit Möte",
+        start: "2020-08-29T12:00",
+        end: "2020-08-29T13:00",
+        display: "block",
+    },
+    {
+        title: "Styrit Möte",
+        start: "2020-08-29T12:30",
+        end: "2020-08-29T13:30",
+        display: "block",
+    },
+];
 
 const Reservations = () => {
     const [redirect, setRedirect] = useState(null);
@@ -31,7 +50,11 @@ const Reservations = () => {
                     },
                 ]}
             />
-            {window.innerWidth > 600 ? <Calendar /> : <PhoneCalendar />}
+            {window.innerWidth > 600 ? (
+                <Calendar events={events} />
+            ) : (
+                <PhoneCalendar events={events} />
+            )}
         </div>
     );
 };
