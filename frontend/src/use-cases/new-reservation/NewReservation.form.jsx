@@ -16,6 +16,7 @@ import {
 import * as yup from "yup";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Title = () => {
     const titleValues = useDigitFormField("title");
@@ -124,6 +125,17 @@ const ActivityRegistration = () => {
     );
 };
 
+const AgreeToTerm = () => {
+    const termsValues = useDigitFormField("agreeToTerms");
+    return (
+        <DigitCheckbox
+            {...termsValues}
+            label="Jag har läst igenom och accepterar bokningsvillkoren*"
+            size={{ width: "100%" }}
+        />
+    );
+};
+
 const whenTrue = {
     is: true,
     then: yup.string().required(),
@@ -142,6 +154,7 @@ const validationSchema = yup.object().shape({
     responsible_name: yup.string().when("isActivity", whenTrue),
     responsible_number: yup.string().when("isActivity", whenTrue),
     responsible_email: yup.string().when("isActivity", whenTrue),
+    agreeToTerms: yup.mixed().oneOf([true]),
     /*is_activity: yup.bool(),
     activity_contact_number: yup.lazy(({ is_activity }) =>
         is_activity ? yup.string() : yup.string().required()
@@ -164,6 +177,7 @@ const NewReservationFrom = ({ onSubmit }) => {
                 responsible_name: "",
                 responsible_number: "",
                 responsible_email: "",
+                agreeToTerms: false,
                 /*is_activity: false,
                 activity_contact_number: "",*/
             }}
@@ -197,6 +211,10 @@ const NewReservationFrom = ({ onSubmit }) => {
                     <Description />
                     <BookAs groups={["digIT", "fikIT"]} />
                     <ActivityRegistration />
+                    <AgreeToTerm />
+                    <a href="https://prit.chalmers.it/Bokningsvillkor.pdf">
+                        <DigitText.Subtitle text="*bokningsvillkoren" />
+                    </a>
                     <DigitButton raised submit text="Submit" />
                 </DigitLayout.Column>
             )}
