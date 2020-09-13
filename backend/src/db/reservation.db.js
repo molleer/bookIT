@@ -1,10 +1,14 @@
 const { query } = require("../utils");
 
 const getReservations = () =>
-    query("SELECT * FROM room ORDER BY name", null, results => results.rows);
+    query(
+        "SELECT * FROM reservation ORDER BY begin_date",
+        null,
+        results => results.rows
+    );
 
 const getReservation = id =>
-    query("SELECT * FROM room WHERE id = $1", [id], results =>
+    query("SELECT * FROM reservation WHERE id = $1", [id], results =>
         results.rowCount > 0 ? results.rows[0] : null
     );
 

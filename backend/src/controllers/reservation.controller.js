@@ -1,11 +1,7 @@
 const uuid = require("uuid/v4");
 const yup = require("yup");
-const { deleteRoom } = require("../db/room.db");
-const { editRoom } = require("../db/room.db");
-const { getRoom } = require("../db/room.db");
-const { getRooms } = require("../db/room.db");
-const { addRoom } = require("../db/room.db");
-const { put, del, post, get, to, isUUID } = require("../utils");
+const { to, validateSchema } = require("../utils");
+const { addReservation, getReservations } = require("../db/reservation.db");
 
 const reservationSchema = yup.object().shape({
     title: yup.string().required(),
@@ -24,7 +20,7 @@ const handleAddReservation = async (req, res) => {
         return;
     }
 
-    const [err] = await to(addRoom(id, { ...req.body }));
+    const [err] = await to(addReservation(id, { ...req.body }));
 
     if (err) {
         res.sendStatus(500);
@@ -33,6 +29,18 @@ const handleAddReservation = async (req, res) => {
     }
 };
 
-const handleGetReservations = async (req, res) => {};
+const handleGetReservations = async (req, res) => {
+    const [err, reservations] = await to(getReservations());
 
-module.exports = {};
+    if (err) {
+        res.sendStatus(500);
+        console.log(err);
+    } else {
+        res.status(200).send(reservations);
+    }
+};
+
+module.exports = {
+    handleGetReservations,
+    handleAddReservation,
+};

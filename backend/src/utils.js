@@ -48,22 +48,6 @@ const query = (sql, values, convertResult) =>
         });
     });
 
-const get = (url, handler) => {
-    app.get("/api" + url, handler);
-};
-
-const post = (url, handler) => {
-    app.post("/api" + url, handler);
-};
-
-const put = (url, handler) => {
-    app.put("/api" + url, handler);
-};
-
-const del = (url, handler) => {
-    app.delete("/api" + url, handler);
-};
-
 const to = promise => {
     return promise
         .then(data => {
@@ -111,10 +95,6 @@ const validateSchema = async (schema, data) => {
 
 module.exports = {
     query,
-    get,
-    post,
-    put,
-    del,
     to,
     initExpress,
     initDB,
