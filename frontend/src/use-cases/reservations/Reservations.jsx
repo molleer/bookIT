@@ -1,32 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DigitButtonGroup } from "@cthit/react-digit-components";
 import { Redirect } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "./views/Calendar";
 import PhoneCalendar from "./views/PhoneCaendar";
-const events = [
-    {
-        title: "Styrit Möte",
-        start: "2020-08-29T06:00",
-        end: "2020-08-29T07:00",
+import { getReservations } from "../../api/reservations";
+
+const parseReservations = reservations =>
+    reservations.map(e => ({
+        title: e.title,
+        start: e.begin_date,
+        end: e.end_date,
         display: "block",
-    },
-    {
-        title: "Styrit Möte",
-        start: "2020-08-29T12:00",
-        end: "2020-08-29T13:00",
-        display: "block",
-    },
-    {
-        title: "Styrit Möte",
-        start: "2020-08-29T12:30",
-        end: "2020-08-29T13:30",
-        display: "block",
-    },
-];
+    }));
 
 const Reservations = () => {
     const [redirect, setRedirect] = useState(null);
+    const [reservations, setReservations] = useState([]);
+
+    useEffect(() => {
+        getReservations()
+            .then(res => setReservations(parseReservations(res.data)))
+            .catch(err => {
+                console.log("Unable to fetch reservations");
+                console.log(err);
+            });
+    }, []);
+
     return (
         <div
             style={{
@@ -51,9 +51,9 @@ const Reservations = () => {
                 ]}
             />
             {window.innerWidth > 600 ? (
-                <Calendar events={events} />
+                <Calendar events={reservations} />
             ) : (
-                <PhoneCalendar events={events} />
+                <PhoneCalendar events={reservations} />
             )}
         </div>
     );

@@ -1,4 +1,4 @@
-import { getRequest } from "../utils/api";
+import { getRequest } from "./utils/api";
 
 export const getReservations = () => getRequest("/reservation/");
 
