@@ -110,11 +110,10 @@ const handleDeleteRoom = async (req, res) => {
     }
 };
 
-get("/room", handleGetRooms);
-get("/room/:id", handleGetRoom);
-
-post("/room", handleAddRoom);
-
-put("/room/:id", handleEditRoom);
-
-del("/room/:id", handleDeleteRoom);
+module.exports = {
+    handleGetRooms,
+    handleGetRoom,
+    handleAddRoom,
+    handleEditRoom,
+    handleDeleteRoom,
+};
