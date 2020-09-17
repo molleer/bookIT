@@ -2,10 +2,14 @@ import React from "react";
 import FullCallendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import PropTypes from "prop-types";
 
-const Calendar = ({ events }) => {
+const Calendar = ({ events, eventClick }) => {
+    events = events ?? [];
+    eventClick = eventClick ?? (() => {});
     return (
         <FullCallendar
+            eventClick={eventClick}
             eventTimeFormat={{
                 hour: "2-digit",
                 minute: "2-digit",
@@ -31,6 +35,17 @@ const Calendar = ({ events }) => {
             events={events}
         />
     );
+};
+
+Calendar.propTypes = {
+    events: PropTypes.arrayOf(
+        PropTypes.shape({
+            title: PropTypes.string.isRequired,
+            start: PropTypes.string.isRequired,
+            end: PropTypes.string.isRequired,
+        })
+    ),
+    eventClick: PropTypes.func,
 };
 
 export default Calendar;

@@ -1,14 +1,18 @@
 import React, { useEffect } from "react";
-import { DigitButtonGroup } from "@cthit/react-digit-components";
+import {
+    DigitButtonGroup,
+    useDigitCustomDialog,
+} from "@cthit/react-digit-components";
 import { Redirect } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "./views/Calendar";
 import PhoneCalendar from "./views/PhoneCaendar";
 import { getReservations } from "../../api/reservations";
+import ReservationDetails from "./elements/ReservationDetails";
 
 const parseReservations = reservations =>
     reservations.map(e => ({
-        title: e.title,
+        ...e,
         start: e.begin_date,
         end: e.end_date,
         display: "block",
@@ -17,6 +21,7 @@ const parseReservations = reservations =>
 const Reservations = () => {
     const [redirect, setRedirect] = useState(null);
     const [reservations, setReservations] = useState([]);
+    const [openDetails] = useDigitCustomDialog();
 
     useEffect(() => {
         getReservations()
@@ -51,7 +56,19 @@ const Reservations = () => {
                 ]}
             />
             {window.innerWidth > 600 ? (
-                <Calendar events={reservations} />
+                <Calendar
+                    events={reservations}
+                    eventClick={e => {
+                        openDetails({
+                            renderMain: () => (
+                                <ReservationDetails
+                                    reservation={e.event.extendedProps}
+                                />
+                            ),
+                            title: e.event.title,
+                        });
+                    }}
+                />
             ) : (
                 <PhoneCalendar events={reservations} />
             )}
