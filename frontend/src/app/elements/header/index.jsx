@@ -12,7 +12,9 @@ const Header = ({ children }) => {
         if (code) {
             postRequest("/auth/account/callback", { code })
                 .then(() => {
-                    history.push("/");
+                    const cp = localStorage.getItem("currentPage");
+                    localStorage.removeItem("currentPage");
+                    window.location.href = cp ?? "/";
                 })
                 .catch(error => {
                     history.push("/");
@@ -32,6 +34,7 @@ const Header = ({ children }) => {
                         text={"Reservations"}
                     />
                     <DigitNavLink link={"/rooms"} text={"Rooms"} />
+                    <DigitNavLink link={"/admin"} text={"Admin"} />
                 </>
             )}
             renderMain={() => children}

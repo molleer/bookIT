@@ -23,6 +23,10 @@ export function getRequest(endpoint) {
                     console.log(error.response.data);
                     console.log(error.response.status);
                     if (error.response.status === 403) {
+                        localStorage.setItem(
+                            "currentPage",
+                            window.location.href
+                        );
                         window.location.href = error.response.data;
                     }
                 } else {
