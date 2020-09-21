@@ -9,6 +9,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import { getReservations } from "../../api/reservations";
+import PolicyCRUD from "./views/PolicyCRUD";
 
 const Admin = () => {
     const [reservations, setReservations] = useState([]);
@@ -57,6 +58,7 @@ const Admin = () => {
                 }}
                 data={reservations}
             />
+            <PolicyCRUD />
         </div>
     );
 };
