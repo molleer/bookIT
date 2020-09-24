@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     DigitForm,
     DigitLayout,
@@ -17,6 +17,7 @@ import {
     AgreeToTerms,
     WeeklyRepetition,
 } from "./elements";
+import UserContext from "../../app/contexts/user";
 
 //TODO: Uncomment when PR #423 is merged in RDC
 /*const Rooms = ({ rooms }) => {
@@ -80,6 +81,7 @@ const initialValues = {
 };
 
 const NewReservationFrom = ({ onSubmit }) => {
+    const me = useContext(UserContext);
     return (
         <DigitForm
             initialValues={initialValues}
@@ -92,8 +94,8 @@ const NewReservationFrom = ({ onSubmit }) => {
             }}
             render={() => (
                 <DigitLayout.Column>
+                    <DigitText.Text text={`Bokare: ${me ? me.cid : ""}`} />
                     <Title />
-                    <PhoneNumber name="phone" label="Telefonnummer" />
                     {/*<Rooms
                         rooms={[
                             {
@@ -111,7 +113,13 @@ const NewReservationFrom = ({ onSubmit }) => {
                         <TimePicker name="end_date" label="Slutdatum" />
                     </DigitLayout.Row>
                     <Description />
-                    <BookAs groups={["digIT", "fikIT"]} />
+                    <BookAs
+                        groups={
+                            me
+                                ? me.groups.map(group => group.superGroup.name)
+                                : []
+                        }
+                    />
                     <ActivityRegistration />
                     <AgreeToTerms />
                     <WeeklyRepetition />

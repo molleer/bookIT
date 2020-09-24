@@ -3,12 +3,15 @@ import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 import App from "./app";
 import { DigitProviders } from "@cthit/react-digit-components";
+import { UserProvider } from "./app/contexts/user";
 
 ReactDOM.render(
-  <DigitProviders>
-    <App />
-  </DigitProviders>,
-  document.getElementById("root")
+    <DigitProviders>
+        <UserProvider>
+            <App />
+        </UserProvider>
+    </DigitProviders>,
+    document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change

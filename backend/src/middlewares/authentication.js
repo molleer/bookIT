@@ -34,7 +34,7 @@ const getAuthenticationMiddleware = () => {
                     const { user_name, authorities } = jwt.decode(access_token);
                     req.session.cid = user_name;
                     req.session.authorities = authorities;
-                    //req.session.req.session.token = access_token;
+                    req.session.token = access_token;
                     req.session.save(err => console.log(err));
                     res.status(200).send("session created");
                 }
