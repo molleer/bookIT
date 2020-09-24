@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import {
     useDigitFormField as formField,
     DigitCheckbox,
-    DigitTextField,
-    DigitLayout,
+    DigitAutocompleteSelectSingle,
 } from "@cthit/react-digit-components";
 
-const ActivityRegistration = () => {
+const ActivityRegistration = ({ users }) => {
     const activityValues = formField("isActivity");
     const permitValues = formField("permit");
     const repNameValues = formField("responsible_name");
@@ -26,24 +25,17 @@ const ActivityRegistration = () => {
             />
             {isActivity && (
                 <>
-                    <DigitCheckbox
-                        {...permitValues}
-                        label="Serveringstillstånd"
+                    <DigitAutocompleteSelectSingle
+                        upperLabel="Aktivitetsansvarig"
+                        options={
+                            users
+                                ? users.map(user => ({
+                                      text: user.nick,
+                                      value: user.cid,
+                                  }))
+                                : []
+                        }
                     />
-                    <DigitLayout.Row>
-                        <DigitTextField
-                            {...repNameValues}
-                            upperLabel="Namn aktivitetsansvarig"
-                        />
-                        <DigitTextField
-                            {...repNumberValues}
-                            upperLabel="Tel aktivitetsansvarig"
-                        />
-                        <DigitTextField
-                            {...repEmailValues}
-                            upperLabel="Email aktivitetsansvarig"
-                        />
-                    </DigitLayout.Row>
                 </>
             )}
         </>

@@ -7,6 +7,13 @@ const handleGetMe = async (req, res) => {
     res.status(me.status).end();
 };
 
+const handleGetUsers = async (req, res) => {
+    const [, users] = await to(gammaGet("/users/minified", req.session.token));
+    res.send(users.data);
+    res.status(users.status).end();
+};
+
 module.exports = {
     handleGetMe,
+    handleGetUsers,
 };

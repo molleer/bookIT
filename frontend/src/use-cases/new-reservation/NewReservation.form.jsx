@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
     DigitForm,
     DigitLayout,
@@ -18,6 +18,7 @@ import {
     WeeklyRepetition,
 } from "./elements";
 import UserContext from "../../app/contexts/user";
+import { getRequest } from "../../api/utils/api";
 
 //TODO: Uncomment when PR #423 is merged in RDC
 /*const Rooms = ({ rooms }) => {
@@ -82,6 +83,14 @@ const initialValues = {
 
 const NewReservationFrom = ({ onSubmit }) => {
     const me = useContext(UserContext);
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        getRequest("/gamma/users")
+            .then(res => setUsers(res.data))
+            .catch(err => console.log("Unable to get users"));
+    }, []);
+
     return (
         <DigitForm
             initialValues={initialValues}
@@ -120,7 +129,7 @@ const NewReservationFrom = ({ onSubmit }) => {
                                 : []
                         }
                     />
-                    <ActivityRegistration />
+                    <ActivityRegistration users={users} />
                     <AgreeToTerms />
                     <WeeklyRepetition />
                     <a href="https://prit.chalmers.it/Bokningsvillkor.pdf">
