@@ -10,6 +10,12 @@ services:
       context: ./backend
       dockerfile: dev.Dockerfile
     image: bookit_backend:dev
+    environment:
+      DB_USER: postgres
+      DB_PASS: example
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: bookit
     ports:
       - 4000:4000
     volumes:

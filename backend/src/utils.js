@@ -24,14 +24,14 @@ const initExpress = (port = 4000) => {
 
 //Add migration
 //https://github.com/db-migrate/pg
-const initDB = (host = "db", port = 5432) => {
+const initDB = () => {
     const { Pool } = pg;
     pool = new Pool({
-        user: "postgres",
-        database: "bookit",
-        password: "example",
-        host: host,
-        port: port,
+        user: process.env.DB_USER,
+        database: process.env.DB_NAME,
+        password: process.env.DB_PASS,
+        host: process.env.DB_HOST,
+        port: Number(process.env.DB_PORT),
     });
 };
 
