@@ -1,4 +1,4 @@
-FROM node:13.2.0
+FROM node:lts-alpine
 
 WORKDIR /usr/src/app
 COPY package.json .
@@ -6,8 +6,8 @@ COPY package-lock.json .
 
 RUN npm install
 
-COPY src src
+COPY . .
 
 EXPOSE 4000
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "./startup.sh" , "dev"]

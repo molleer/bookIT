@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:lts-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -13,4 +13,4 @@ RUN npm install --only=production
 COPY . .
 
 EXPOSE 8080
-CMD [ "npm", "start" ]
+CMD [ "sh", "./startup.sh" , "start" ]
