@@ -3,10 +3,13 @@
 exports.shorthands = undefined;
 
 exports.up = pgm => {
-    pgm.createTable("cat", {
-        id: "id",
+    pgm.createTable("room", {
+        id: {
+            type: "uuid",
+            primaryKey: true,
+        },
         name: {
-            type: "string",
+            type: "text",
             notNull: true,
         },
     });
