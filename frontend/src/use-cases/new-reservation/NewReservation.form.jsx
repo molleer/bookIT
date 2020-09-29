@@ -4,6 +4,7 @@ import {
     DigitLayout,
     DigitButton,
     DigitText,
+    useDigitToast,
     //DigitRadioButtonGroup,
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
@@ -52,7 +53,9 @@ const validationSchema = yup.object().shape({
     responsible_name: yup.string().when("isActivity", whenTrue),
     responsible_number: yup.string().when("isActivity", whenTrue),
     responsible_email: yup.string().when("isActivity", whenTrue),
-    agreeToTerms: yup.mixed().oneOf([true]),
+    agreeToTerms: yup
+        .mixed()
+        .oneOf([true], "Du måste godkänna bokningsvillkoren"),
     wants_repetition: yup.bool(),
     repeat_to: yup.date(),
     /*is_activity: yup.bool(),
@@ -82,6 +85,11 @@ const initialValues = {
 };
 
 const NewReservationFrom = ({ onSubmit }) => {
+    const [openToast] = useDigitToast({
+        duration: 3000,
+        actionText: "Ok",
+        actionHandler: () => {},
+    });
     const me = useContext(UserContext);
     const [users, setUsers] = useState([]);
 
@@ -99,7 +107,11 @@ const NewReservationFrom = ({ onSubmit }) => {
                 validationSchema
                     .validate(values)
                     .then(() => onSubmit(values))
-                    .catch(err => console.log(err));
+                    .catch(err =>
+                        openToast({
+                            text: err.message,
+                        })
+                    );
             }}
             render={() => (
                 <DigitLayout.Column>

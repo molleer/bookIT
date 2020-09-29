@@ -10,7 +10,7 @@ const AgreeToTerms = () => {
         <DigitCheckbox
             {...termsValues}
             label="Jag har läst igenom och accepterar bokningsvillkoren*"
-            size={{ width: "100%" }}
+            size={{ width: "100%", height: "100%" }}
         />
     );
 };
