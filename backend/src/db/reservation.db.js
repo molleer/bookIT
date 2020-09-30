@@ -33,10 +33,21 @@ const deleteReservation = id =>
         results => results.rowCount
     );
 
+const overlap = (b, e) =>
+    `($1 < ${b} AND ${b} < $2) OR ($1 < ${e} AND ${e} < $2) OR (${b} < $1 AND $2 < ${e})`;
+
+const getOverlappingReservations = (from, to) =>
+    query(
+        "SELECT * FROM reservation WHERE " + overlap("begin_date", "end_date"),
+        [from, to],
+        results => results.rows
+    );
+
 module.exports = {
     getReservations,
     getReservation,
     addReservation,
     editReservation,
     deleteReservation,
+    getOverlappingReservations,
 };
