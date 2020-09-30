@@ -1,26 +1,10 @@
-const uuid = require("uuid/v4");
-const yup = require("yup");
-const { to, validateSchema } = require("../utils");
-const { addReservation, getReservations } = require("../db/reservation.db");
-
-const reservationSchema = yup.object().shape({
-    title: yup.string().required(),
-    description: yup.string().required(),
-    begin_date: yup.string().required(),
-    end_date: yup.string().required(),
-});
+const {
+    createReservation,
+    getReservations,
+} = require("../services/reservation.service");
 
 const handleAddReservation = async (req, res) => {
-    const id = uuid();
-
-    const schemaErrors = await validateSchema(reservationSchema, req.body);
-
-    if (schemaErrors != null) {
-        res.status(422).send(schemaErrors);
-        return;
-    }
-
-    const [err] = await to(addReservation(id, { ...req.body }));
+    const [err, id] = await createReservation(req.body);
 
     if (err) {
         res.sendStatus(500);
@@ -30,7 +14,7 @@ const handleAddReservation = async (req, res) => {
 };
 
 const handleGetReservations = async (req, res) => {
-    const [err, reservations] = await to(getReservations());
+    const [err, reservations] = await getReservations();
 
     if (err) {
         res.sendStatus(500);
