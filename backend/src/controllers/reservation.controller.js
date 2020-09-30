@@ -4,7 +4,7 @@ const {
 } = require("../services/reservation.service");
 
 const handleAddReservation = async (req, res) => {
-    const [err, id] = await createReservation(req.body);
+    const [err, id] = await createReservation(req.session.token, req.body);
 
     if (err) {
         res.sendStatus(500);

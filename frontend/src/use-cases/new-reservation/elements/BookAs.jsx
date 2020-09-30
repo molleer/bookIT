@@ -6,8 +6,10 @@ const BookAs = ({ groups }) => {
     const dropDownValues = useDigitFormField("bookAs");
     const getGroups = () => {
         const groupObject = {};
-        for (var i = 0; i < groups.length; i++)
+        for (var i in groups) {
             groupObject[groups[i]] = groups[i];
+        }
+        groupObject.private = "Privat";
         return groupObject;
     };
     return (

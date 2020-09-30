@@ -45,6 +45,7 @@ const validationSchema = yup.object().shape({
     title: yup.string().required(),
     phone: yup.string().required(),
     //room: yup.string().required(),
+    description: yup.string(),
     begin_date: yup.date().required(),
     end_date: yup.date().required(),
     bookAs: yup.string().required(),
