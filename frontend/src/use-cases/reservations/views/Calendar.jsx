@@ -30,8 +30,11 @@ const Calendar = ({ events, eventClick }) => {
                 end: "today,prev,next",
             }}
             plugins={[dayGridPlugin, timeGridPlugin]}
-            initialView="timeGridWeek"
+            initialView={
+                window.innerWidth > 600 ? "timeGridWeek" : "timeGridDay"
+            }
             eventOverlap
+            height={window.innerWidth > 600 ? "100%" : "auto"}
             events={events}
         />
     );

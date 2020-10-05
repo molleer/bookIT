@@ -6,7 +6,6 @@ import {
 import { Redirect } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "./views/Calendar";
-import PhoneCalendar from "./views/PhoneCaendar";
 import { getReservations } from "../../api/reservations";
 import ReservationDetails from "./elements/ReservationDetails";
 
@@ -55,23 +54,19 @@ const Reservations = () => {
                     },
                 ]}
             />
-            {window.innerWidth > 600 ? (
-                <Calendar
-                    events={reservations}
-                    eventClick={e => {
-                        openDetails({
-                            renderMain: () => (
-                                <ReservationDetails
-                                    reservation={e.event.extendedProps}
-                                />
-                            ),
-                            title: e.event.title,
-                        });
-                    }}
-                />
-            ) : (
-                <PhoneCalendar events={reservations} />
-            )}
+            <Calendar
+                events={reservations}
+                eventClick={e => {
+                    openDetails({
+                        renderMain: () => (
+                            <ReservationDetails
+                                reservation={e.event.extendedProps}
+                            />
+                        ),
+                        title: e.event.title,
+                    });
+                }}
+            />
         </div>
     );
 };
