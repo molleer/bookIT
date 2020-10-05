@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     useDigitFormField as formField,
     DigitCheckbox,
@@ -6,15 +6,40 @@ import {
     DigitTextField,
     DigitLayout,
 } from "@cthit/react-digit-components";
+import { getRequest } from "../../../api/utils/api";
 
-const ActivityRegistration = ({ users }) => {
+const set = value => ({ target: { value } });
+
+const ActivityRegistration = ({ users, defaultUser }) => {
     const activityValues = formField("isActivity");
     const permitValues = formField("permit");
     const repNameValues = formField("responsible_name");
     const repNumberValues = formField("responsible_number");
     const repEmailValues = formField("responsible_email");
-    const repCidValues = formField("responsible_cid");
+    const [repCid, setRepCid] = useState(defaultUser);
     const [manuallMode, setManuallMode] = useState(false);
+
+    useEffect(() => {
+        if (!repCid) return;
+        getRequest(`/gamma/users/${repCid}`)
+            .then(res => {
+                const user = res.data;
+                repNameValues.onChange(
+                    set(`${user.firstName} '${user.nick}' ${user.lastName}`)
+                );
+                repNumberValues.onChange(set(user.phone ?? ""));
+                repEmailValues.onChange(
+                    set(user.email ?? user.cid + "@student.chalmers.se")
+                );
+                if (!user.phone) setManuallMode(true);
+
+                console.log(user);
+            })
+            .catch(err => {
+                console.log("Unable to fetch user " + repCid);
+                console.log(err);
+            });
+    }, [repCid]);
 
     return (
         <>
@@ -31,19 +56,21 @@ const ActivityRegistration = ({ users }) => {
                     />
                     <DigitLayout.Row>
                         <DigitAutocompleteSelectSingle
-                            {...repCidValues}
+                            value={repCid}
                             disabled={manuallMode}
                             upperLabel="Aktivitetsansvarig"
                             options={
                                 users
                                     ? users.map(user => ({
                                           text: user.nick,
-                                          value: user.cid,
+                                          value: user.id,
                                       }))
                                     : []
                             }
+                            onChange={e => setRepCid(e.target.value)}
                         />
                         <DigitCheckbox
+                            vlaue={manuallMode}
                             onChange={e => setManuallMode(e.target.checked)}
                             label="Skriv in själv"
                         />
