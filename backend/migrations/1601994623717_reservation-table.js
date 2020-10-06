@@ -39,6 +39,12 @@ exports.up = pgm => {
             foreignKey: true,
             references: "activity_registration(id)",
         },
+        room: {
+            type: "uuid",
+            foreignKey: true,
+            references: "room(id)",
+            notNull: true,
+        },
     });
 };
 

@@ -14,8 +14,15 @@ const getReservation = id =>
 
 const addReservation = (id, data) =>
     query(
-        "INSERT INTO reservation (id, title, description, begin_date, end_date) VALUES ($1, $2, $3, $4, $5)",
-        [id, data.title, data.description, data.begin_date, data.end_date],
+        "INSERT INTO reservation (id, title, description, begin_date, end_date, room) VALUES ($1, $2, $3, $4, $5, $6)",
+        [
+            id,
+            data.title,
+            data.description,
+            data.begin_date,
+            data.end_date,
+            data.room,
+        ],
         results => results.rowCount
     );
 
@@ -34,12 +41,13 @@ const deleteReservation = id =>
     );
 
 const overlap = (b, e) =>
-    `($1 < ${b} AND ${b} < $2) OR ($1 < ${e} AND ${e} < $2) OR (${b} < $1 AND $2 < ${e})`;
+    `(($1 < ${b} AND ${b} < $2) OR ($1 < ${e} AND ${e} < $2) OR (${b} < $1 AND $2 < ${e}))`;
 
-const getOverlappingReservations = (from, to) =>
+const getOverlappingReservations = (from, to, room_id) =>
     query(
-        "SELECT * FROM reservation WHERE " + overlap("begin_date", "end_date"),
-        [from, to],
+        "SELECT * FROM reservation WHERE room=$3 AND " +
+            overlap("begin_date", "end_date"),
+        [from, to, room_id],
         results => results.rows
     );
 

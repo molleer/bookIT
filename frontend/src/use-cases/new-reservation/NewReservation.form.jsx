@@ -10,30 +10,18 @@ import {
 import * as yup from "yup";
 import {
     Title,
-    PhoneNumber,
     TimePicker,
     Description,
     BookAs,
     ActivityRegistration,
     AgreeToTerms,
     WeeklyRepetition,
+    Rooms,
 } from "./elements";
 import UserContext from "../../app/contexts/user";
 import { getRequest } from "../../api/utils/api";
-
-//TODO: Uncomment when PR #423 is merged in RDC
-/*const Rooms = ({ rooms }) => {
-    const roomValues = useDigitFormField("room");
-    return (
-        <DigitRadioButtonGroup
-            {...roomValues}
-            upperLabel="Lokal"
-            radioButtons={rooms.map(room => {
-                return { ...room, primary: true };
-            })}
-        />
-    );
-};*/
+import { getRooms } from "../../api/rooms/get.rooms";
+import * as moment from "moment";
 
 const whenTrue = {
     is: true,
@@ -44,7 +32,7 @@ const whenTrue = {
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
     phone: yup.string().required(),
-    //room: yup.string().required(),
+    room: yup.string().notOneOf([""], "Du måste välja vilket rum du vill boka"),
     description: yup.string(),
     begin_date: yup.date().required(),
     end_date: yup.date().required(),
@@ -68,9 +56,11 @@ const validationSchema = yup.object().shape({
 const initialValues = {
     title: "Event",
     phone: "123",
-    //room: "hubben",
+    room: "",
     begin_date: new Date(),
-    end_date: new Date(),
+    end_date: moment(new Date())
+        .add(1, "h")
+        .toDate(),
     description: "Hi there",
     bookAs: "",
     isActivity: false,
@@ -93,11 +83,21 @@ const NewReservationFrom = ({ onSubmit }) => {
     });
     const me = useContext(UserContext);
     const [users, setUsers] = useState([]);
+    const [rooms, setRooms] = useState([]);
 
     useEffect(() => {
         getRequest("/gamma/users")
             .then(res => setUsers(res.data))
             .catch(err => console.log("Unable to get users"));
+    }, []);
+
+    useEffect(() => {
+        getRooms()
+            .then(res => setRooms(res.data))
+            .catch(err => {
+                console.log("Failed to fetch rooms");
+                console.log(err);
+            });
     }, []);
 
     return (
@@ -118,18 +118,7 @@ const NewReservationFrom = ({ onSubmit }) => {
                 <DigitLayout.Column>
                     <DigitText.Text text={`Bokare: ${me ? me.cid : ""}`} />
                     <Title />
-                    {/*<Rooms
-                        rooms={[
-                            {
-                                id: "hubben",
-                                label: "Hubben",
-                            },
-                            {
-                                id: "grupprummet",
-                                label: "Grupprummet",
-                            },
-                        ]}
-                    />*/}
+                    <Rooms rooms={rooms} />
                     <DigitLayout.Row>
                         <TimePicker name="begin_date" label="Startdatum" />
                         <TimePicker name="end_date" label="Slutdatum" />

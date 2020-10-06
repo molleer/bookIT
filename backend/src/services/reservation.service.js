@@ -11,6 +11,7 @@ const reservationSchema = yup.object().shape({
     begin_date: yup.date().required(),
     end_date: yup.date().required(),
     bookAs: yup.string().required(),
+    room: yup.string().required(),
 });
 
 const createReservation = async (token, body) => {
@@ -32,13 +33,15 @@ const getReservations = async () => {
     return await to(db.getReservations());
 };
 
-const validateTime = async (from, to_date) => {
+const validateTime = async (from, to_date, room_id) => {
     //If the event starts before it stops
     if (new Date(from) >= new Date(to_date))
         return Error("End date must be greater than begin date");
 
     //Fetches all overlapping
-    const [err, rows] = await to(getOverlappingReservations(from, to_date));
+    var [err, rows] = await to(
+        getOverlappingReservations(from, to_date, room_id)
+    );
 
     return err || rows.length
         ? new Error("The time selected is overlapping with another reservation")
@@ -53,12 +56,12 @@ const validateReservation = async (user, body) => {
     //If the user is a member of the booked group
     if (
         body.bookAs !== "private" &&
-        user.groups.find(group => group.superGroup.name === body.bookAs)
+        !user.groups.find(group => group.superGroup.name === body.bookAs)
     ) {
         return new Error(`${user.cid} is not a member of '${body.bookAs}'`);
     }
 
-    return validateTime(body.begin_date, body.end_date);
+    return validateTime(body.begin_date, body.end_date, body.room);
 };
 
 module.exports = {
