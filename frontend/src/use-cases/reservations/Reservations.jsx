@@ -7,7 +7,7 @@ import { Redirect } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "./views/Calendar";
 import { getReservations } from "../../api/reservations";
-import ReservationDetails from "./elements/ReservationDetails";
+import ReservationDetails from "../../app/elements/reservation-details";
 
 const parseReservations = reservations =>
     reservations.map(e => ({
