@@ -7,6 +7,7 @@ exports.up = pgm => {
         id: {
             type: "uuid",
             primaryKey: true,
+            default: pgm.func("uuid_generate_v1()"),
         },
         title: {
             type: "text",
@@ -14,11 +15,6 @@ exports.up = pgm => {
         },
         description: {
             type: "text",
-        },
-        accepted: {
-            type: "boolean",
-            notNull: true,
-            default: false,
         },
         begin_date: {
             type: "timestamp",
@@ -37,6 +33,11 @@ exports.up = pgm => {
             type: "timestamp",
             notNull: true,
             default: pgm.func("NOW()"),
+        },
+        activity_registration: {
+            type: "uuid",
+            foreignKey: true,
+            references: "activity_registration(id)",
         },
     });
 };
