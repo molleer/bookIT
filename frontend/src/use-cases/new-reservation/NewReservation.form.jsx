@@ -13,7 +13,6 @@ import {
     TimePicker,
     Description,
     BookAs,
-    ActivityRegistration,
     AgreeToTerms,
     WeeklyRepetition,
     Rooms,
@@ -22,6 +21,7 @@ import UserContext from "../../app/contexts/user";
 import { getRequest } from "../../api/utils/api";
 import { getRooms } from "../../api/rooms/get.rooms";
 import * as moment from "moment";
+import ActivityRegistration from "./views/activity-registration";
 
 const whenTrue = {
     is: true,

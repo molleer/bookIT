@@ -6,7 +6,7 @@ import {
     DigitTextField,
     DigitLayout,
 } from "@cthit/react-digit-components";
-import { getRequest } from "../../../api/utils/api";
+import { getRequest } from "../../../../api/utils/api";
 
 const set = value => ({ target: { value } });
 
