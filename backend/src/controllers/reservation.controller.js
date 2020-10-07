@@ -2,9 +2,12 @@ const {
     createReservation,
     getReservations,
 } = require("../services/reservation.service");
+const { to } = require("../utils");
+const { getMe } = require("../utils/gamma");
 
 const handleAddReservation = async (req, res) => {
-    const [err, id] = await createReservation(req.session.token, req.body);
+    const [, me] = await to(getMe(req.session.token));
+    const [err, id] = await createReservation(me.data, req.body);
 
     if (err) {
         res.status(400).send(err.message);

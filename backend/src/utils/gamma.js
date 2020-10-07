@@ -50,8 +50,13 @@ const gammaGet = (endpoint, token) =>
         },
     });
 
+const getMe = token => {
+    return gammaGet("/users/me", token);
+};
+
 module.exports = {
     getGammaUri,
     postGammaToken,
     gammaGet,
+    getMe,
 };

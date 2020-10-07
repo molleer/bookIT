@@ -2,7 +2,6 @@ const uuid = require("uuid/v4");
 const yup = require("yup");
 const { to, validateSchema } = require("../utils");
 const db = require("../db/reservation.db");
-const { gammaGet } = require("../utils/gamma");
 const { getOverlappingReservations } = require("../db/reservation.db");
 
 const reservationSchema = yup.object().shape({
@@ -14,11 +13,8 @@ const reservationSchema = yup.object().shape({
     room: yup.string().required(),
 });
 
-const createReservation = async (token, body) => {
-    const id = uuid();
-
-    const [, me] = await to(gammaGet("/users/me", token));
-    var err = await validateReservation(me.data, body);
+const createReservation = async (user, body, id = uuid()) => {
+    var err = await validateReservation(user, body);
 
     if (err != null) {
         return [err, null];

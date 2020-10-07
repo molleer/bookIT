@@ -41,7 +41,7 @@ const deleteReservation = id =>
     );
 
 const overlap = (b, e) =>
-    `(($1 < ${b} AND ${b} < $2) OR ($1 < ${e} AND ${e} < $2) OR (${b} < $1 AND $2 < ${e}))`;
+    `(($1 < ${b} AND ${b} < $2) OR ($1 < ${e} AND ${e} < $2) OR (${b} <= $1 AND $2 <= ${e}))`;
 
 const getOverlappingReservations = (from, to, room_id) =>
     query(
