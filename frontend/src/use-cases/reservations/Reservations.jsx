@@ -8,6 +8,7 @@ import { useState } from "react";
 import Calendar from "./views/Calendar";
 import { getReservations } from "../../api/reservations";
 import ReservationDetails from "../../app/elements/reservation-details";
+import { Wrapper } from "./Reservations.style";
 
 const parseReservations = reservations =>
     reservations.map(e => ({
@@ -32,14 +33,7 @@ const Reservations = () => {
     }, []);
 
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-                width: "95%",
-            }}
-        >
+        <Wrapper>
             {redirect && <Redirect to={redirect} />}
             <DigitButtonGroup
                 primary
@@ -67,7 +61,7 @@ const Reservations = () => {
                     });
                 }}
             />
-        </div>
+        </Wrapper>
     );
 };
 

@@ -14,6 +14,7 @@ import { getReservations } from "../../api/reservations";
 import { formatDate } from "../../app/utils";
 import { useHistory } from "react-router-dom";
 import ReservationDetails from "../../app/elements/reservation-details";
+import { ButtonRight, Wrapper } from "./Admin.style";
 
 const Admin = () => {
     const [reservations, setReservations] = useState([]);
@@ -57,15 +58,7 @@ const Admin = () => {
     }, [history.location]);
 
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "flex-start",
-                width: "100%",
-                flexWrap: "wrap",
-            }}
-        >
+        <Wrapper>
             <DigitDesign.Card>
                 <DigitDesign.CardBody>
                     <DigitList
@@ -84,9 +77,9 @@ const Admin = () => {
                         ]}
                     />
                 </DigitDesign.CardBody>
-                <DigitDesign.CardButtons style={{ "justify-content": "right" }}>
+                <ButtonRight>
                     <DigitIconButton icon={AddIcon} primary />
-                </DigitDesign.CardButtons>
+                </ButtonRight>
             </DigitDesign.Card>
             <DigitTable
                 titleText="Bokningar"
@@ -102,7 +95,7 @@ const Admin = () => {
                 data={reservations}
             />
             {/**<PolicyCRUD /> */}
-        </div>
+        </Wrapper>
     );
 };
 
