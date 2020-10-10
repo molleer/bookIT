@@ -113,6 +113,8 @@ services:
             - gamma
         ports:
             - 8081:8081
+        logging:
+            driver: "none"
 
     gamma-redis:
         image: redis:5.0
