@@ -15,11 +15,24 @@ import { formatDate } from "../../app/utils";
 import { useHistory } from "react-router-dom";
 import ReservationDetails from "../../app/elements/reservation-details";
 import { ButtonRight, Wrapper } from "./Admin.style";
+import { useContext } from "react";
+import UserContext from "../../app/contexts/user/User.context";
 
 const Admin = () => {
     const [reservations, setReservations] = useState([]);
+    const me = useContext(UserContext);
     const history = useHistory();
-    const [openDetails] = useDigitCustomDialog();
+    const [openDetails] = useDigitCustomDialog({
+        renderButtons: () => {
+            return (
+                <>
+                    {me && me.isAdmin ? (
+                        <DigitIconButton icon={DeleteIcon} />
+                    ) : null}
+                </>
+            );
+        },
+    });
 
     const formatData = data => {
         for (var i in data) {
