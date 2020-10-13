@@ -1,9 +1,10 @@
+const { isAdmin } = require("../services/admin.service");
 const { to } = require("../utils");
 const { gammaGet } = require("../utils/gamma");
 
 const handleGetMe = async (req, res) => {
     const [, me] = await to(gammaGet("/users/me", req.session.token));
-    res.send(me.data);
+    res.send({ ...me.data, isAdmin: isAdmin(me.data.authorities) });
     res.status(me.status).end();
     if (me.status == 200) console.log("Success");
 };

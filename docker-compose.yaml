@@ -16,6 +16,9 @@ services:
             DB_HOST: db
             DB_PORT: 5432
             DB_NAME: bookit
+
+            ADMIN_AUTHORITY_ID: 584f26df-6521-488c-bac2-69e8fc9d55ab
+            MOCK_MODE: "false"
         ports:
             - 4000:4000
         volumes:
