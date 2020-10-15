@@ -5,9 +5,18 @@ import {
 } from "@cthit/react-digit-components";
 import { string } from "prop-types";
 
-const TimePicker = ({ name, label }) => {
+const TimePicker = ({ name, label, onChange }) => {
     const timeValues = useDigitFormField(name);
-    return <DigitDateAndTimePicker {...timeValues} upperLabel={label} />;
+    return (
+        <DigitDateAndTimePicker
+            {...timeValues}
+            upperLabel={label}
+            onChange={e => {
+                onChange(e);
+                timeValues.onChange(e);
+            }}
+        />
+    );
 };
 
 TimePicker.propTypes = {
