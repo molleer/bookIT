@@ -19,7 +19,7 @@ import {
     Rooms,
 } from "./elements";
 import UserContext from "../../app/contexts/user";
-import { getRequest } from "../../api/utils/api";
+import { getRequest, postRequest } from "../../api/utils/api";
 import { getRooms } from "../../api/rooms/get.rooms";
 import * as moment from "moment";
 import ActivityRegistration from "./views/activity-registration";
@@ -97,8 +97,18 @@ const NewReservationFrom = ({ onSubmit }) => {
 
     useEffect(() => {
         if (!room) return;
-        if (endDate > beginDate) return setValidTime(true);
-        setValidTime(false);
+        if (endDate <= beginDate) return setValidTime(false);
+
+        postRequest("/reservation/isBookableTime", {
+            begin_date: beginDate,
+            end_date: endDate,
+            room: room,
+        })
+            .then(res => setValidTime(res.data))
+            .catch(err => {
+                console.log(err);
+                setValidTime(false);
+            });
     }, [endDate, beginDate, room]);
 
     useEffect(() => {

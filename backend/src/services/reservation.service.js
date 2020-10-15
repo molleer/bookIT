@@ -63,4 +63,5 @@ const validateReservation = async (user, body) => {
 module.exports = {
     createReservation,
     getReservations,
+    validateTime,
 };

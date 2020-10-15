@@ -1,6 +1,7 @@
 const {
     createReservation,
     getReservations,
+    validateTime,
 } = require("../services/reservation.service");
 const { to } = require("../utils");
 const { getMe } = require("../utils/gamma");
@@ -27,7 +28,18 @@ const handleGetReservations = async (req, res) => {
     }
 };
 
+const handleCheckValidTime = async (req, res) => {
+    const err = await validateTime(
+        req.body.begin_date,
+        req.body.end_date,
+        req.body.room
+    );
+
+    res.status(200).send(err === null);
+};
+
 module.exports = {
     handleGetReservations,
     handleAddReservation,
+    handleCheckValidTime,
 };
