@@ -5,7 +5,7 @@ import {
 } from "@cthit/react-digit-components";
 import React from "react";
 
-const Rooms = ({ rooms }) => {
+const Rooms = ({ rooms, onChange }) => {
     const roomValues = useDigitFormField("room");
     return (
         <DigitAutocompleteSelectSingle
@@ -15,6 +15,10 @@ const Rooms = ({ rooms }) => {
                 text: r.name,
                 value: r.id,
             }))}
+            onChange={e => {
+                onChange(e);
+                roomValues.onChange(e);
+            }}
         />
     );
 };

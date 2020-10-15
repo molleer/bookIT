@@ -5,6 +5,7 @@ import {
     DigitButton,
     DigitText,
     useDigitToast,
+    useDigitFormField,
     //DigitRadioButtonGroup,
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
@@ -22,6 +23,8 @@ import { getRequest } from "../../api/utils/api";
 import { getRooms } from "../../api/rooms/get.rooms";
 import * as moment from "moment";
 import ActivityRegistration from "./views/activity-registration";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const whenTrue = {
     is: true,
@@ -53,14 +56,17 @@ const validationSchema = yup.object().shape({
     ),*/
 });
 
+const default_begin_date = new Date();
+const default_end_date = moment(new Date())
+    .add(1, "h")
+    .toDate();
+
 const initialValues = {
     title: "Event",
     phone: "123",
     room: "",
-    begin_date: new Date(),
-    end_date: moment(new Date())
-        .add(1, "h")
-        .toDate(),
+    begin_date: default_begin_date,
+    end_date: default_end_date,
     description: "Hi there",
     bookAs: "",
     isActivity: false,
@@ -84,6 +90,16 @@ const NewReservationFrom = ({ onSubmit }) => {
     const me = useContext(UserContext);
     const [users, setUsers] = useState([]);
     const [rooms, setRooms] = useState([]);
+    const [beginDate, setBeginDate] = useState(default_begin_date);
+    const [endDate, setEndDate] = useState(default_end_date);
+    const [room, setRoom] = useState(null);
+    const [validTime, setValidTime] = useState(false);
+
+    useEffect(() => {
+        if (!room) return;
+        if (endDate > beginDate) return setValidTime(true);
+        setValidTime(false);
+    }, [endDate, beginDate, room]);
 
     useEffect(() => {
         getRequest("/gamma/users")
@@ -118,10 +134,26 @@ const NewReservationFrom = ({ onSubmit }) => {
                 <DigitLayout.Column>
                     <DigitText.Text text={`Bokare: ${me ? me.cid : ""}`} />
                     <Title />
-                    <Rooms rooms={rooms} />
+                    <Rooms
+                        rooms={rooms}
+                        onChange={e => setRoom(e.target.value)}
+                    />
                     <DigitLayout.Row>
-                        <TimePicker name="begin_date" label="Startdatum" />
-                        <TimePicker name="end_date" label="Slutdatum" />
+                        <TimePicker
+                            name="begin_date"
+                            label="Startdatum"
+                            onChange={e => setBeginDate(e.target.value)}
+                        />
+                        <TimePicker
+                            name="end_date"
+                            label="Slutdatum"
+                            onChange={e => setEndDate(e.target.value)}
+                        />
+                        {!room ? null : validTime ? (
+                            <CheckCircleIcon style={{ color: "green" }} />
+                        ) : (
+                            <CancelIcon style={{ color: "red" }} />
+                        )}
                     </DigitLayout.Row>
                     <Description />
                     <BookAs
