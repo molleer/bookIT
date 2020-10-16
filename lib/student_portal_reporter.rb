@@ -8,7 +8,7 @@ end
 class StudentPortalReporter
   include Capybara::DSL
 
-  LOGIN_URL = "https://student.portal.chalmers.se/_layouts/Chalmers/Authenticate.aspx?Source=/sv/studentliv/anmalanavarrangemang/Sidor/AnmalanAvArrangemang.aspx"
+  LOGIN_URL = "https://idp.chalmers.se/adfs/ls/?wa=wsignin1.0&wtrealm=urn%3achalmers%3astudent&wctx=https%3a%2f%2fstudent.portal.chalmers.se%2f_layouts%2fChalmers%2fAuthenticate.aspx%3fSource%3dhttps%3a%2f%2fstudent.portal.chalmers.se%2fsv%2fchalmersstudier%2fSidor%2fTjanster.aspx"
   ANMALAN_AV_ARRANGEMANG_URL = "https://student.portal.chalmers.se/sv/studentliv/anmalanavarrangemang/Sidor/AnmalanAvArrangemang.aspx?authenticated"
   SUCCESS_CONTENT = /Tack för din anmälan av detta arrangemang/i
 
@@ -64,16 +64,16 @@ class StudentPortalReporter
     Rails.logger.info("Trying to login.. ")
 
     begin
-      within("#aspnetForm") do
-        fill_in 'ctl00_ContentPlaceHolder1_UsernameTextBox', with: Rails.application.secrets.vo_usr
-        fill_in 'ctl00_ContentPlaceHolder1_PasswordTextBox', with: Rails.application.secrets.vo_pwd
+      within("#loginForm") do
+        fill_in 'UserName', with: Rails.application.secrets.vo_usr
+        fill_in 'Password', with: Rails.application.secrets.vo_pwd
       end
     rescue Capybara::ElementNotFound
       return if first('#' + FIELD_IDS[:title]) # If the title field is found, then we're already logged in.
       save_and_open_page
       raise "Failed to login, elements not found, saving page to app root."
     end
-    click_button('ctl00_ContentPlaceHolder1_SubmitButton')
+    click_button('submitButton')
   end
 
   def party_report(reports)
