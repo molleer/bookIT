@@ -36,6 +36,7 @@ services:
         ports:
             - 3001:3000
         volumes:
+            - ./frontend/package.json:/usr/src/app/package.json
             - ./frontend/src:/usr/src/app/src
             - ./frontend/public:/usr/src/app/public
             - node_modules:/urs/src/app/node_modules
